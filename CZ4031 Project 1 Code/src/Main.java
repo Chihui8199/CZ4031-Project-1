@@ -21,10 +21,8 @@ public class Main {
         List<Record> data = TSVFileReader.readTSVFile(filename);
         for (Record record : data) {
             System.out.println("Key: " + record.getKey());
-            System.out.print("Data: ");
-            for (String field : record.getData()) {
-                System.out.print(field + " ");
-            }
+            System.out.println("Field 1: " + record.getAvgRating());
+            System.out.println("Field 2: " + record.getNumVotes());
             System.out.println();
         }
         
