@@ -1,9 +1,9 @@
 package utils;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -40,12 +40,12 @@ public class Parser {
         }
     }
 
-    public void checkIfDataExceedsDiskSize(String data) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+    public void checkIfDataExceedsDiskSize(byte[] data) {
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(filename, true))) {
             File file = new File(filename);
             long fileSize = file.length();
-            if (fileSize + data.getBytes().length > MIN_DISK_CAPACITY && fileSize + data.getBytes().length < MAX_DISK_CAPACITY) {
-                writer.write(data);
+            if (fileSize + data.length > MIN_DISK_CAPACITY && fileSize + data.length < MAX_DISK_CAPACITY) {
+                output.write(data);
             } else {
                 System.out.println("Error: disk capacity exceeded");
             }
