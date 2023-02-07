@@ -1,7 +1,7 @@
 class Record {
-    private String key;
-    private String avgRating;
-    private String numVotes;
+    private final String key;
+    private final String avgRating;
+    private final String numVotes;
 
     public Record(String key, String avgRating, String numVotes) {
         this.key = key;
