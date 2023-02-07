@@ -72,7 +72,6 @@ public class Parser {
         //BPTree tree = new BPTree(); // TODO: to be implemented
         int key = rec.getNumVotes();
         //tree.insertKey(key) // TODO: not sure what are the other params tbc
-
     }
 
 }

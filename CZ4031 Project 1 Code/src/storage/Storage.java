@@ -1,8 +1,11 @@
 package storage;
 
 public class Storage {
-    public Storage(int dizeSize, int blkSize){
-
+    int memDiskSize;
+    int blkSize;
+    public Storage(int diskSize, int blkSize){
+        this.memDiskSize = diskSize;
+        this.blkSize = blkSize;
     }
 
     // TODO: to be implemented
