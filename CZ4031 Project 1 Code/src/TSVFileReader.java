@@ -6,22 +6,23 @@ import java.util.List;
 
 public class TSVFileReader {
 
-    public static List<String[]> readTSVFile(String filePath) {
-        List<String[]> data = new ArrayList<>();
+    public static List<Record> readTSVFile(String filePath) {
+
+        List<Record> data = new ArrayList<>();
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             while ((line = br.readLine()) != null) {
-                data.add(line.split("\t"));
+                String[] fields = line.split("\t");
+                String key = fields[0];
+                String[] recordData = new String[fields.length - 1];
+                System.arraycopy(fields, 1, recordData, 0, fields.length - 1);
+                data.add(new Record(key, recordData));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return data;
+
     }
 
-    public static void main(String[] args) {
-        List<String[]> tsvData = readTSVFile("sample.tsv");
-        // Prepare data for B+ tree creation
-        // ...
-    }
 }

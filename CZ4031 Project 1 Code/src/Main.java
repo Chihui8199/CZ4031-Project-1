@@ -15,23 +15,21 @@ public class Main {
         Scanner consoleScanner = new Scanner(System.in);
         System.out.print("Enter the name of the file to read: ");
         String filename = consoleScanner.nextLine();
-        File myFile = new File(filename);
-        try {
-            System.out.println("Attempting to read from file in: "+myFile.getCanonicalPath());
-        } catch (IOException e) {
-            System.out.println("Unable to read file: "+myFile);
-            e.printStackTrace();
-        }
 
-        //Testing - check if TSVReader is working
-        // List<String[]> tsvData = TSVFileReader.readTSVFile(filename);
-        // for (String[] line : tsvData) {
-        //     for (String field : line) {
-        //         System.out.print(field + "\t");
-        //     }
-        //     System.out.println();
-        // }
-        // consoleScanner.close();
+
+
+        List<Record> data = TSVFileReader.readTSVFile(filename);
+        for (Record record : data) {
+            System.out.println("Key: " + record.getKey());
+            System.out.print("Data: ");
+            for (String field : record.getData()) {
+                System.out.print(field + " ");
+            }
+            System.out.println();
+        }
+        
+        
+        consoleScanner.close();
   }
 
 }
