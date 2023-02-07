@@ -1,26 +1,27 @@
-import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
-
-//TSVFileReader class reads inputs from a tab-separated values (TSV) file
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TSVFileReader {
-    public static int[] readValuesFromFile(String filename) throws FileNotFoundException {
-      Scanner fileScanner = new Scanner(new File(filename));
-      StringBuilder valuesString = new StringBuilder();
-  
-      while (fileScanner.hasNextLine()) {
-        String line = fileScanner.nextLine();
-        valuesString.append(line).append("\t");
-      }
-  
-      fileScanner.close();
-      String[] values = valuesString.toString().split("\t");
-      int[] keys = new int[values.length];
-      for (int i = 0; i < values.length; i++) {
-        keys[i] = Integer.parseInt(values[i]);
-      }
-  
-      return keys;
+
+    public static List<String[]> readTSVFile(String filePath) {
+        List<String[]> data = new ArrayList<>();
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                data.add(line.split("\t"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
-  }
+
+    public static void main(String[] args) {
+        List<String[]> tsvData = readTSVFile("sample.tsv");
+        // Prepare data for B+ tree creation
+        // ...
+    }
+}
