@@ -1,3 +1,4 @@
+import storage.Storage;
 import utils.Parser;
 
 public class Main {
@@ -8,8 +9,10 @@ public class Main {
         // Read in the data and write to db
         Parser.readTSVFile(fileName);
 
-        //when insert
-        //Parser.checkIfDataExceedsDiskSize(Data)
+        // when insert
+        // Storage storage = new Storage("database.txt");
+        // String data = "string to upload to database";
+        //Parser.checkIfDataExceedsDiskSize(data.getBytes());
 
 //        System.out.println("Initial Commit");
 //
