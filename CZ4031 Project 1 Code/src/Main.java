@@ -8,6 +8,9 @@ public class Main {
         // Read in the data and write to db
         Parser.readTSVFile(fileName);
 
+        //when insert
+        //Parser.checkIfDataExceedsDiskSize(Data)
+
 //        System.out.println("Initial Commit");
 //
 //

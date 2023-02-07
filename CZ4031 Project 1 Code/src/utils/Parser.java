@@ -1,6 +1,9 @@
 package utils;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -8,6 +11,10 @@ import storage.Record;
 import storage.Storage;
 
 public class Parser {
+    private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024;
+    private static final int MAX_DISK_CAPACITY = 500 * 1024 * 1024;
+    private static final int BLOCK_SIZE = 200;
+    private String filename;
     /**
      * Loads in the data and stores it in the database
      * @param filePath takes in the file path of data.tsv
@@ -33,6 +40,21 @@ public class Parser {
         }
     }
 
+    public void checkIfDataExceedsDiskSize(String data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            File file = new File(filename);
+            long fileSize = file.length();
+            if (fileSize + data.getBytes().length > MIN_DISK_CAPACITY && fileSize + data.getBytes().length < MAX_DISK_CAPACITY) {
+                writer.write(data);
+            } else {
+                System.out.println("Error: disk capacity exceeded");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * for each line of data read in create a record object and stores it into the database
      * @param tconst alphanumeric unique identifier of the title
@@ -43,7 +65,8 @@ public class Parser {
         // creates a new Record object
         Record rec = new Record(tconst,averageRating, numVotes);
         // write the Record to the database
-        Storage db = new Storage(500000000, 200);
+        
+        Storage db = new Storage(MAX_DISK_CAPACITY, BLOCK_SIZE);
         db.writeRecordToStorage(rec);
         // create a BP+ indexing as we read the file
         //BPTree tree = new BPTree(); // TODO: to be implemented
