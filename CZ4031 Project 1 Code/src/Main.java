@@ -1,14 +1,16 @@
 import storage.Storage;
 import utils.Parser;
+import index.testBplusTree;
 
 public class Main {
 
     public static void main(String[] args) {
-        String dir = System.getProperty("user.dir");
-        String fileName = dir + "/utils/data/data.tsv";
+        // String dir = System.getProperty("user.dir");
+        // String fileName = dir + "/utils/data/data.tsv";
         // Read in the data and write to db
-        Parser.readTSVFile(fileName);
-
+        // Parser.readTSVFile(fileName);
+        
+        testBplusTree.test();
         // when insert
         // Storage storage = new Storage("database.txt");
         // String data = "string to upload to database";
@@ -34,5 +36,6 @@ public class Main {
 //
 //        consoleScanner.close();
   }
+
 
 }
