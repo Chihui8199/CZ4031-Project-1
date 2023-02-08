@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
+import java.io.*;
+
 import java.util.Scanner;
 
 import storage.Record;
@@ -13,7 +16,9 @@ import storage.Storage;
 public class Parser {
 
 
-    private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024;
+
+    private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024; // TODO: i think this calculation is not correct
+
     //private static final int MAX_DISK_CAPACITY = 500 * 1024 * 1024;
     private static final int BLOCK_SIZE = 200;
     private String filename;
@@ -82,6 +87,20 @@ public class Parser {
         // creates a new Record object
         Record rec = new Record(tconst,averageRating, numVotes);
         return rec;
+    }
+
+    public void checkIfDataExceedsDiskSize(byte[] data) {
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(filename, true))) {
+            File file = new File(filename);
+            long fileSize = file.length();
+            if (fileSize + data.length > MIN_DISK_CAPACITY && fileSize + data.length < MAX_DISK_CAPACITY) {
+                output.write(data);
+            } else {
+                System.out.println("Error: disk capacity exceeded");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
