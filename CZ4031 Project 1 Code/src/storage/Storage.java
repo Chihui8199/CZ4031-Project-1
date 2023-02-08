@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Implementation of an unspanned db/storage class - each record must be stored as a whole in single block
  */
 public class Storage {
+
     // max size of disk
     int memdiskSize;
     // size of block
@@ -71,7 +72,6 @@ public class Storage {
         }
         // inserting the actual record into the block
         int offset = block.insertRecordIntoBlock(rec);
-        System.out.println(String.format("block ptr, %d", blockPtr));
         return new Address(blockPtr, offset);
     }
 

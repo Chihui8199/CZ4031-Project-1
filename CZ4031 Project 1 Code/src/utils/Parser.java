@@ -12,13 +12,13 @@ import storage.Storage;
 
 public class Parser {
 
+
     private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024;
     //private static final int MAX_DISK_CAPACITY = 500 * 1024 * 1024;
     private static final int BLOCK_SIZE = 200;
     private String filename;
 
     private static final int MAX_DISK_CAPACITY = 500 * (int)(Math.pow(10,6));
-
 
     /**
      * Loads in the data and stores it in the database
@@ -57,6 +57,7 @@ public class Parser {
     }
 
 
+
 //    public void checkIfDataExceedsDiskSize(byte[] data) {
 //        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(filename, true))) {
 //            File file = new File(filename);
@@ -71,8 +72,6 @@ public class Parser {
 //        }
 //    }
 
-
-
     /**
      * for each line of data read in create a record object and stores it into the database
      * @param tconst alphanumeric unique identifier of the title
@@ -83,7 +82,6 @@ public class Parser {
         // creates a new Record object
         Record rec = new Record(tconst,averageRating, numVotes);
         return rec;
-
     }
 
 }
