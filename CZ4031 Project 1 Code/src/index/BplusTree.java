@@ -4,7 +4,6 @@ public class BplusTree{
 
     private static final int POINTER_SIZE = 6; // for 64 bits system; RAM use 64bit for addressing -> 2^6 = 6B
     private static final int KEY_SIZE = 4; // for int value
-    
 
 
     // Constructor for Bplus

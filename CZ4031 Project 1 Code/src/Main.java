@@ -1,4 +1,5 @@
 import java.io.File;
+import index.testBplusTree;
 
 import utils.Parser;
 
@@ -15,6 +16,8 @@ public class Main {
         } else {
           System.out.print("No, file does not exist");
         }
+
+        testBplusTree.test();
 
         // when insert
         // Storage storage = new Storage("database.txt");
