@@ -32,16 +32,16 @@ public class Parser {
     // TODO: change this to Buffered Reader implementation I couldn't figure out the conversin
     // TODO: each Record should be stored as a fixed length and is not now
     public static void readTSVFile(String filePath) {
-        String line;
+
         try {
             // initialise database
             Storage db = new Storage(MAX_DISK_CAPACITY, BLOCK_SIZE);
-            //start loading data
-            Scanner sc = new Scanner(new FileReader(filePath));
-            sc.nextLine(); //skip the first line (the column line)
-            while(sc.hasNextLine()) {
-                String newLine = sc.nextLine();
-                String[] fields = newLine.split("\t");
+            // start loading data
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            reader.readLine(); // skip the first line (the column line)
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split("\t");
                 String tconst = fields[0];
                 // TODO: parse each of the three fields to byteArray so that each Record can be initialise as a fixed length
                 float averageRating = Float.parseFloat(fields[1]);
@@ -52,10 +52,11 @@ public class Parser {
                 db.writeRecordToStorage(rec);
                 db.printDatabaseInfo();
                 // create a BP+ indexing as we read the file
-                //BPTree tree = new BPTree(); // TODO: to be implemented
+                // BPTree tree = new BPTree(); // TODO: to be implemented
                 int key = rec.getNumVotes();
-                //tree.insertKey(key) // TODO: not sure what are the other params tbc
+                // tree.insertKey(key) // TODO: not sure what are the other params tbc
             }
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
