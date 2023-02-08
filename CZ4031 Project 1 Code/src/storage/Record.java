@@ -25,4 +25,15 @@ public class Record {
     public int getNumVotes() {
         return numVotes;
     }
+
+    // tConst is fixed-size 9 char, rating is float so 4 bytes and votes is integer so 4 bytes also
+    public static int getRecordSize(){
+        return 4 + 4 + 9;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Record Info: Tconst: %s, aveRating: %f, numVotes %d ", this.getTconst(), this.getAverageRating(),this.getNumVotes());
+
+    }
 }
