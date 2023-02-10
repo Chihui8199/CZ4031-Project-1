@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         String dir = System.getProperty("user.dir");
-        String fileName = dir + "\\CZ4031 Project 1 Code\\src\\utils\\data\\data.tsv"; 
+        String fileName = dir + File.separator + "CZ4031 Project 1 Code" + File.separator + "src" + File.separator + "utils" + File.separator + "data" + File.separator + "data.tsv";
         // Read in the data and write to db
         File file = new File(fileName);
         if (file.exists()) {
@@ -17,7 +17,7 @@ public class Main {
           System.out.print("No, file does not exist");
         }
 
-        testBplusTree.test();
+        // testBplusTree.test();
 
         // when insert
         // Storage storage = new Storage("database.txt");

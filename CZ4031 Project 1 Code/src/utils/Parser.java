@@ -10,6 +10,7 @@ import java.io.*;
 
 import java.util.Scanner;
 
+import storage.Address;
 import storage.Record;
 import storage.Storage;
 
@@ -49,12 +50,12 @@ public class Parser {
                 Record rec = createRecord(tconst, averageRating, numVotes);
                 System.out.println(rec.toString());
                 // write the each record object to the database
-                db.writeRecordToStorage(rec);
+                Address add = db.writeRecordToStorage(rec);
                 db.printDatabaseInfo();
                 // create a BP+ indexing as we read the file
                 // BPTree tree = new BPTree(); // TODO: to be implemented
                 int key = rec.getNumVotes();
-                // tree.insertKey(key) // TODO: not sure what are the other params tbc
+                // tree.insertKey(key, add) // TODO: not sure what are the other params tbc
             }
             reader.close();
         } catch (IOException e) {

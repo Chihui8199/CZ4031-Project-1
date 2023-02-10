@@ -29,12 +29,13 @@ public class Storage {
 
     }
 
-    public void writeRecordToStorage(Record rec){
+    public Address writeRecordToStorage(Record rec){
         // insert the Record into the first available block
         int blockPtr = getFirstAvailableBlockId();
         // insert the record with data attributes into the block chosen
         Address addressofRecordStored = this.insertRecordIntoBlock(blockPtr, rec);
         System.out.println(String.format("%s is stored at %s", rec.toString(),addressofRecordStored.toString() ));
+        return addressofRecordStored;
     }
 
     private int getFirstAvailableBlockId(){
