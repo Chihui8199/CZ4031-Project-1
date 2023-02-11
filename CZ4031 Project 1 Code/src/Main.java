@@ -17,7 +17,7 @@ public class Main {
           System.out.print("No, file does not exist");
         }
 
-        // testBplusTree.test();
+        // testBplusTree.insertNode();
 
         // when insert
         // Storage storage = new Storage("database.txt");

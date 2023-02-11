@@ -14,6 +14,8 @@ import storage.Address;
 import storage.Record;
 import storage.Storage;
 
+import index.*;
+
 public class Parser {
 
 
@@ -33,14 +35,18 @@ public class Parser {
     // TODO: change this to Buffered Reader implementation I couldn't figure out the conversin
     // TODO: each Record should be stored as a fixed length and is not now
     public static void readTSVFile(String filePath) {
-
         try {
+            testBplusTree tree = new testBplusTree(); 
+            Node firstNode = testBplusTree.createFirstNode();
+            
+
             // initialise database
             Storage db = new Storage(MAX_DISK_CAPACITY, BLOCK_SIZE);
             // start loading data
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); // skip the first line (the column line)
             String line;
+
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split("\t");
                 String tconst = fields[0];
@@ -53,9 +59,9 @@ public class Parser {
                 Address add = db.writeRecordToStorage(rec);
                 db.printDatabaseInfo();
                 // create a BP+ indexing as we read the file
-                // BPTree tree = new BPTree(); // TODO: to be implemented
+                // TODO: to be implemented
                 int key = rec.getNumVotes();
-                // tree.insertKey(key, add) // TODO: not sure what are the other params tbc
+                tree.insertKey(key, add); // TODO: not sure what are the other params tbc
             }
             reader.close();
         } catch (IOException e) {

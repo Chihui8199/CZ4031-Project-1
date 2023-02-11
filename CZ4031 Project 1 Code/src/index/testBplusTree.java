@@ -5,18 +5,141 @@ package index;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class testBplusTree {
+import javax.swing.text.AsyncBoxView.ChildLocator;
 
-    
-    public static void test(){
+import storage.Address;
+import index.NonLeafNode;
 
-        ArrayList<Integer> inputs = new ArrayList<>(Arrays.asList(10,20,30,40,50,60,70,80,90,100));
-        System.out.println(inputs);
+public class testBplusTree{
 
+    static final int NODE_SIZE = 3;
+    static Node rootNode;
+    Node nodeToInsertTo;
+
+    public testBplusTree(){
     }
 
-    public static void insertNode(){
+  public static Node createFirstNode() {
+        Node newNode = new Node();
+        setRoot(newNode);
+        newNode.setIsLeaf(true);
+        return newNode;
+    }
 
+
+    public static Node createNode() {
+        Node newNode = new Node();
+        return newNode;
+    }
+
+
+    public static void setRoot(Node root){
+        rootNode = root;
+    }
+
+    
+    public Node getRoot(){
+        return rootNode;
+    }
+
+
+
+    public void insertKey(int key, Address add){
+        nodeToInsertTo = searchNode(key, add);
+        nodeToInsertTo.addKey(key, add);
+    }
+
+
+    public LeafNode searchNode(int key, Address add){
+        // first find the root node
+        Node root = getRoot();
+        ArrayList<Integer> keys; 
+
+        NonLeafNode nodeToInsertTo = (NonLeafNode)root;
+
+        while (!nodeToInsertTo.getChild(0).getIsLeaf()) {
+
+            keys = nodeToInsertTo.getKeys();
+            
+            for (int i = keys.size() -1; i >= 0; i--) {
+
+                if (keys.get(i) <= key) {
+
+                    nodeToInsertTo = (NonLeafNode) nodeToInsertTo.getChild(i+1);
+                    break;
+                }
+
+                else if (i == 0)
+                    nodeToInsertTo = (NonLeafNode) nodeToInsertTo.getChild(0);
+            }
+        }
+
+        keys = nodeToInsertTo.getKeys();
+        for (int i = keys.size() -1; i >= 0; i--) {
+
+            if (keys.get(i) <= key)
+                return (LeafNode) nodeToInsertTo.getChild(i+1);
+        }
+
+        return (LeafNode) nodeToInsertTo.getChild(0);
+
+            // Version 2: while current node is not leaf node: iterate through node levels
+            // Node newNode = root;
+            // while(!newNode.getIsLeaf()){
+
+            //     //iterate through keys
+            //     for(int i : newNode.getKeys()){
+
+            //         // if current key > key(i), enter the left node
+            //         if( key >= newNode.getKey(i)){
+
+            //             ArrayList<Node> childrenArray = ((NonLeafNode) newNode).getChildren(); 
+            //             // Node nodeToFind;
+
+            //                 // iterate through nodes
+            //                 for (Node node : childrenArray){
+            //                     if (node.getKey(i) == key ){
+            //                         newNode = node;
+            //                     }
+            //                 }
+
+            //         }
+            //     }
+            // }
+            
+
+            // return;
+           
+            // within each leaf node
+            // use getKeys to retrieve each Arraylist of keys in each node, 
+           
+            // which is an ArrayList of nodes
+            // then loop through using the line 68-73 logic until you get to the leaf node
+            // within each node, check through the arraylist with line 68-73 logic again
+            // then add key to the required node
+        }
+
+        
+        
+//from this root we need to search for the node to insert the key 
+// which means we need to search for the node which already has they key/ if not create the key
+        // to search, we check if the key is less than the root, check the left child
+        // else check the right Child
+        //keep repeating until you find the node which contains the key/ should contain the key
+
+    // public void insertNode(int key){
+        
+    //     // ArrayList<Integer> inputs = new ArrayList<>(Arrays.asList(10,20,30,40,50,60,70,80,90,100));
+    //     // System.out.println(inputs);
+    //     Node node = createNode();
+    //     // System.out.println(node.getIsLeaf());
+    //     node.addKey(key);
+
+    // }
+
+
+
+    
 // Insertion on B+ Tree:
 // 1. Perform a search to determine what node the new record should be inserted to
 // 2. If the node is not full (at most n keys after the insertion), insert the record to the node
@@ -28,8 +151,6 @@ public class testBplusTree {
 
     
     
-
-}
 
     public static void deleteNode(){
 
