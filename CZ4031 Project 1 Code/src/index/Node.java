@@ -1,33 +1,55 @@
 package index;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+import storage.Address;
+
 import java.lang.Math;
 
-public abstract class Node{
+public class Node{
 
     // Max number of keys in each node (node size)
     private int nodeSize;
     private int minLeafNodeSize;
     private int minNonLeafNodeSize;
-
+    static final int NODE_SIZE = 3;
     // List of keys currently in Node
-    private ArrayList<Integer> keys;
-
+    
     // Pointer to nonLeafNode node
-    private NonLeafNode nonLeafNode;
+    // private NonLeafNode nonLeafNode;
+    
 
     private boolean isLeaf;
     private boolean isRoot;
 
+
+//************************************************************************/
+protected ArrayList<Integer> keys;
+    // TODO: change it to hashmap type, keys are index and the value is the arraylist [Blk,Offset]
+    // eg. [key 1: [[blk 2, offset 3], [blk 5, offset 7]]]
+
+    HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+    ArrayList<Integer> list = new ArrayList<>();
+    list.add(1);
+    list.add(2);
+    list.add(3);
+    map.put(1, list);
+    ArrayList<Integer> retrievedList = map.get(1);
+
+
+//************************************************************************/
+
+
+
     
     public Node(){
-
-        nodeSize = 3;
-        minLeafNodeSize = (int)(Math.floor((nodeSize + 1) / 2));
-        minNonLeafNodeSize = (int)(Math.floor(nodeSize / 2));
-        keys = new ArrayList<Integer>();
-        isLeaf = false;
-        isRoot = false;
+        this.isLeaf = false;
+        this.isRoot = false;
+        this.nodeSize = NODE_SIZE;
+        this.minLeafNodeSize = (int)(Math.floor((nodeSize + 1) / 2));
+        this.minNonLeafNodeSize = (int)(Math.floor(nodeSize / 2));
+        this.keys = new ArrayList<Integer>();
     }    
 
     // check whether node is a leaf
@@ -40,6 +62,10 @@ public abstract class Node{
         isLeaf = isALeaf;
     }
 
+
+
+
+
     // check whether node is as root
     public boolean getIsRoot() {
         return isRoot;
@@ -50,15 +76,15 @@ public abstract class Node{
         isRoot = isARoot;
     }
 
-    // get leaf node's parent
-    public NonLeafNode getParent() {
-        return nonLeafNode;
-    }
 
-    // set leaf node's parent
-    public void setParent(NonLeafNode parent) {
-        nonLeafNode = parent;
-    }
+
+
+
+
+
+
+
+
 
     // get arraylist of all keys
     public ArrayList<Integer> getKeys() {
@@ -71,33 +97,9 @@ public abstract class Node{
     }
     
 
-    // add key into the arraylist in the node
-    public int addKey(int key) {
 
-        // if node is empty, add key at index 0
-        if (this.getKeys().size() == 0) {
-
-            this.keys.add(key);
-            return 0;
-        }
-        
-        int n = keys.size();
-        int i;
-
-        // for current (i), if current key is greater than new key, break and savc index i
-        for (i = 0; i < n; i++) {
-            if (keys.get(i) >= key) 
-                break;
-        }
-
-        // for every current key greater than new key, move current key to right empty index j + 1
-        for (int j = n - 1; j >= i; j--) {
-            keys.set(j + 1 , keys.get(j));
-        }
-
-        // insert new key into empty index i
-        keys.set(i, key);
-        return i;
+    public void printNode(){
+        System.out.println(this.keys); 
     }
     
 
@@ -111,61 +113,25 @@ public abstract class Node{
         keys = new ArrayList<Integer>();
     }
 
-    
-    
-    // find smallest key (more for use by parentnode but placed here for first level of parents)
-    
-    
-    // public int findSmallestKey() {
-
-    //     int key;
-    //     NonLeafNode copy;
-
-    //     if (!this.getIsLeaf()) {
-
-    //         copy = (NonLeafNode) this;
-
-    //         while (!copy.getChild(0).getIsLeaf())
-    //             copy = (NonLeafNode) copy.getChild(0);
-            
-    //         key = copy.getChild(0).getKey(0);
-    //     }
-
-    //     else 
-    //         key = this.getKey(0);
-
-    //     return key;
-    // }
-
-    // delete the node
-
-
-    public void deleteNode() {
-
-        // Removing child nodes of a non-leaf/parent node and setting the pointer of that node to be null
-        if (nonLeafNode != null) {
-            nonLeafNode.deleteChild(this);
-            nonLeafNode = null;
+	public void splitNode() {
+        if (this.getIsLeaf()){
+            for (int i =0; i <= minLeafNodeSize; i++){
+                
+            }
         }
 
-        // Removing the data block/records pointed by the "deleted" leaf node (by replacing with a new arraylist)
-        // and ensuring that the "deleted" leaf node points to null
-        if (this.isLeaf) {
-            LeafNode copy = (LeafNode) this;
-            copy.deleteRecords();
-            copy.setNext(null);
-        }
+        else{
+            // All the indexes here are gonna be in the left node
+            // the remaining ones are gonna be in a right node
+            Node leftNode = new Node();
 
-        // when nonLeafNode == null
-        else {
-            NonLeafNode copy = (NonLeafNode) this;
-            copy.deleteChildren();
+            for (int i =0; i <= minNonLeafNodeSize; i++){
+                
+                leftNode.addKey(this.i, null);
+            }
         }
-
-        isLeaf = false;
-        isRoot = false;
-        keys = new ArrayList<Integer>();
-    }
+	}
 
 }
 
+    

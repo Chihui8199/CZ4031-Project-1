@@ -1,16 +1,24 @@
-import storage.Storage;
-import utils.Parser;
+import java.io.File;
 import index.testBplusTree;
+
+import utils.Parser;
 
 public class Main {
 
     public static void main(String[] args) {
-        // String dir = System.getProperty("user.dir");
-        // String fileName = dir + "/utils/data/data.tsv";
+        String dir = System.getProperty("user.dir");
+        String fileName = dir + File.separator + "CZ4031 Project 1 Code" + File.separator + "src" + File.separator + "utils" + File.separator + "data" + File.separator + "data.tsv";
         // Read in the data and write to db
-        // Parser.readTSVFile(fileName);
-        
-        testBplusTree.test();
+        File file = new File(fileName);
+        if (file.exists()) {
+            System.out.print("Yes File Exist");
+            Parser.readTSVFile(fileName);
+        } else {
+          System.out.print("No, file does not exist");
+        }
+
+        // testBplusTree.insertNode();
+
         // when insert
         // Storage storage = new Storage("database.txt");
         // String data = "string to upload to database";
@@ -35,7 +43,7 @@ public class Main {
 //
 //
 //        consoleScanner.close();
-  }
 
+  }
 
 }

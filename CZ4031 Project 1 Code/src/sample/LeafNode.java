@@ -35,6 +35,8 @@ public class LeafNode extends Node {
     // add record
     public int addRecord(int key, Address address) {
 
+
+        // if no records in LeafNode, add address and key into LeafNode
         if (this.getRecords().size() == 0) {
 
             this.records.add(address);
@@ -42,14 +44,16 @@ public class LeafNode extends Node {
             return 0;
         }
 
+        // else, 
         int index;
         index = super.addKey(key);
 
         records.add(address);
 
-        for (int i = records.size() -2; i >= index; i--) 
-            records.set(i+1, records.get(i));
-        
+
+        for (int i = records.size() - 2; i >= index; i--)
+            records.set(i + 1, records.get(i));
+
         records.set(index, address);
 
         return index;
@@ -95,11 +99,11 @@ public class LeafNode extends Node {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        for (int i=0; i<getKeys().size(); i++){
-            if (i>0){
+        for (int i = 0; i < getKeys().size(); i++) {
+            if (i > 0) {
                 sb.append(", ");
             }
-             sb.append(String.format("%d:{%d=>%s}", i, getKey(i), getRecord(i)));
+            sb.append(String.format("%d:{%d=>%s}", i, getKey(i), getRecord(i)));
         }
         sb.append("]");
         return sb.toString();
