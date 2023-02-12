@@ -7,9 +7,8 @@ import storage.Address;
 
 public class LeafNode extends Node {
 
-    private ArrayList<Address> records;
+    protected ArrayList<Address> records;
     private LeafNode nextNode;
-    private NonLeafNode parent;
 
     public LeafNode(){
         super();
@@ -18,36 +17,25 @@ public class LeafNode extends Node {
         setNext(null);
     }
 
-
-
     // Add record
     public void addKey(int key, Address add) {
         int n = NODE_SIZE;
         System.out.println(this.getKeys().size());
-        System.out.println(this.keys.size());
+        // System.out.println(this.map.size());
 
-        ArrayList<Integer> keyBlkOffset;
-        keyBlkOffset.add(key);
-        keyBlkOffset.add(add.getBlockId());
-        keyBlkOffset.add(add.getOffset());
 
-        // if node is empty, add key at index 0
-        if (this.getKeys().size() == 0) {
-            this.keys.add();
-            return;
-        }
-        
+        this.records.add(add);
+        this.map.put(key,records);
 
-        // insert at the back
-        if (keys.size() < n){
+
+        if (this.getKeys().size() < n || this.map.containsKey(key) ){
              // for current (i), if current key is greater than new key, break and save index i
-             this.keys.add(key);
-            Collections.sort(keys);
-            System.out.println(keys);
+            this.records.add(add);
+            this.map.put(key,records);
         }
 
         else{
-            this.splitNode();
+            this.splitNode(key, add);
             System.out.print("node size capacity reached, could not insert key: ");
             System.out.println(key);
         }
@@ -59,13 +47,4 @@ public class LeafNode extends Node {
     public void setNext(LeafNode sibling) {
         nextNode = sibling;
     }
-
-    public void setParent(NonLeafNode setparent){
-        parent = setparent;
-    }
-
-    public Node getParent(){
-        return parent;
-    }
-
 }

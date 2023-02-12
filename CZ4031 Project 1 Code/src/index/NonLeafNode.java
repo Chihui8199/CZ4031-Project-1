@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 public class NonLeafNode extends Node{
     
-    static Node parent;
-    static ArrayList<Node> children;
+    ArrayList<Node> children;
 
     public NonLeafNode(){
         super();
@@ -21,12 +20,10 @@ public class NonLeafNode extends Node{
         return children.get(index);
     }
 
-    public void setParent(NonLeafNode setparent){
-        parent = setparent;
+    public void addChild(Node child) {
+        this.children.add(child);
     }
 
-    public Node getParent(){
-        return parent;
-    }
+
 
 }

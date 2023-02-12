@@ -4,6 +4,8 @@ package index;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.text.AsyncBoxView.ChildLocator;
 
@@ -43,17 +45,16 @@ public class testBplusTree{
     }
 
 
-
     public void insertKey(int key, Address add){
-        nodeToInsertTo = searchNode(key, add);
-        nodeToInsertTo.addKey(key, add);
+        nodeToInsertTo = searchNode(key);
+        ((LeafNode) nodeToInsertTo).addKey(key, add);
     }
 
 
-    public LeafNode searchNode(int key, Address add){
+    public LeafNode searchNode(int key){
         // first find the root node
         Node root = getRoot();
-        ArrayList<Integer> keys; 
+        List<Integer> keys; 
 
         NonLeafNode nodeToInsertTo = (NonLeafNode)root;
 
@@ -63,7 +64,7 @@ public class testBplusTree{
             
             for (int i = keys.size() -1; i >= 0; i--) {
 
-                if (keys.get(i) <= key) {
+                if (((Node) keys).getKey(i) <= key) {
 
                     nodeToInsertTo = (NonLeafNode) nodeToInsertTo.getChild(i+1);
                     break;
@@ -77,11 +78,12 @@ public class testBplusTree{
         keys = nodeToInsertTo.getKeys();
         for (int i = keys.size() -1; i >= 0; i--) {
 
-            if (keys.get(i) <= key)
+            if (((Node) keys).getKey(i) <= key)
                 return (LeafNode) nodeToInsertTo.getChild(i+1);
         }
 
         return (LeafNode) nodeToInsertTo.getChild(0);
+}
 
             // Version 2: while current node is not leaf node: iterate through node levels
             // Node newNode = root;
@@ -117,8 +119,7 @@ public class testBplusTree{
             // then loop through using the line 68-73 logic until you get to the leaf node
             // within each node, check through the arraylist with line 68-73 logic again
             // then add key to the required node
-        }
-
+        
         
         
 //from this root we need to search for the node to insert the key 

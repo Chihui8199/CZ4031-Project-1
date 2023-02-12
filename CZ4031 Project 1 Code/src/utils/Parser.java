@@ -37,7 +37,7 @@ public class Parser {
     public static void readTSVFile(String filePath) {
         try {
             testBplusTree tree = new testBplusTree(); 
-            Node firstNode = testBplusTree.createFirstNode();
+            testBplusTree.createFirstNode();
             
 
             // initialise database
