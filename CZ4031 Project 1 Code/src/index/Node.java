@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.SortedMap;
 
 import storage.Address;
 
@@ -86,7 +88,6 @@ public class Node {
     // need to make sure that old node that was split, keys are updated correctly. same for new node as well
     // need to check if old node has parent node, if have, then connect the new one to it as well, if parent is full, call split again
     // if dont have, need to create new parent node which contains smallest key of new node
-
     public void splitNode(int key, Address addr) {
 
         // Is a LeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -95,6 +96,7 @@ public class Node {
             LeafNode newNode = new LeafNode();
             ArrayList<Address> addrToBeAdded = new ArrayList<Address>();
 
+            System.out.printf("\n\nSplitting LeafNode");
             // Handling the TreeMap-----------------------------------------------------------------------
             // add keyToBeAdded into the OLD NODES's treemap of keys (which contain arraylists of addresses), 
             // which is automatically sorted by keys, take the last minLeafNodeSize keys of the sorted treemap and insert into new Node's treemap
@@ -106,7 +108,7 @@ public class Node {
             int i = 0;
             int fromKey = 0;
 
-            // 
+            // get last key in the node(?)
             for (Map.Entry<Integer, ArrayList<Address>> entry : ((LeafNode)this).map.entrySet()) {
                 if (i == n) {
                     fromKey = entry.getKey();
@@ -115,23 +117,42 @@ public class Node {
                 i++;
             }
 
-
             // newNode with correct TreeMap created by using SubMap which creates a treemap of keys after the nth index
 
-            TreeMap<Integer, ArrayList<Address>> lastnKeys = (TreeMap<Integer, ArrayList<Address>>) ((LeafNode)this).map.subMap(fromKey, false, ((LeafNode)this).map.lastKey(), true);
-            
+            System.out.printf("\nMap Before Removing\n");
+            System.out.print(((LeafNode)this).map);
+
+            SortedMap<Integer, ArrayList<Address>> lastnKeys = 
+                        ((LeafNode)this).map.subMap(
+                        fromKey, 
+                        false, 
+                        ((LeafNode)this).map.lastKey(), 
+                        true);
+
             newNode.map = new TreeMap<Integer, ArrayList<Address>>(lastnKeys);
             
             // removing keys after the nth index for old node
             lastnKeys.clear();
 
-            
+            System.out.printf("\nMap After Removing\n");
+            System.out.print(((LeafNode)this).map);
+
             // Handling the ArrayList of keys-----------------------------------------------------------------------
+            
+            System.out.printf("\n**Keys in ArrayList Before Removing\n");
+            System.out.print(this.keys);
+            
             insertInOrder(this.keys, key);
 
             newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
 
-            this.keys.subList(n, this.keys.size()).clear();
+            // removing keys after the nth index for old node
+            this.keys.subList(n, this.keys.size()).clear(); //<- TODO: HERE ISSUE
+
+
+
+            System.out.printf("\n**Keys in ArrayList After Removing\n");
+            System.out.print(this.keys);
 
 
             // Handling the parent node of the old node---------------------------------------------------------------

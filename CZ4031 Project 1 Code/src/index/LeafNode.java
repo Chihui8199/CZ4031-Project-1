@@ -26,7 +26,7 @@ public class LeafNode extends Node {
     public void addRecord(int key, Address add) {
         int n = NODE_SIZE;
 
-        System.out.printf("Entered addRecord\n");
+        System.out.printf("\nEntered addRecord\n");
 
         // if node is empty, create new Arraylist and TreeMap
         if (this.keys == null){
@@ -77,9 +77,13 @@ public class LeafNode extends Node {
 
         // else, the arraylist and treemap is full, split the node
         else{
+            System.out.printf("**Keys in ArrayList Before Splitting\n");
+            System.out.print(this.keys);
             this.splitNode(key, add);
-            System.out.print("node size capacity reached, could not insert key: ");
-            System.out.println(key);
+            // System.out.print("node size capacity reached, could not insert key: ");
+            // System.out.println(key);
+            System.out.printf("\n**Keys in ArrayList After Splitting\n");
+            System.out.print(this.keys);
         }
 
     }

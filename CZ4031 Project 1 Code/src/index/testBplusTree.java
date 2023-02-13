@@ -49,7 +49,7 @@ public class testBplusTree{
     public void insertKey(int key, Address add){
         System.out.printf("\n\n\nInserting Key %d\n", key);
         nodeToInsertTo = searchNode(key);
-        System.out.printf("Keys of node to insert to: \n");
+        System.out.printf("Keys of node to insert to: ");
         System.out.print(nodeToInsertTo.getKeys());
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
