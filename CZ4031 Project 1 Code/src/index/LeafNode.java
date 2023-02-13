@@ -57,6 +57,7 @@ public class LeafNode extends Node {
 
         // else if keysize not full, insert the key into the ArrayList in sorted order
         else if (this.keys.size() < n){
+            this.records = new ArrayList<Address>();
             this.records.add(add);
             this.records.add(add);
             System.out.printf("Record added to Address ArrayList:");

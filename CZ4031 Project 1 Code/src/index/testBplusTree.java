@@ -19,14 +19,15 @@ public class testBplusTree{
     Node nodeToInsertTo;
 
     public testBplusTree(){
+        rootNode = createFirstNode();
     }
 
-  public void createFirstNode() {
-        Node newNode = new Node();
-        
+  public LeafNode createFirstNode() {
+        LeafNode newNode = new LeafNode();
         newNode.setIsRoot(true);
         newNode.setIsLeaf(true);
-    setRoot(newNode);
+        setRoot(newNode);
+        return newNode;
 }
 
 
@@ -48,28 +49,29 @@ public class testBplusTree{
     public void insertKey(int key, Address add){
         System.out.printf("\n\n\nInserting Key %d\n", key);
         nodeToInsertTo = searchNode(key);
-        System.out.printf("Keys of node to insert to: %d\n", nodeToInsertTo.getKeys());
+        System.out.printf("Keys of node to insert to: \n");
+        System.out.print(nodeToInsertTo.getKeys());
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
 
 
     public LeafNode searchNode(int key){
         // first find the root node
-        Node root = getRoot();
+        // LeafNode root = (LeafNode) getRoot();
         ArrayList<Integer> keys; 
 
         System.out.printf("Searching Node for Key %d\n",key);
 
         //root is at first level
-        if (root.getIsLeaf()){
-            root = new LeafNode();
-            setRoot(root);
+        if (testBplusTree.rootNode.getIsLeaf()){
+            // root = new LeafNode();
+            setRoot(rootNode);
             System.out.printf("Found Node : Root\n");
-            return (LeafNode)root;
+            return (LeafNode)rootNode;
         }
 
         else{
-            Node nodeToInsertTo = (NonLeafNode)root;
+            Node nodeToInsertTo = (NonLeafNode) getRoot();
 
         // if nodeToInsertTo's child is not a leaf node
         while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf()) {
