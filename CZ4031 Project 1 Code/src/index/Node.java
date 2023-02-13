@@ -61,6 +61,8 @@ public class Node {
         {
             this.setIsRoot(false);
             setparent.setIsRoot(true);
+            setparent.setIsLeaf(false);
+            testBplusTree.setRoot(setparent);
         }
         this.parent = setparent;
     }
@@ -197,10 +199,11 @@ public class Node {
                 this.setParent(newParent);
                 this.getParent().addChild(newNode);
 
-                if (this.getIsRoot()){
-                    this.setIsRoot(false);
-                    newParent.setIsRoot(true);
-                }
+                // if (this.getIsRoot()){
+                //     this.setIsRoot(false);
+                //     newParent.setIsRoot(true);
+                //     testBplusTree.setRoot(newParent);
+                // }
             }
 
         }

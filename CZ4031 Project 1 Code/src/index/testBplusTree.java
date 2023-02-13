@@ -23,10 +23,11 @@ public class testBplusTree{
 
   public void createFirstNode() {
         Node newNode = new Node();
-        setRoot(newNode);
+        
         newNode.setIsRoot(true);
         newNode.setIsLeaf(true);
-    }
+    setRoot(newNode);
+}
 
 
     public static Node createNode() {
@@ -45,9 +46,9 @@ public class testBplusTree{
     }
 
     public void insertKey(int key, Address add){
-        System.out.printf("\nInserting Key %d\n", key);
+        System.out.printf("\n\n\nInserting Key %d\n", key);
         nodeToInsertTo = searchNode(key);
-        System.out.printf("Keys of node to insert to %d\n", nodeToInsertTo.getKeys());
+        System.out.printf("Keys of node to insert to: %d\n", nodeToInsertTo.getKeys());
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
 
@@ -57,11 +58,12 @@ public class testBplusTree{
         Node root = getRoot();
         ArrayList<Integer> keys; 
 
-        System.out.printf("Searching Key %d\n",key);
+        System.out.printf("Searching Node for Key %d\n",key);
 
         //root is at first level
         if (root.getIsLeaf()){
             root = new LeafNode();
+            setRoot(root);
             System.out.printf("Found Node : Root\n");
             return (LeafNode)root;
         }

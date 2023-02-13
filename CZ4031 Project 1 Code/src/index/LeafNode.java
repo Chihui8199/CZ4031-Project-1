@@ -29,30 +29,49 @@ public class LeafNode extends Node {
         System.out.printf("Entered addRecord\n");
 
         // if node is empty, create new Arraylist and TreeMap
-        if (this.getKeys() == null){
+        if (this.keys == null){
             this.records = new ArrayList<Address>();
             this.records.add(add);
-            System.out.printf("Address %d %d added to key %d in ArrayList \n",add.getBlockId(),add.getOffset(),key);
+            this.records.add(add);
+            System.out.printf("Record added to Address ArrayList:");
+            System.out.print(this.records);
+            // System.out.printf("\nAddress %d %d added to key %d in ArrayList \n",add.getBlockId(),add.getOffset(),key);
             this.map = new TreeMap<Integer, ArrayList<Address>>();
             this.map.put(key,records);
-            System.out.printf("Record is added to key %d in TreeMap \n",key);
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+            System.out.print(this.map);
+
+            this.keys = new ArrayList<Integer>();
+            insertInOrder(this.keys, key);
+            System.out.printf("\nKey added to Key ArrayList:");
+            System.out.print(this.keys);
+            System.out.printf("\nCurrent node's Key Size:");
+            System.out.print(this.keys.size());
             return;
         }
 
-        // if node full or contains duplicates, add records into TreeMap
-        if (this.getKeys().size() < n || this.map.containsKey(key)){
+        else if (this.map.containsKey(key) || this.keys.contains(key)){
             this.records.add(add);
             this.map.put(key,records);
-        }
-
-        // if contains duplicate in ArrayList of keys, don't need to change ArrayList
-        if (this.keys.contains(key)){
-            return;
         }
 
         // else if keysize not full, insert the key into the ArrayList in sorted order
         else if (this.keys.size() < n){
+            this.records.add(add);
+            this.records.add(add);
+            System.out.printf("Record added to Address ArrayList:");
+            System.out.print(this.records);
+            // System.out.printf("\nAddress %d %d added to key %d in ArrayList \n",add.getBlockId(),add.getOffset(),key);
+
+            this.map.put(key,records);
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+            System.out.print(this.map);
+
             insertInOrder(this.keys, key);
+            System.out.printf("\nKey added to Key ArrayList:");
+            System.out.print(this.keys);
+            System.out.printf("\nCurrent node's Key Size:");
+            System.out.print(this.keys.size());
         }
 
         // else, the arraylist and treemap is full, split the node
@@ -71,6 +90,8 @@ public class LeafNode extends Node {
             i++; 
         } 
         list.add(i, num); 
+        System.out.printf("\nList:");
+        System.out.print(list);
     }
 
     // Set sibling node as nextNode
