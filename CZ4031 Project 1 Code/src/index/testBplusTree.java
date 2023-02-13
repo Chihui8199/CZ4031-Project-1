@@ -21,11 +21,11 @@ public class testBplusTree{
     public testBplusTree(){
     }
 
-  public static Node createFirstNode() {
+  public void createFirstNode() {
         Node newNode = new Node();
         setRoot(newNode);
+        newNode.setIsRoot(true);
         newNode.setIsLeaf(true);
-        return newNode;
     }
 
 
@@ -34,55 +34,63 @@ public class testBplusTree{
         return newNode;
     }
 
-
     public static void setRoot(Node root){
         rootNode = root;
+        rootNode.setIsRoot(true);
     }
 
     
-    public Node getRoot(){
+    public static Node getRoot(){
         return rootNode;
     }
 
-
     public void insertKey(int key, Address add){
+        System.out.printf("\nInserting Key %d\n", key);
         nodeToInsertTo = searchNode(key);
-        ((LeafNode) nodeToInsertTo).addKey(key, add);
+        System.out.printf("Keys of node to insert to %d\n", nodeToInsertTo.getKeys());
+        ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
 
 
     public LeafNode searchNode(int key){
         // first find the root node
         Node root = getRoot();
-        List<Integer> keys; 
+        ArrayList<Integer> keys; 
 
-        NonLeafNode nodeToInsertTo = (NonLeafNode)root;
+        System.out.printf("Searching Key %d\n",key);
 
-        while (!nodeToInsertTo.getChild(0).getIsLeaf()) {
+        //root is at first level
+        if (root.getIsLeaf()){
+            root = new LeafNode();
+            System.out.printf("Found Node : Root\n");
+            return (LeafNode)root;
+        }
+
+        else{
+            Node nodeToInsertTo = (NonLeafNode)root;
+
+        // if nodeToInsertTo's child is not a leaf node
+        while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf()) {
 
             keys = nodeToInsertTo.getKeys();
             
             for (int i = keys.size() -1; i >= 0; i--) {
 
-                if (((Node) keys).getKey(i) <= key) {
-
-                    nodeToInsertTo = (NonLeafNode) nodeToInsertTo.getChild(i+1);
+                if (nodeToInsertTo.getKey(i) <= key) {
+                    System.out.printf("nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
+                    nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(i+1);
                     break;
                 }
 
                 else if (i == 0)
-                    nodeToInsertTo = (NonLeafNode) nodeToInsertTo.getChild(0);
+                    nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(0);
             }
         }
 
-        keys = nodeToInsertTo.getKeys();
-        for (int i = keys.size() -1; i >= 0; i--) {
-
-            if (((Node) keys).getKey(i) <= key)
-                return (LeafNode) nodeToInsertTo.getChild(i+1);
+        return (LeafNode) nodeToInsertTo; 
         }
 
-        return (LeafNode) nodeToInsertTo.getChild(0);
+       
 }
 
             // Version 2: while current node is not leaf node: iterate through node levels

@@ -9,6 +9,7 @@ public class NonLeafNode extends Node{
     public NonLeafNode(){
         super();
         children = new ArrayList<Node>();
+        setIsLeaf(false);
     }
 
 

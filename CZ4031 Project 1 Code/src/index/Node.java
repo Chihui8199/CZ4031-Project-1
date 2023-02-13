@@ -22,16 +22,16 @@ public class Node {
     private boolean isLeaf;
     private boolean isRoot;
     private NonLeafNode parent;
-    protected ArrayList<Address> records;
-    protected TreeMap<Integer, ArrayList<Address>> map;
+    protected ArrayList<Integer> keys;
+    Node rootNode;
 
     public Node() {
+        this.rootNode = testBplusTree.getRoot();
         this.isLeaf = false;
         this.isRoot = false;
         this.nodeSize = NODE_SIZE;
         this.minLeafNodeSize = (int) (Math.floor((nodeSize + 1) / 2));
         this.minNonLeafNodeSize = (int) (Math.floor(nodeSize / 2));
-        this.map = new TreeMap<Integer, ArrayList<Address>>();
     }
 
     // check whether node is a leaf
@@ -54,6 +54,8 @@ public class Node {
         isRoot = isARoot;
     }
 
+
+
     public void setParent(NonLeafNode setparent){
         if (this.getIsRoot())
         {
@@ -69,18 +71,13 @@ public class Node {
 
 
    // get arraylist of all keys
-    public List<Integer> getKeys() {
-        Set<Integer> keySet = map.keySet();
-        List<Integer> keys = new ArrayList<>(keySet);
-        return keys;
+    public ArrayList<Integer> getKeys() {
+        return this.keys;
     }
 
     // get key at index within node
     public int getKey(int index) {
-        Set<Integer> keys = map.keySet();
-        List<Integer> keyList = new ArrayList<>(keys);
-        Integer key = keyList.get(index);
-        return key;
+        return this.keys.get(index);
     }
 
 
@@ -88,38 +85,66 @@ public class Node {
     // need to check if old node has parent node, if have, then connect the new one to it as well, if parent is full, call split again
     // if dont have, need to create new parent node which contains smallest key of new node
 
-    public void splitNode(int key, Address add) {
+    public void splitNode(int key, Address addr) {
 
-        int keyToBeAdded = key;
-
-
+        // Is a LeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         if (this.getIsLeaf()){
             //create a new node
             LeafNode newNode = new LeafNode();
-            ArrayList<Address> addToBeAdded = new ArrayList<Address>();
+            ArrayList<Address> addrToBeAdded = new ArrayList<Address>();
 
-            // ################# IMPORTANT #######################
+            // Handling the TreeMap-----------------------------------------------------------------------
             // add keyToBeAdded into the OLD NODES's treemap of keys (which contain arraylists of addresses), 
             // which is automatically sorted by keys, take the last minLeafNodeSize keys of the sorted treemap and insert into new Node's treemap
-            addToBeAdded.add(add);
-            newNode.map.put(keyToBeAdded, addToBeAdded);
-
-            int n = minLeafNodeSize;
+            ((LeafNode)this).records.add(addr);
+            ((LeafNode)this).map.put(key, addrToBeAdded);
+  
+            // Removing whats after the nth index into the new node
+            int n = NODE_SIZE - minLeafNodeSize;
             int i = 0;
             int fromKey = 0;
-            for (Map.Entry<Integer, ArrayList<Address>> entry : map.entrySet()) {
+
+            // 
+            for (Map.Entry<Integer, ArrayList<Address>> entry : ((LeafNode)this).map.entrySet()) {
                 if (i == n) {
                     fromKey = entry.getKey();
                     break;
                 }
                 i++;
             }
+
+
+            // newNode with correct TreeMap created by using SubMap which creates a treemap of keys after the nth index
+
+            TreeMap<Integer, ArrayList<Address>> lastnKeys = (TreeMap<Integer, ArrayList<Address>>) ((LeafNode)this).map.subMap(fromKey, false, ((LeafNode)this).map.lastKey(), true);
             
-            newNode.map = (TreeMap<Integer, ArrayList<Address>>) map.subMap(fromKey, false, map.lastKey(), true);
+            newNode.map = new TreeMap<Integer, ArrayList<Address>>(lastnKeys);
             
+            // removing keys after the nth index for old node
+            lastnKeys.clear();
+
+            
+            // Handling the ArrayList of keys-----------------------------------------------------------------------
+            insertInOrder(this.keys, key);
+
+            newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
+
+            this.keys.subList(n, this.keys.size()).clear();
+
+
+            // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists insert new node into this node
             if (this.getParent() != null){
-                this.getParent().addChild(newNode);
+
+                //Check if parent is full, if no
+                if(this.getParent().getKeys().size() != NODE_SIZE){
+                    
+                    //Add new node into old node's parent
+                    this.getParent().addChild(newNode);
+
+                } else {
+                    splitNode(key, null);
+                }
             }
             // else create new parent node, insert new node into this node
             else{
@@ -130,45 +155,71 @@ public class Node {
             
         }
 
+
+
+        // Is a NonLeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         else{
+
+
             //create a new node
             LeafNode newNode = new LeafNode();
-            ArrayList<Address> addToBeAdded = new ArrayList<Address>();
 
-            // ################# IMPORTANT #######################
-            // add keyToBeAdded into the OLD NODES's treemap of keys (which contain arraylists of addresses), 
-            // which is automatically sorted by keys, take the last minLeafNodeSize keys of the sorted treemap and insert into new Node's treemap
-            addToBeAdded.add(add);
-            newNode.map.put(keyToBeAdded, addToBeAdded);
 
-            int n = minNonLeafNodeSize;
-            int i = 0;
-            int fromKey = 0;
-            for (Map.Entry<Integer, ArrayList<Address>> entry : map.entrySet()) {
-                if (i == n) {
-                    fromKey = entry.getKey();
-                    break;
-                }
-                i++;
-            }
-            
-            newNode.map = (TreeMap<Integer, ArrayList<Address>>) map.subMap(fromKey, false, map.lastKey(), true);
-            
+            // Removing whats after the nth index into the new node
+            int n = NODE_SIZE - minLeafNodeSize;
+
+            // Handling the ArrayList of keys-----------------------------------------------------------------------
+            insertInOrder(this.keys, key);
+
+            newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
+
+            this.keys.subList(n, this.keys.size()).clear();
+
+
+
+            // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists insert new node into this node
             if (this.getParent() != null){
-                this.getParent().addChild(newNode);
+
+                //Check if parent is full, if no
+                if(this.getParent().getKeys().size() != NODE_SIZE){
+                    
+                    //Add new node into old node's parent
+                    this.getParent().addChild(newNode);
+
+                } else {
+                    splitNode(key, null);
+                }
             }
             // else create new parent node, insert new node into this node
             else{
                 NonLeafNode newParent = new NonLeafNode();
                 this.setParent(newParent);
                 this.getParent().addChild(newNode);
+
+                if (this.getIsRoot()){
+                    this.setIsRoot(false);
+                    newParent.setIsRoot(true);
+                }
             }
+
         }
 	}
 
+
+    public static void insertInOrder(ArrayList<Integer> list, int num) { 
+        int i = 0; 
+        
+        while (i < list.size() && list.get(i) < num) { 
+            i++; 
+        } 
+        list.add(i, num); 
+    }
+
+
+    
     public void printNode() {
-        Set<Integer> keys = map.keySet();
+        Set<Integer> keys = ((LeafNode)this).map.keySet();
         System.out.println(keys);
     }
 
