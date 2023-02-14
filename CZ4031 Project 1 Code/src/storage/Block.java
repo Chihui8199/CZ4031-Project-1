@@ -15,7 +15,7 @@ public class Block {
     //TODO: maybe move block size to some kind of constants file?
     public Block( int BLOCK_SIZE){
         this.curRecords = 0;
-        this.totalRecords = BLOCK_SIZE /Record.getRecordSize(); // total number of records that can fit into a block
+        this.totalRecords = BLOCK_SIZE / Record.getRecordSize(); // total number of records that can fit into a block
         this.recordsList = new Record[this.totalRecords];
     }
 
@@ -35,4 +35,22 @@ public class Block {
         // no space to insert record
         return -1;
     }
+
+
+    public boolean isFull() {
+        return curRecords >= recordsList.length;
+    }
+    // getRecord accepts an offset, and returns the physical_storage.Record at the offset in this block
+    public Record getRecord(int offset) {
+        return recordsList[offset];
+    }
+
+    // deleteRecord accepts an offset, deletes the physical_storage.Record at that offset in this block
+    public void deleteRecord(int offset) {
+        recordsList[offset] = null;
+        curRecords--;
+    }
+
+
+
 }

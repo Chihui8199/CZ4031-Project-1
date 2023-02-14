@@ -26,9 +26,10 @@ public class Record {
         return numVotes;
     }
 
-    // tConst is fixed-size 9 char, rating is float so 4 bytes and votes is integer so 4 bytes also
+    // Java: one char 2 Bytes
+    // tConst is fixed-size 10 char x 2Bytes = 20 Bytes, rating is float so 4 bytes and votes is integer so 4 bytes also
     public static int getRecordSize(){
-        return 4 + 4 + 9;
+        return 20 + 4 + 4;
     }
 
     @Override
