@@ -152,7 +152,7 @@ public class Node {
             newNode.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
 
             // removing keys after the nth index for old node
-            this.keys.subList(n, this.keys.size()).clear(); //<- TODO: HERE ISSUE
+            this.keys.subList(n, this.keys.size()).clear();
 
 
 
@@ -165,6 +165,7 @@ public class Node {
 
             // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists insert new node into this node
+            // TODO: i think its here
             if (this.getParent() != null){
 
                 System.out.printf("\n**Keys in parent node------------------------------\n");
@@ -190,7 +191,21 @@ public class Node {
                 newParent.addChild(this);
                 newParent.addChild(newNode);
                 newParent.keys.add(newNode.getKey(0));
-                this.setParent(newParent);
+                setParent(newParent);
+                // newNode.setParent(newParent); //<- adding this gave me an infinite loop
+
+                System.out.printf("\nKeys in new ParentNode's ArrayList:");
+                System.out.print(newParent.keys);
+
+                try{
+                    System.out.print("\nParent: ");
+                    System.out.print(this.getParent().keys);
+                    System.out.print("\nChild at index 0: ");
+                    System.out.print(this.getParent().getChild(0).getKeys());
+                    System.out.print("\nChild at index 1: ");
+                    System.out.print(this.getParent().getChild(1).getKeys());
+                    }
+                catch(Exception e){ System.out.print("No parent");}
             }
             
         }

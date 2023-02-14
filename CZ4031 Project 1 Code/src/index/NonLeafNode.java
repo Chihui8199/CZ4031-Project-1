@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class NonLeafNode extends Node{
     
     ArrayList<Node> children;
+    private Node parent;
 
     public NonLeafNode(){
         super();

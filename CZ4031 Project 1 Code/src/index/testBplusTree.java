@@ -85,8 +85,10 @@ public class testBplusTree{
                     break;
                 }
 
-                else if (i == 0)
+                else if (i == 0){
+                    System.out.printf("nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
                     nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(0);
+                }
             }
         }
 
@@ -99,11 +101,14 @@ public class testBplusTree{
         }
 
 
-        System.out.println("Keys!!!!!!!!!!!!!:");
+        System.out.print("Keys!!!!!!!!!!!!!: ");
         System.out.println(keys);
 
-        // System.out.println("CHILDREN^^^^^^^:");
-        // System.out.println(((NonLeafNode) nodeToInsertTo).getChild(0).keys);
+        System.out.println("Current Node Keys^^^^^^^:");
+        System.out.println(this.nodeToInsertTo.keys);
+
+        System.out.println("CHILDREN^^^^^^^:");
+        System.out.println(((NonLeafNode) nodeToInsertTo).getChild(0).keys);
 
 
         for (int i = keys.size() -1; i >= 0; i--) {
