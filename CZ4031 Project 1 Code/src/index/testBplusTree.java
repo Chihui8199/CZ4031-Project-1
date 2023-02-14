@@ -47,7 +47,9 @@ public class testBplusTree{
     }
 
     public void insertKey(int key, Address add){
-        System.out.printf("\n\n\nInserting Key %d\n", key);
+        System.out.printf("\n\n\nCurrent Root:");
+        System.out.println(testBplusTree.getRoot().getKeys());
+        System.out.printf("Inserting Key %d\n", key);
         nodeToInsertTo = searchNode(key);
         System.out.printf("Keys of node to insert to: ");
         System.out.print(nodeToInsertTo.getKeys());
@@ -72,24 +74,36 @@ public class testBplusTree{
 
         else{
             Node nodeToInsertTo = (NonLeafNode) getRoot();
+            System.out.printf("!!!!!!!!!!!!!!!!!!!!Root isLeaf:\n");
+            System.out.println(nodeToInsertTo.getIsLeaf());
 
         // if nodeToInsertTo's child is not a leaf node
-        while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf()) {
+        while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf() ) {
 
             keys = nodeToInsertTo.getKeys();
+            // loops through keys of nodeToInsertTo
             for (int i = keys.size() -1; i >= 0; i--) {
 
                 if (nodeToInsertTo.getKey(i) <= key) {
-                    System.out.printf("nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
+                    System.out.printf("if nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
                     nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(i+1);
+                    System.out.println(nodeToInsertTo.getKeys());
+                    System.out.println(nodeToInsertTo.getIsLeaf());
                     break;
                 }
 
                 else if (i == 0){
-                    System.out.printf("nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
+                    System.out.printf("else nodeToInsertTo = %d\n", nodeToInsertTo.getKey(i));
                     nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(0);
+                    System.out.println(nodeToInsertTo.getKeys());
                 }
             }
+            if (nodeToInsertTo.getIsLeaf()){
+                System.out.println("hellllookofsdcnfksdf");
+                System.out.println(nodeToInsertTo.getParent().getKeys());
+                break;
+            }
+            
         }
 
         
@@ -104,16 +118,17 @@ public class testBplusTree{
         System.out.print("Keys!!!!!!!!!!!!!: ");
         System.out.println(keys);
 
-        System.out.println("Current Node Keys^^^^^^^:");
-        System.out.println(this.nodeToInsertTo.keys);
 
-        System.out.println("CHILDREN^^^^^^^:");
-        System.out.println(((NonLeafNode) nodeToInsertTo).getChild(0).keys);
+        // System.out.println("CHILDREN^^^^^^^:");
+        // System.out.println(((NonLeafNode) nodeToInsertTo).getChild(0).keys);
 
 
         for (int i = keys.size() -1; i >= 0; i--) {
-            if (keys.get(i) <= key)
+            if (keys.get(i) <= key){   
+                System.out.printf("if nodeToInsertTo = %d\n",nodeToInsertTo.getKey(i));
+                System.out.println(nodeToInsertTo.getClass());
                 return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(i+1);
+            }
         }
 
         return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(0); 

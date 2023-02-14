@@ -59,6 +59,7 @@ public class Node {
 
 
     public void setParent(NonLeafNode setparent){
+        System.out.println("Setting parent (parent has these keys)" + setparent.getKeys());
         if (this.getIsRoot())
         {
             this.setIsRoot(false);
@@ -66,11 +67,18 @@ public class Node {
             setparent.setIsLeaf(false);
             testBplusTree.setRoot(setparent);
         }
+        else{
+            setparent.setIsLeaf(false);
+        }
         this.parent = setparent;
     }
 
     public NonLeafNode getParent(){
         return this.parent;
+    }
+
+    private void removeParent(NonLeafNode parent) {
+        this.parent = null;
     }
 
 
@@ -92,6 +100,8 @@ public class Node {
 
         // Is a LeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         if (this.getIsLeaf()){
+            System.out.print("\nROOT NODE IS:");
+            System.out.print(testBplusTree.getRoot().getKeys());
 
             System.out.println("\nSPLITTING LEAF NODE************************************************");
             //create a new node
@@ -165,24 +175,82 @@ public class Node {
 
             // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists insert new node into this node
-            // TODO: i think its here
+            
             if (this.getParent() != null){
 
                 System.out.printf("\n**Keys in parent node------------------------------\n");
                 System.out.print(this.getParent().keys);
 
                 //Check if parent is full, if no
-                if(this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE){
+                
+                if (this.getParent().keys.size() == NODE_SIZE ){
+                    System.out.printf("\n\nProblematic split\n");
+                    
+                    System.out.printf("\n\n############################THE CURRENT PARENT IS A ROOT:");
+                    System.out.println(this.getParent().getIsRoot());
+
+                    System.out.printf("\n Creating new root node when a nonleaf node is full\n");
+                    NonLeafNode new2Parent = new NonLeafNode();
+                    new2Parent.keys = new ArrayList<Integer>();
+                    new2Parent.addChild(this.getParent());
+                    
+
+                    if (this.getParent().getIsRoot()){
+                        this.getParent().setIsRoot(false);
+                        new2Parent.setIsRoot(true);
+                        testBplusTree.setRoot(new2Parent);
+                    }
+
+                    this.getParent().setParent(new2Parent);
+
+
+
+                    System.out.printf("\n Removing rightmost child when the nonleaf node is full\n");
+                    this.getParent().removeChild(this);
+                    this.getParent().keys.remove(this.keys.size());
+                    this.removeParent(this.getParent());
+                    
+                    System.out.printf("\n\nAdding key %d in NEW parent node\n",newNode.getKey(0));
+                    NonLeafNode newParent = new NonLeafNode();
+                    newParent.keys = new ArrayList<Integer>();
+                    newParent.addChild(this);
+                    newParent.addChild(newNode);
+                    newParent.keys.add(newNode.getKey(0));
+                    this.setParent(newParent);
+                    newNode.setParent(newParent); //<- adding this gave me an infinite loop
+
+                    System.out.printf("\nKeys in new ParentNode's ArrayList:");
+                    System.out.print(newParent.keys);
+
+
+                    new2Parent.addChild(newParent);
+                    new2Parent.keys.add(newParent.getKey(0));
+                    newNode.setParent(new2Parent); //<- adding this gave me an infinite loop
+                    System.out.printf("\nKeys in new2 ParentNode's ArrayList:");
+                    System.out.println(new2Parent.keys);
+
+                    System.out.println(newNode.keys);
+
+                    System.out.print(new2Parent.getChild(0).keys);
+                    System.out.println(new2Parent.getChild(1).keys);
+
+                    System.out.print(newParent.getChild(0).keys);
+                    System.out.print(newParent.getChild(1).keys);
+                    
+                }
+            
+                
+                else if(this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE){
                     System.out.printf("\n\nAdding key %d in OLD parent node\n",newNode.getKey(0));
                     //Add new node into old node's parent
                     this.getParent().addChild(newNode);
                     this.getParent().keys.add(newNode.getKey(0));
                     newNode.setParent(this.getParent());
 
-                } else {
-                    splitNode(key, null);
-                }
+                } 
+                
             }
+
             // else create new parent node, insert new and old node into this node
             else{
                 System.out.printf("\n\nAdding key %d in NEW parent node\n",newNode.getKey(0));
@@ -191,8 +259,8 @@ public class Node {
                 newParent.addChild(this);
                 newParent.addChild(newNode);
                 newParent.keys.add(newNode.getKey(0));
-                setParent(newParent);
-                // newNode.setParent(newParent); //<- adding this gave me an infinite loop
+                this.setParent(newParent);
+                newNode.setParent(newParent); //<- adding this gave me an infinite loop
 
                 System.out.printf("\nKeys in new ParentNode's ArrayList:");
                 System.out.print(newParent.keys);
@@ -227,7 +295,7 @@ public class Node {
              newNode.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
  
              // removing keys after the nth index for old node
-             this.keys.subList(n, this.keys.size()).clear(); //<- TODO: HERE ISSUE
+             this.keys.subList(n, this.keys.size()).clear();
  
  
  
@@ -252,9 +320,9 @@ public class Node {
                      this.getParent().addChild(newNode);
                      this.getParent().keys.add(newNode.getKey(0));
  
-                 } else {
-                     splitNode(key, null);
-                 }
+                 } else if (this.getParent().keys.size() == NODE_SIZE){
+                    splitNode(key, null);
+                }
              }
              // else create new parent node, insert new and old node into this node
              else{
@@ -312,6 +380,7 @@ public class Node {
 
         // }
 	}
+
 
 
     public static void insertInOrder(ArrayList<Integer> list, int num) { 
