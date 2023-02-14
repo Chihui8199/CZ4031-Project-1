@@ -167,7 +167,7 @@ public class Node {
             if (this.getParent() != null){
 
                 //Check if parent is full, if no
-                if(this.getParent().getKeys().size() != NODE_SIZE){
+                if(this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE){
                     
                     //Add new node into old node's parent
                     this.getParent().addChild(newNode);

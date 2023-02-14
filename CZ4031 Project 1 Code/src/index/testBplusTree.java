@@ -91,7 +91,7 @@ public class testBplusTree{
             }
         }
 
-        return (LeafNode) nodeToInsertTo; 
+        return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(0); 
         }
 
        
