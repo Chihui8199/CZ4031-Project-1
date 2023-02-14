@@ -77,8 +77,8 @@ public class LeafNode extends Node {
 
         // else, the arraylist and treemap is full, split the node
         else{
-            System.out.printf("**Keys in ArrayList Before Splitting\n");
-            System.out.print(this.keys);
+            System.out.printf("**Keys in ArrayList Before Splitting");
+            System.out.println(this.keys);
             this.splitNode(key, add);
             // System.out.print("node size capacity reached, could not insert key: ");
             // System.out.println(key);

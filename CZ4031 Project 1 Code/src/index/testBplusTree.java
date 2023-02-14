@@ -77,7 +77,6 @@ public class testBplusTree{
         while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf()) {
 
             keys = nodeToInsertTo.getKeys();
-            
             for (int i = keys.size() -1; i >= 0; i--) {
 
                 if (nodeToInsertTo.getKey(i) <= key) {
@@ -89,6 +88,27 @@ public class testBplusTree{
                 else if (i == 0)
                     nodeToInsertTo = ((NonLeafNode) nodeToInsertTo).getChild(0);
             }
+        }
+
+        
+        keys = nodeToInsertTo.getKeys();
+        if (keys == null)
+        {
+            System.out.println("executed null########################################");
+            return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(0); 
+        }
+
+
+        System.out.println("Keys!!!!!!!!!!!!!:");
+        System.out.println(keys);
+
+        // System.out.println("CHILDREN^^^^^^^:");
+        // System.out.println(((NonLeafNode) nodeToInsertTo).getChild(0).keys);
+
+
+        for (int i = keys.size() -1; i >= 0; i--) {
+            if (keys.get(i) <= key)
+                return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(i+1);
         }
 
         return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(0); 

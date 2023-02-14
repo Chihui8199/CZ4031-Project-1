@@ -92,11 +92,12 @@ public class Node {
 
         // Is a LeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         if (this.getIsLeaf()){
+
+            System.out.println("\nSPLITTING LEAF NODE************************************************");
             //create a new node
             LeafNode newNode = new LeafNode();
             //ArrayList<Address> addrToBeAdded = new ArrayList<Address>();
 
-            System.out.printf("\n\nSplitting LeafNode");
             // Handling the TreeMap-----------------------------------------------------------------------
             // add keyToBeAdded into the OLD NODES's treemap of keys (which contain arraylists of addresses), 
             // which is automatically sorted by keys, take the last minLeafNodeSize keys of the sorted treemap and insert into new Node's treemap
@@ -166,21 +167,30 @@ public class Node {
             // if parent node exists insert new node into this node
             if (this.getParent() != null){
 
+                System.out.printf("\n**Keys in parent node------------------------------\n");
+                System.out.print(this.getParent().keys);
+
                 //Check if parent is full, if no
                 if(this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE){
-                    
+                    System.out.printf("\n\nAdding key %d in OLD parent node\n",newNode.getKey(0));
                     //Add new node into old node's parent
                     this.getParent().addChild(newNode);
+                    this.getParent().keys.add(newNode.getKey(0));
+                    newNode.setParent(this.getParent());
 
                 } else {
                     splitNode(key, null);
                 }
             }
-            // else create new parent node, insert new node into this node
+            // else create new parent node, insert new and old node into this node
             else{
+                System.out.printf("\n\nAdding key %d in NEW parent node\n",newNode.getKey(0));
                 NonLeafNode newParent = new NonLeafNode();
+                newParent.keys = new ArrayList<Integer>();
+                newParent.addChild(this);
+                newParent.addChild(newNode);
+                newParent.keys.add(newNode.getKey(0));
                 this.setParent(newParent);
-                this.getParent().addChild(newNode);
             }
             
         }
@@ -189,52 +199,103 @@ public class Node {
 
         // Is a NonLeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         else{
+            System.out.println("\nSPLITTING NON LEAF NODE************************************************");
 
-
-            //create a new node
             LeafNode newNode = new LeafNode();
+             // Handling the ArrayList of keys-----------------------------------------------------------------------
+             int n = NODE_SIZE - minLeafNodeSize;
+             System.out.printf("\n**Keys in ArrayList Before Removing\n");
+             System.out.print(this.keys);
+             
+             insertInOrder(this.keys, key);
+ 
+             newNode.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
+ 
+             // removing keys after the nth index for old node
+             this.keys.subList(n, this.keys.size()).clear(); //<- TODO: HERE ISSUE
+ 
+ 
+ 
+             System.out.printf("\n**Keys in old Node's ArrayList After Removing\n");
+             System.out.print(this.keys);
+ 
+             System.out.printf("\n**Keys in new Node's ArrayList\n");
+             System.out.print(newNode.keys);
+ 
+ 
+             // Handling the parent node of the old node---------------------------------------------------------------
+             // if parent node exists insert new node into this node
+             if (this.getParent() != null){
+ 
+                 System.out.printf("\n**Keys in parent node------------------------------\n");
+                 System.out.print(this.getParent().keys);
+ 
+                 //Check if parent is full, if no
+                 if(this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE){
+                     System.out.printf("Adding key %d\n",newNode.getKey(0));
+                     //Add new node into old node's parent
+                     this.getParent().addChild(newNode);
+                     this.getParent().keys.add(newNode.getKey(0));
+ 
+                 } else {
+                     splitNode(key, null);
+                 }
+             }
+             // else create new parent node, insert new and old node into this node
+             else{
+                 NonLeafNode newParent = new NonLeafNode();
+                 newParent.keys = new ArrayList<Integer>();
+                 newParent.addChild(this);
+                 newParent.addChild(newNode);
+                 newParent.keys.add(newNode.getKey(0));
+                 this.setParent(newParent);
+             }
+            }
+
+            
+
+        //     //create a new node
+        //     LeafNode newNode = new LeafNode();
 
 
-            // Removing whats after the nth index into the new node
-            int n = NODE_SIZE - minLeafNodeSize;
+        //     // Removing whats after the nth index into the new node
+        //     int n = NODE_SIZE - minLeafNodeSize;
 
-            // Handling the ArrayList of keys-----------------------------------------------------------------------
-            insertInOrder(this.keys, key);
+        //     // Handling the ArrayList of keys-----------------------------------------------------------------------
+        //     insertInOrder(this.keys, key);
 
-            newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
+        //     newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
 
-            this.keys.subList(n, this.keys.size()).clear();
+        //     this.keys.subList(n, this.keys.size()).clear();
 
 
 
-            // Handling the parent node of the old node---------------------------------------------------------------
-            // if parent node exists insert new node into this node
-            if (this.getParent() != null){
+        //     // Handling the parent node of the old node---------------------------------------------------------------
+        //     // if parent node exists insert new node into this node
+        //     if (this.getParent() != null){
 
-                //Check if parent is full, if no
-                if(this.getParent().getKeys().size() != NODE_SIZE){
+        //         //Check if parent is full, if no
+        //         if(this.getParent().keys == null || this.getParent().getKeys().size() != NODE_SIZE){
                     
-                    //Add new node into old node's parent
-                    this.getParent().addChild(newNode);
+        //             //Add new node into old node's parent
+        //             this.getParent().addChild(newNode);
+        //             this.getParent().keys.add(newNode.getKey(0));
 
-                } else {
-                    splitNode(key, null);
-                }
-            }
-            // else create new parent node, insert new node into this node
-            else{
-                NonLeafNode newParent = new NonLeafNode();
-                this.setParent(newParent);
-                this.getParent().addChild(newNode);
+        //         } else {
+        //             splitNode(key, null);
+        //         }
+        //     }
+        //     // else create new parent node, insert new node into this node
+        //     else{
+        //         NonLeafNode newParent = new NonLeafNode();
+        //         newParent.keys = new ArrayList<Integer>();
+        //         newParent.addChild(this);
+        //         newParent.addChild(newNode);
+        //         newParent.keys.add(newNode.getKey(0));
+        //         this.setParent(newParent);
+        //     }
 
-                // if (this.getIsRoot()){
-                //     this.setIsRoot(false);
-                //     newParent.setIsRoot(true);
-                //     testBplusTree.setRoot(newParent);
-                // }
-            }
-
-        }
+        // }
 	}
 
 
