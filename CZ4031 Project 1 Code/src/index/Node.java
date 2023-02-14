@@ -94,17 +94,18 @@ public class Node {
         if (this.getIsLeaf()){
             //create a new node
             LeafNode newNode = new LeafNode();
-            ArrayList<Address> addrToBeAdded = new ArrayList<Address>();
+            //ArrayList<Address> addrToBeAdded = new ArrayList<Address>();
 
             System.out.printf("\n\nSplitting LeafNode");
             // Handling the TreeMap-----------------------------------------------------------------------
             // add keyToBeAdded into the OLD NODES's treemap of keys (which contain arraylists of addresses), 
             // which is automatically sorted by keys, take the last minLeafNodeSize keys of the sorted treemap and insert into new Node's treemap
+            ((LeafNode)this).records = new ArrayList<Address>();
             ((LeafNode)this).records.add(addr);
-            ((LeafNode)this).map.put(key, addrToBeAdded);
+            ((LeafNode)this).map.put(key, ((LeafNode)this).records);
   
             // Removing whats after the nth index into the new node
-            int n = NODE_SIZE - minLeafNodeSize;
+            int n = NODE_SIZE - minLeafNodeSize+1;
             int i = 0;
             int fromKey = 0;
 
@@ -119,7 +120,7 @@ public class Node {
 
             // newNode with correct TreeMap created by using SubMap which creates a treemap of keys after the nth index
 
-            System.out.printf("\nMap Before Removing\n");
+            System.out.printf("\nMap of old node Before Removing\n");
             System.out.print(((LeafNode)this).map);
 
             SortedMap<Integer, ArrayList<Address>> lastnKeys = 
@@ -134,8 +135,11 @@ public class Node {
             // removing keys after the nth index for old node
             lastnKeys.clear();
 
-            System.out.printf("\nMap After Removing\n");
+            System.out.printf("\nMap of old node After Removing\n");
             System.out.print(((LeafNode)this).map);
+
+            System.out.printf("\nMap of new node\n");
+            System.out.print(newNode.map);
 
             // Handling the ArrayList of keys-----------------------------------------------------------------------
             
@@ -144,15 +148,18 @@ public class Node {
             
             insertInOrder(this.keys, key);
 
-            newNode.keys = new ArrayList<Integer>(this.keys.subList(n+1, this.keys.size()));// after nth index
+            newNode.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
 
             // removing keys after the nth index for old node
             this.keys.subList(n, this.keys.size()).clear(); //<- TODO: HERE ISSUE
 
 
 
-            System.out.printf("\n**Keys in ArrayList After Removing\n");
+            System.out.printf("\n**Keys in old Node's ArrayList After Removing\n");
             System.out.print(this.keys);
+
+            System.out.printf("\n**Keys in new Node's ArrayList\n");
+            System.out.print(newNode.keys);
 
 
             // Handling the parent node of the old node---------------------------------------------------------------
