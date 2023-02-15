@@ -36,20 +36,20 @@ public class Parser {
     // TODO: each Record should be stored as a fixed length and is not now
     public static void readTSVFile(String filePath) {
         // try {
-            Address addr1 = new Address(6,7);
-            Address addr2 = new Address(8,9);
-            Address addr3 = new Address(4,5);
-            Address addr4 = new Address(2,2);
-            Address addr5 = new Address(7,7);
+            Address addr1 = new Address(1,1);
+            Address addr2 = new Address(2,2);
+            Address addr3 = new Address(3,3);
+            Address addr4 = new Address(4,4);
+            Address addr5 = new Address(5,5);
             testBplusTree tree = new testBplusTree(); 
             tree.createFirstNode();
             tree.insertKey(1,addr1);
             tree.insertKey(2,addr2);
-            tree.insertKey(3,addr2);
+            tree.insertKey(3,addr3);
             tree.insertKey(4,addr4);
             tree.insertKey(5,addr5);
             tree.insertKey(6,addr5);
-            tree.insertKey(1,addr1);
+            tree.insertKey(4,addr2);
             tree.insertKey(2,addr2);
             tree.insertKey(3,addr2);
             tree.insertKey(4,addr4);
@@ -59,17 +59,17 @@ public class Parser {
             tree.insertKey(8,addr3);
             tree.insertKey(9,addr4);
             tree.insertKey(10,addr2);
-            tree.insertKey(11,addr4);
-            tree.insertKey(12,addr3);
-            tree.insertKey(13,addr2);
-            tree.insertKey(14,addr4);
-            tree.insertKey(15,addr3);
-            tree.insertKey(16,addr2);
-            tree.insertKey(17,addr4);
-            tree.insertKey(18,addr3);
-            tree.insertKey(19,addr2);
-            tree.insertKey(20,addr4);
-            tree.insertKey(21,addr3);
+            // tree.insertKey(11,addr4);
+            // tree.insertKey(12,addr3);
+            // tree.insertKey(13,addr2);
+            // tree.insertKey(14,addr4);
+            // tree.insertKey(15,addr3);
+            // tree.insertKey(16,addr2);
+            // tree.insertKey(17,addr4);
+            // tree.insertKey(18,addr3);
+            // tree.insertKey(19,addr2);
+            // tree.insertKey(20,addr4);
+            // tree.insertKey(21,addr3);
             
 
             // // initialise database

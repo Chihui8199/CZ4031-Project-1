@@ -137,7 +137,7 @@ public class Node {
             SortedMap<Integer, ArrayList<Address>> lastnKeys = 
                         ((LeafNode)this).map.subMap(
                         fromKey, 
-                        false, 
+                        true, 
                         ((LeafNode)this).map.lastKey(), 
                         true);
 
@@ -153,18 +153,13 @@ public class Node {
             System.out.print(newNode.map);
 
             // Handling the ArrayList of keys-----------------------------------------------------------------------
-            
-            System.out.printf("\n**Keys in ArrayList Before Removing\n");
-            System.out.print(this.keys);
-            
+                    
             insertInOrder(this.keys, key);
 
             newNode.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
 
             // removing keys after the nth index for old node
             this.keys.subList(n, this.keys.size()).clear();
-
-
 
             System.out.printf("\n**Keys in old Node's ArrayList After Removing\n");
             System.out.print(this.keys);

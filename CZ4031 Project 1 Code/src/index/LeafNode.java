@@ -27,11 +27,15 @@ public class LeafNode extends Node {
         int n = NODE_SIZE;
 
         System.out.printf("\nEntered addRecord\n");
+        // System.out.printf("Current Key: ");
+        // System.out.println(key);
+        // System.out.printf("Current Address: ");
+        // System.out.println(add);
 
         // if node is empty, create new Arraylist and TreeMap
         if (this.keys == null){
             this.records = new ArrayList<Address>();
-            this.records.add(add);
+            // this.records.add(add);
             this.records.add(add);
             System.out.printf("Record added to Address ArrayList:");
             System.out.print(this.records);
@@ -50,15 +54,30 @@ public class LeafNode extends Node {
             return;
         }
 
-        else if (this.map.containsKey(key) || this.keys.contains(key)){
-            this.records.add(add);
-            this.map.put(key,records);
+        else if (this.map.containsKey(key) || this.keys.contains(key)){ 
+            
+            // Get the existing list of records associated with the key
+            ArrayList<Address> existingRecords = map.get(key);
+
+            // Append the new record to the existing list of records
+            existingRecords.add(add);
+
+            // Put the updated list of records back into the map
+            map.put(key,existingRecords);
+
+            System.out.printf("Current Key: ");
+            System.out.println(key);
+            System.out.printf("Current Address: ");
+            System.out.println(add);
+            
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+            System.out.print(this.map);
         }
 
         // else if keysize not full, insert the key into the ArrayList in sorted order
         else if (this.keys.size() < n){
             this.records = new ArrayList<Address>();
-            this.records.add(add);
+            // this.records.add(add);
             this.records.add(add);
             System.out.printf("Record added to Address ArrayList:");
             System.out.print(this.records);
@@ -86,6 +105,19 @@ public class LeafNode extends Node {
             System.out.print(this.keys);
         }
 
+    }
+
+    public Node findNodeByKey(int key, Node rootNode) {
+        if (rootNode == null) {
+            return null;    
+        }
+        for (Node child : ((NonLeafNode)rootNode).getChildren()) {
+            Node foundNode = findNodeByKey(key, child);
+            if (foundNode != null) {
+                return foundNode;
+            }
+        }
+        return null;
     }
 
     public static void insertInOrder(ArrayList<Integer> list, int num) { 
