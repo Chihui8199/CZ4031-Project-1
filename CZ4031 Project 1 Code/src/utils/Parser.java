@@ -50,7 +50,7 @@ public class Parser {
             tree.insertKey(5,addr5);
             tree.insertKey(6,addr5);
             tree.insertKey(4,addr2);
-            tree.insertKey(2,addr2);
+            tree.insertKey(2,addr1);
             tree.insertKey(3,addr2);
             tree.insertKey(4,addr4);
             tree.insertKey(5,addr5);
@@ -59,11 +59,11 @@ public class Parser {
             tree.insertKey(8,addr3);
             tree.insertKey(9,addr4);
             tree.insertKey(10,addr2);
-            // tree.insertKey(11,addr4);
-            // tree.insertKey(12,addr3);
-            // tree.insertKey(13,addr2);
-            // tree.insertKey(14,addr4);
-            // tree.insertKey(15,addr3);
+            tree.insertKey(11,addr4);
+            tree.insertKey(12,addr3);
+            tree.insertKey(13,addr2);
+            tree.insertKey(14,addr4);
+            tree.insertKey(15,addr3);
             // tree.insertKey(16,addr2);
             // tree.insertKey(17,addr4);
             // tree.insertKey(18,addr3);
