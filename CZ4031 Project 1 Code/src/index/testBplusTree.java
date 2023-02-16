@@ -134,36 +134,27 @@ public class testBplusTree {
                 "\n\n\nDeleting Key %d --------------------------------------------------------------------------------------------------------------------\n",
                 key);
 
-        /*
-         * 1) Start at the root and go up to leaf node containing the key K
-         * 2) Find the node n on the path from the root to the leaf node containing K
-         * A. If n is root, remove K
-         * a. if root has mode than one keys, done
-         * b. if root has only K
-         * i) if any of its child node can lend a node
-         * Borrow key from the child and adjust child links
-         * ii) Otherwise merge the children nodes it will be new root
-         * c. If n is a internal node, remove K
-         * i) If n has at lease ceil(m/2) keys, done!
-         * ii) If n has less than ceil(m/2) keys,
-         * If a sibling can lend a key,
-         * Borrow key from the sibling and adjust keys in n and the parent node
-         * Adjust child links
-         * Else
-         * Merge n with its sibling
-         * Adjust child links
-         * d. If n is a leaf node, remove K
-         * i) If n has at least ceil(M/2) elements, done!
-         * In case the smallest key is deleted, push up the next key
-         * ii) If n has less than ceil(m/2) elements
-         * If the sibling can lend a key
-         * Borrow key from a sibling and adjust keys in n and its parent node
-         * Else
-         * Merge n and its sibling
-         * Adjust keys in the parent node
-         * 
-         * 
-         */
+        LeafNode leafNode = searchNode(key);
+
+        // Invalid key- not found: nothing to delete
+        if (leafNode == null) {
+            System.out.println("The key is not found in the tree. No node is deleted.");
+            return;
+        }
+
+        // Check if it is the only record in the node
+        if (leafNode.getKeys().size() == 1) {
+            if (leafNode.getIsRoot()) {
+                setRoot(null);
+                System.out.println("Root Node has been deleted. The entire B+ tree is no longer in memory");
+            }
+            // else{
+            // If not leaf node, remove it from it's parent node
+            // determine index of leaf notde from the parent's list of children
+            // remove leaf node from list of children
+            // need do some sibling thing
+            // }
+        }
 
         // Deletion on B+ Tree (Case 3):
         // 1. Neither adjacent sibling can be used
