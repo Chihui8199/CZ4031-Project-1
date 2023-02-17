@@ -249,7 +249,29 @@ public class Node {
                     newNode.setParent(this.getParent());
 
                 } 
+
+                System.out.printf("\nCurrent Children Size:\n");
+                System.out.println(this.getParent().getChildren().size());
+                for (int k = 0; k < this.getParent().getChildren().size(); k++) {
+                    System.out.print(this.getParent().getChild(k).keys);
+                    System.out.print(" ");
+                }
                 
+                // Check if children nodes are full or more, if yes, split them
+                if (this.getIsLeaf() != true || this.getParent().getChildren().size() > NODE_SIZE + 1){
+    
+                    System.out.printf("\n\n\nChildren nodes are full, splitting them\n");
+    
+                    System.out.printf("\nKeys in parent node:\n");
+                    System.out.print(this.getParent().keys);
+                 
+    
+                    // Splitting the children nodes
+                    splitNode(this.getKey(minLeafNodeSize), null);
+    
+                }
+                
+
             }
 
             // else parent node does not exist, have to create new parent node, insert new and old node into this node
