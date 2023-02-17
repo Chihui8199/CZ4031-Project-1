@@ -10,11 +10,20 @@ public class LeafNode extends Node {
     protected TreeMap<Integer, ArrayList<Address>> map;
     protected ArrayList<Address> records;
     private LeafNode nextNode;
+    private LeafNode next;
 
     public LeafNode() {
         super();
         setIsLeaf(true);
         setNext(null);
+    }
+
+    public LeafNode getNext() {
+        return next;
+    }
+
+    public void setNext(LeafNode next) {
+        this.next = next;
     }
 
     // Add record into both TreeMap and ArrayList of keys

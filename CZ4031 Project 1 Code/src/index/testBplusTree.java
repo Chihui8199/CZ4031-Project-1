@@ -30,7 +30,9 @@ public class testBplusTree {
 
     public static void setRoot(Node root) {
         rootNode = root;
-        rootNode.setIsRoot(true);
+        if (rootNode != null) {
+            rootNode.setIsRoot(true);
+        }
     }
 
     public static Node getRoot() {
