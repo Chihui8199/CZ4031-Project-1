@@ -239,7 +239,6 @@ public class Node {
 
                     System.out.printf("\n******************KEYS IN ROOT: ");
                     System.out.println(testBplusTree.getRoot().getKeys());
-                    System.out.println(testBplusTree.getRoot().getKeys());
                 }
             
                 // else if parent is not full or parent is empty

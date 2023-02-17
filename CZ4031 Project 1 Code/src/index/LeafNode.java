@@ -16,6 +16,17 @@ public class LeafNode extends Node {
         setNext(null);
     }
 
+    // TODO: Have to create function for findRecord
+    public ArrayList<Address> findRecord(int key){
+        if (this.map.containsKey(key) || this.keys.contains(key)){ 
+            
+            // Get the existing list of records associated with the key
+            ArrayList<Address> existingRecords = map.get(key);
+            return existingRecords;
+    }
+        return null;
+    }
+
     // Add record into both TreeMap and ArrayList of keys
     public void addRecord(int key, Address add) {
         int n = NODE_SIZE;
