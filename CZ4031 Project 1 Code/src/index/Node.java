@@ -218,8 +218,8 @@ public class Node {
 
 
                     new2Parent.addChild(newParent);
-                    new2Parent.keys.add(newParent.getKey(0));
-                    newNode.setParent(new2Parent);
+                    new2Parent.keys.add(this.getKey(0));
+                    
                     System.out.printf("\nKeys in new2Parent Node's ArrayList: ");
                     System.out.println(new2Parent.keys);
 
@@ -235,7 +235,11 @@ public class Node {
                     System.out.print(newParent.getChild(0).keys);
                     System.out.printf("\nKeys in newParent's index 1 child: ");
                     System.out.println(newParent.getChild(1).keys);
-                    
+
+
+                    System.out.printf("\n******************KEYS IN ROOT: ");
+                    System.out.println(testBplusTree.getRoot().getKeys());
+                    System.out.println(testBplusTree.getRoot().getKeys());
                 }
             
                 // else if parent is not full or parent is empty
