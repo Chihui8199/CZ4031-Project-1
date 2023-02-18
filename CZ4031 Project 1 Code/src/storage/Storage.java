@@ -76,6 +76,20 @@ public class Storage {
         return new Address(blockPtr, offset);
     }
 
+    /**
+     * Retrieves the Block from Disk and uses the offset to return the record stored there.
+     * @param add The add representing the location on disk of the record to be retrieved.
+     * @return The record stored at the corresponding add in the disk.
+     */
+    // public Record getRecord(Address add) {
+    //     int blockId = add.getBlockId();
+    //     Block block = blocks[blockId];
+    //     return block.getRecord(add.getOffset());
+    // }
+    // public int getNumberBlockUsed(){
+    //     return filledBlocks.size();
+    // }
+
     public void printDatabaseInfo(){
         System.out.println(String.format("Total Memory Size: %f MB", (float) memdiskSize/Math.pow(10, 6)));
         System.out.println(String.format("Size of Each Block: %d B", 200));

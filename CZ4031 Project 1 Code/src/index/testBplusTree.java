@@ -55,7 +55,8 @@ public class testBplusTree{
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
 
-    public ArrayList<Address> searchKey(int key){
+    // TODO: remove this --> we can do this recusively. Look at searchKey function
+    public ArrayList<Address> searchKey2(int key){
         System.out.printf("\n\nSearching Key %d --------------------------------------------------------------------------------------------------------------------\n", key);
         System.out.printf("Current Root:");
         System.out.println(testBplusTree.getRoot().getKeys());
@@ -138,7 +139,7 @@ public class testBplusTree{
         return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(0); 
         }
        
-}
+    }
 
 
     
@@ -146,39 +147,78 @@ public class testBplusTree{
     public static void deleteNode(){
 
 
-// Deletion on B+ Tree (Case 3):
-// 1. Neither adjacent sibling can be used
-// 2. Merge the two nodes, deleting one of them
-// 3. Adjust the parent
-// 4. If the parent is not full enough, recursively apply the deletion algorithm in parent 
-    
-// Deletion on B+ Tree (Case 2):
-// 1. An adjacent sibling can be used
-
-// Deletion on B+ Tree (Case 1):
-// 1. No changes required
-
-
-
-}
-
-    public static void searchValue(){
-// 1. Start from the root node
-// 2. While the node is not a leaf node
-//      1) We decide which pointer to follow based on the target key and the keys maintained in the node
-//      2) Follow the pointer, arrive a new node
-// 3. Decide which pointer to follow
-// 4. Follow the pointer and retrieve the data block
     }
 
-    public static void searchRange(){
-// 1. Start from the root node
-// 2. While the node is not a leaf node
-//      1) We decide which pointer to follow based on the target key (the lower bound of the range) and the keys maintained in the node
-//      2) Follow the pointer, arrive a new node
-// 3. Decide which pointer to follow
-// 4. Follow the pointer and retrieve the data block
-// 5. Keep scanning the following leaf nodes and the data blocks pointed by the pointers in the leaf nodes until we reach the upper bound of the range
+    /**
+     * Wrapper function on top of searchNode
+     * @param key
+     * @return ArrayList of Address in the database
+     */
+    public ArrayList<Address> keySearch(int key) {
+        return(searchValue(this.rootNode, key));
+    }
+
+    public ArrayList<Address> searchValue(Node node, int key){
+        // Find if key is within the rootNode
+        if (node.getIsLeaf()){
+            int ptrIdx = node.searchKey(key, false);
+            if (ptrIdx >= 0 && ptrIdx < node.getKeySize() && key == node.getKeyAt(ptrIdx)) {
+                return ((LeafNode) node).getAddressesForKey(key); // returns an ArrayList of addresses
+            }
+            return null;
+        }
+        // If it's an internal node, descend until we reach a leaf node to find the results
+        else{
+            int ptrIdx = node.searchKey(key, false); // looks for the upper bound of the key in the node
+            NonLeafNode nonLeafNode = (NonLeafNode) node;  // descends into childnode at the corresponding ptr
+            Node childNode = ((NonLeafNode) node).getChild(ptrIdx);
+            return (searchValue(childNode, key));
+        }
+    }
+
+    /**
+     * Wrapper Function of rangeSearch
+     * @param minKey min key of the range (inclusive)
+     * @param maxKey max key of the range (inclusive)
+     */
+    public ArrayList<Address> rangeSearch(int minKey, int maxKey) {
+        return searchValuesInRange(minKey, maxKey, this.rootNode);
+    }
+
+    public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
+        int ptrIdx;
+        ArrayList<Address> resultList = new ArrayList<>();
+        if(node.getIsLeaf()){
+            ptrIdx = node.searchKey(minKey, false); //if minKey is in key array, get key index
+            LeafNode leaf = (LeafNode)node;
+            while (true){
+                if(ptrIdx == leaf.getKeySize()) {
+                    // check if we have a next node to load.
+                    // Assuming that next node return a null if there's no next node
+                    if(leaf.getNext() == null)
+                        break; // if not just break the loop
+                    // Traverse to the next node and start searching from index 0 within the next node again
+                    leaf = (LeafNode)(leaf.getNext());
+
+                    ptrIdx = 0;
+                    if(ptrIdx >= leaf.getKeySize())
+                        throw new IllegalStateException("Range search found a node with 0 keys");
+                }
+                if(leaf.getKey(ptrIdx) > maxKey)
+                    break;
+                int key = leaf.getKey(ptrIdx);
+                resultList.addAll(leaf.getAddressesForKey(key));
+                ptrIdx++;
+            }
+            return (resultList.size()>0 ? resultList : null);
+        }
+        else {
+            ptrIdx =  node.searchKey(minKey, true);
+            // Descend into leaf node
+            NonLeafNode nonLeafNode = (NonLeafNode) node;
+            Node childNode = ((NonLeafNode) node).getChild(ptrIdx);
+            return(searchValuesInRange(minKey, maxKey, childNode));
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import java.io.*;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import storage.Address;
@@ -46,18 +47,18 @@ public class Parser {
 
             tree.insertKey(1,addr1);
             tree.insertKey(4,addr2);
+            tree.insertKey(4, addr3);
             tree.insertKey(7,addr3);
-            tree.insertKey(10,addr4);
-            tree.insertKey(17,addr5);
+            tree.insertKey(10,addr4); //
+            tree.insertKey(17,addr5); //
             tree.insertKey(21,addr5);
             tree.insertKey(31,addr2);
             tree.insertKey(25,addr1);
-            tree.insertKey(19,addr2);
-            tree.insertKey(20,addr4);
+            tree.insertKey(19,addr2); //
+            tree.insertKey(20,addr4); //
             tree.insertKey(28,addr5);
             tree.insertKey(42,addr5);
 
-            
             
             // 1 4 7 10 17 21 31 25 19 20 28 42
 
@@ -83,8 +84,11 @@ public class Parser {
             // tree.insertKey(14,addr4);
             // tree.insertKey(15,addr3);
 
-            // System.out.print(tree.searchKey(4));
-
+            System.out.print(tree.searchKey2(4));
+            System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
+            System.out.printf("\nKEY SEARCH %s", tree.keySearch(1));
+            System.out.printf("\nRANGE SEARCH %s", tree.rangeSearch(1, 4));
+            //System.out.printf("\nFINDING " + tree.keySearch(4));
             // tree.insertKey(16,addr2);
             // tree.insertKey(17,addr4);
             // tree.insertKey(18,addr3);

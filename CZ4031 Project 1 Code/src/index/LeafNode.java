@@ -26,6 +26,9 @@ public class LeafNode extends Node {
     }
         return null;
     }
+    public ArrayList<Address> getAddressesForKey(int key){
+       return map.get(key);
+    }
 
     // Add record into both TreeMap and ArrayList of keys
     public void addRecord(int key, Address add) {
@@ -103,6 +106,10 @@ public class LeafNode extends Node {
 
     }
 
+    Address getPointerAt(int index) {
+        return records.get(index);
+    }
+
     public Node findNodeByKey(int key, Node rootNode) {
         if (rootNode == null) {
             return null;    
@@ -134,5 +141,10 @@ public class LeafNode extends Node {
 
     public LeafNode getNext(){
         return nextNode;
+    }
+
+    @Override
+    public String toString() {
+       return String.format("\n--------LEAF NODE CONTAINS: map %s records %s, nextNode ------------\n", map.toString(), records, nextNode);
     }
 }

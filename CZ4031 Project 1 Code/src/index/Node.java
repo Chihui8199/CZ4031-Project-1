@@ -91,6 +91,50 @@ public class Node {
         return this.keys.get(index);
     }
 
+    public int getKeySize(){
+        return keys.size();
+    }
+
+    /**
+     * Binary search stored keys. (wrapper of the recursive function)
+     *
+     * @param key        key to search
+     * @param upperBound if set true, search for upperBound
+     *                   if set false, search for exactKey
+     * @return if key exists & upperBound false, the index of the key
+     * else, the index of upper bound of the key.
+     */
+    int searchKey(int key, boolean upperBound) {
+        int keyCount = keys.size();
+        return searchKey(0, keyCount-1, key, upperBound);
+    }
+
+    private int searchKey(int left, int right, int key, boolean upperBound) {
+        if (left > right)
+            return left;
+
+        int middle = (left + right) / 2;
+        int middleKey = getKeyAt(middle);
+
+        if (middleKey < key) {
+            return searchKey(middle + 1, right, key, upperBound);
+        } else if (middleKey > key) {
+            return searchKey(left, middle - 1, key, upperBound);
+        } else { // this is equal
+//            while (middle < keyCount && keys.get(middle) == key)
+              while (middle < keys.size() && keys.get(middle) == key)
+                middle++;
+            if (!upperBound)
+                return middle-1;
+            return middle;
+        }
+    }
+
+    int getKeyAt(int index) {
+        return keys.get(index);
+    }
+
+
 
     // need to make sure that old node that was split, keys are updated correctly. same for new node as well
     // need to check if old node has parent node, if have, then connect the new one to it as well, if parent is full, call split again
