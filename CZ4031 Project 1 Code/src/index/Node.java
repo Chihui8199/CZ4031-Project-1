@@ -168,6 +168,13 @@ public class Node {
             System.out.print(newNode.keys);
 
 
+            if (((LeafNode)this).getNext() != null){
+                newNode.setNext(((LeafNode)this).getNext());
+            }
+            ((LeafNode)this).setNext(newNode);
+            System.out.printf("\nKeys in old Node's next node:\n");
+            System.out.print(((LeafNode)this).getNext().getKeys());
+
             // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists, insert new node into this node
             
@@ -178,6 +185,10 @@ public class Node {
 
                 //Check if parent is full, if yes
                 if (this.getParent().keys.size() == NODE_SIZE ){
+
+                    // if the newNode is added to the end 
+                    if (newNode.getNext()==null){
+                    
                     System.out.printf("\n\nProblematic split\n");
                     
                     System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
@@ -239,6 +250,74 @@ public class Node {
 
                     System.out.printf("\n******************KEYS IN ROOT: ");
                     System.out.println(testBplusTree.getRoot().getKeys());
+                    }
+
+                    else{
+                    
+                    System.out.printf("\n\nProblematic split\n");
+                    
+                    System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
+                    System.out.println(this.getParent().getIsRoot());
+                    
+                    // First, create a new node, new2Parent, that will be the parent of the current's node parent
+                    NonLeafNode new2Parent = new NonLeafNode();
+                    new2Parent.keys = new ArrayList<Integer>();
+                    new2Parent.addChild(this.getParent());
+                    
+                    // if the current node's parent is a root, new2Parent which is its parent will become a root
+                    if (this.getParent().getIsRoot()){
+                        this.getParent().setIsRoot(false);
+                        new2Parent.setIsRoot(true);
+                        testBplusTree.setRoot(new2Parent);
+                    }
+                    this.getParent().setParent(new2Parent);
+
+
+                    //Removing rightmost child as well as the rightmost key
+                    this.getParent().removeChild(newNode.getNext());
+                    this.getParent().keys.remove(this.keys.size());
+                    
+
+                    System.out.printf("\n\nAdding key %d in NEW parent node\n",newNode.getKey(0));
+                    NonLeafNode newParent = new NonLeafNode();
+                    newParent.keys = new ArrayList<Integer>();
+                    newParent.addChild(newNode);
+                    newParent.addChild(newNode.getNext());
+                    newParent.keys.add(newNode.getNext().getKey(0));
+                    newNode.setParent(newParent);
+                    newNode.getNext().setParent(newParent); 
+
+
+                    System.out.printf("\nKeys in newParent Node's ArrayList: ");
+                    System.out.println(newParent.keys);
+
+
+                    new2Parent.addChild(newParent);
+                    new2Parent.keys.add(newNode.getKey(0));
+                    newParent.setParent(new2Parent);
+                    
+                    System.out.printf("\nKeys in new2Parent Node's ArrayList: ");
+                    System.out.println(new2Parent.keys);
+
+                    System.out.printf("\nKeys in new Node's ArrayList: ");
+                    System.out.println(newNode.keys);
+
+                    System.out.printf("\nKeys in new2Parent's index 0 child: ");
+                    System.out.print(new2Parent.getChild(0).keys);
+                    System.out.printf("\nKeys in new2Parent's index 1 child: ");
+                    System.out.println(new2Parent.getChild(1).keys);
+
+                    System.out.printf("\nKeys in newParent's index 0 child: ");
+                    System.out.print(newParent.getChild(0).keys);
+                    System.out.printf("\nKeys in newParent's index 1 child: ");
+                    System.out.println(newParent.getChild(1).keys);
+
+
+                    System.out.printf("\n******************KEYS IN ROOT: ");
+                    System.out.println(testBplusTree.getRoot().getKeys());
+                    }
+
+                    
                 }
             
                 // else if parent is not full or parent is empty
@@ -257,19 +336,19 @@ public class Node {
                     System.out.print(" ");
                 }
                 
-                // Check if children nodes are full or more, if yes, split them
-                if (this.getIsLeaf() != true || this.getParent().getChildren().size() > NODE_SIZE + 1){
+                // // Check if children nodes are full or more, if yes, split them
+                // if (this.getIsLeaf() != true || this.getParent().getChildren().size() > NODE_SIZE + 1){
     
-                    System.out.printf("\n\n\nChildren nodes are full, splitting them\n");
+                //     System.out.printf("\n\n\nChildren nodes are full, splitting them\n");
     
-                    System.out.printf("\nKeys in parent node:\n");
-                    System.out.print(this.getParent().keys);
+                //     System.out.printf("\nKeys in parent node:\n");
+                //     System.out.print(this.getParent().keys);
                  
     
-                    // Splitting the children nodes
-                    splitNode(this.getKey(minLeafNodeSize), null);
+                //     // Splitting the children nodes
+                //     splitNode(this.getKey(minLeafNodeSize), null);
     
-                }
+                // }
                 
 
             }

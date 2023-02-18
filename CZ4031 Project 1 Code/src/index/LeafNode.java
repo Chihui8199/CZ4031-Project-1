@@ -131,4 +131,8 @@ public class LeafNode extends Node {
     public void setNext(LeafNode sibling) {
         nextNode = sibling;
     }
+
+    public LeafNode getNext(){
+        return nextNode;
+    }
 }
