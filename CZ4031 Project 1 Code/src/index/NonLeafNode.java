@@ -1,5 +1,7 @@
 package index;
 
+import storage.Address;
+
 import java.util.ArrayList;
 
 public class NonLeafNode extends Node{
@@ -11,7 +13,6 @@ public class NonLeafNode extends Node{
         children = new ArrayList<Node>();
         setIsLeaf(false);
     }
-
 
     public ArrayList<Node> getChildren(){
         return children;

@@ -77,7 +77,7 @@ public class testBplusTree{
         System.out.printf("Searching Node for Key %d\n",key);
 
         // If root is a leaf node, means its still at the first node, hence return the rootNode
-        if (testBplusTree.rootNode.getIsLeaf()){
+        if (testBplusTree.rootNode.isLeaf()){
             setRoot(rootNode);
             System.out.printf("Found Node : Root\n");
             return (LeafNode)rootNode;
@@ -89,7 +89,7 @@ public class testBplusTree{
 
             // Starting from the rootnode, keep looping (going down) until the current node's (nodeToInsertTo) child is a leaf node 
 
-            while (!((NonLeafNode) nodeToInsertTo).getChild(0).getIsLeaf() ) {
+            while (!((NonLeafNode) nodeToInsertTo).getChild(0).isLeaf() ) {
 
                 keys = nodeToInsertTo.getKeys();
 
@@ -113,7 +113,7 @@ public class testBplusTree{
                     }
                 }
 
-                if (nodeToInsertTo.getIsLeaf()){
+                if (nodeToInsertTo.isLeaf()){
                     break;
                 }
             
@@ -141,12 +141,68 @@ public class testBplusTree{
        
     }
 
+    /**
+     * Wrapper function for deleting node
+     * @param key key to be deleted
+     * @return AraryList of address to be removed from database
+     */
+    public ArrayList<Address> deleteKey(int key) {
+        return (deleteNode(rootNode, null, -1, -1, key));
+    }
 
-    
+    public ArrayList<Address> deleteNode(Node node, NonLeafNode parent, int parentPointerIndex, int parentKeyIndex, int key){
+        ArrayList<Address> addOfRecToDelete = new ArrayList<>();
+        if(node.isLeaf()){
+            // search for the key to delete
+            LeafNode leaf = (LeafNode) node;
+            int keyIdx = node.searchKey(key, false);
+            if ((keyIdx == leaf.getKeySize()) || (key != leaf.getKeyAt(keyIdx)))
+                return null;
+            // found keys to delete: 1) remove key in map 2) remove idx in records
+            addOfRecToDelete.addAll(leaf.getAddressesForKey(key));
+            leaf.removeKeyAt(keyIdx);
+        } else {
+            // traverse to leaf node to find records to delete
+            NonLeafNode nonLeafNode = (NonLeafNode) node;
+            int ptrIdx = node.searchKey(key, true);
+            int keyIdx = ptrIdx - 1;
 
-    public static void deleteNode(){
+            // read the next level node (read action will be recorded in the next level)
+            Node next = nonLeafNode.getChild(ptrIdx);
+            addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key);
+        }
+        // carry out re-balancing tree magic if needed
+        // TODO: change this to the calculated node_size once finalised
+        // TODO: handle deletion in main memory
+        if (node.isUnderUtilized(NODE_SIZE)) {
+            // needs merging if underutilized
+            handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
+        }
+        return addOfRecToDelete;
+    }
 
+    /**
+     * This function is used to handle the redistribution of nodes (i.e borrowing from sibiling) or merging or nodes
+     * @param underUtilizedNode current tree is wrong and current node is underutlised
+     * @param parent
+     * @param parentPointerIndex
+     * @param parentKeyIndex
+     */
 
+    private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex, int parentKeyIndex) throws IllegalStateException {
+        if (parent == null){
+            //TODO:
+            //handleInvalidRoot(parent);
+        }
+        else if(underUtilizedNode.isLeaf()){
+           //TODO
+            //handleInvalidLeaf(underUtilizedNode);
+        } else if (underUtilizedNode.isNonLeaf()){
+            //TODO:
+            //handleInvalidNonLeaf(underUtilizedNode);
+        } else{
+            throw new IllegalStateException("state is wrong!");
+        }
     }
 
     /**
@@ -154,13 +210,13 @@ public class testBplusTree{
      * @param key
      * @return ArrayList of Address in the database
      */
-    public ArrayList<Address> keySearch(int key) {
+    public ArrayList<Address> searchKey(int key) {
         return(searchValue(this.rootNode, key));
     }
 
     public ArrayList<Address> searchValue(Node node, int key){
         // Find if key is within the rootNode
-        if (node.getIsLeaf()){
+        if (node.isLeaf()){
             int ptrIdx = node.searchKey(key, false);
             if (ptrIdx >= 0 && ptrIdx < node.getKeySize() && key == node.getKeyAt(ptrIdx)) {
                 return ((LeafNode) node).getAddressesForKey(key); // returns an ArrayList of addresses
@@ -188,7 +244,7 @@ public class testBplusTree{
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
-        if(node.getIsLeaf()){
+        if(node.isLeaf()){
             ptrIdx = node.searchKey(minKey, false); //if minKey is in key array, get key index
             LeafNode leaf = (LeafNode)node;
             while (true){

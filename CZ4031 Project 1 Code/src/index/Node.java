@@ -35,8 +35,12 @@ public class Node {
     }
 
     // check whether node is a leaf
-    public boolean getIsLeaf() {
+    public boolean isLeaf() {
         return isLeaf;
+    }
+
+    public boolean isNonLeaf() {
+        return !isLeaf;
     }
 
     // set node as leaf
@@ -45,7 +49,7 @@ public class Node {
     }
 
     // check whether node is as root
-    public boolean getIsRoot() {
+    public boolean isRoot() {
         return isRoot;
     }
 
@@ -59,7 +63,7 @@ public class Node {
         System.out.println("Setting parent (parent has these keys)" + setparent.getKeys());
         
         // If the current node was a root, have to make sure its parent will also be a root, and also have to setIsRoot to false for the current node
-        if (this.getIsRoot())
+        if (this.isRoot())
         {
             this.setIsRoot(false);
             setparent.setIsRoot(true);
@@ -120,8 +124,7 @@ public class Node {
             return searchKey(middle + 1, right, key, upperBound);
         } else if (middleKey > key) {
             return searchKey(left, middle - 1, key, upperBound);
-        } else { // this is equal
-//            while (middle < keyCount && keys.get(middle) == key)
+        } else {
               while (middle < keys.size() && keys.get(middle) == key)
                 middle++;
             if (!upperBound)
@@ -134,7 +137,24 @@ public class Node {
         return keys.get(index);
     }
 
+    int removeKeyAt(int index) {
+        return keys.remove(index);
+    }
 
+    /**
+     * Check if there a need to re-balance the tree
+     * @param maxKeyCount
+     * @return
+     */
+    boolean isUnderUtilized(int maxKeyCount) {
+        if (isRoot()) { // root
+            return (this.getKeySize() < 1);
+        } else if (isLeaf()) { // leaf
+            return (this.getKeySize() < (maxKeyCount + 1) / 2);
+        } else { // non-leaf
+            return (this.getKeySize() < maxKeyCount / 2);
+        }
+    }
 
     // need to make sure that old node that was split, keys are updated correctly. same for new node as well
     // need to check if old node has parent node, if have, then connect the new one to it as well, if parent is full, call split again
@@ -143,7 +163,7 @@ public class Node {
 
         // Is a LeafNode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         // for leaf node, need to handle both ArrayList of keys and TreeMap of keys and value pairs (which are keys and the Address Arraylist respectively)
-        if (this.getIsLeaf()){
+        if (this.isLeaf()){
             System.out.print("\nROOT NODE IS:");
             System.out.print(testBplusTree.getRoot().getKeys());
 
@@ -236,7 +256,7 @@ public class Node {
                     System.out.printf("\n\nProblematic split\n");
                     
                     System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
-                    System.out.println(this.getParent().getIsRoot());
+                    System.out.println(this.getParent().isRoot());
                     
                     // First, create a new node, new2Parent, that will be the parent of the current's node parent
                     NonLeafNode new2Parent = new NonLeafNode();
@@ -244,7 +264,7 @@ public class Node {
                     new2Parent.addChild(this.getParent());
                     
                     // if the current node's parent is a root, new2Parent which is its parent will become a root
-                    if (this.getParent().getIsRoot()){
+                    if (this.getParent().isRoot()){
                         this.getParent().setIsRoot(false);
                         new2Parent.setIsRoot(true);
                         testBplusTree.setRoot(new2Parent);
@@ -301,7 +321,7 @@ public class Node {
                     System.out.printf("\n\nProblematic split\n");
                     
                     System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
-                    System.out.println(this.getParent().getIsRoot());
+                    System.out.println(this.getParent().isRoot());
                     
                     // First, create a new node, new2Parent, that will be the parent of the current's node parent
                     NonLeafNode new2Parent = new NonLeafNode();
@@ -309,7 +329,7 @@ public class Node {
                     new2Parent.addChild(this.getParent());
                     
                     // if the current node's parent is a root, new2Parent which is its parent will become a root
-                    if (this.getParent().getIsRoot()){
+                    if (this.getParent().isRoot()){
                         this.getParent().setIsRoot(false);
                         new2Parent.setIsRoot(true);
                         testBplusTree.setRoot(new2Parent);

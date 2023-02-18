@@ -3,17 +3,10 @@ package utils;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-
-import java.io.*;
-
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import storage.Address;
 import storage.Record;
-import storage.Storage;
 
 import index.*;
 
@@ -86,8 +79,10 @@ public class Parser {
 
             System.out.print(tree.searchKey2(4));
             System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
-            System.out.printf("\nKEY SEARCH %s", tree.keySearch(1));
+            System.out.printf("\nKEY SEARCH %s", tree.searchKey(1));
             System.out.printf("\nRANGE SEARCH %s", tree.rangeSearch(1, 4));
+            System.out.printf("\nDELETION %s", tree.deleteKey(100));
+            System.out.printf("\nFIND IF DELETED KEY STILL EXISTS %s", tree.searchKey(4));
             //System.out.printf("\nFINDING " + tree.keySearch(4));
             // tree.insertKey(16,addr2);
             // tree.insertKey(17,addr4);

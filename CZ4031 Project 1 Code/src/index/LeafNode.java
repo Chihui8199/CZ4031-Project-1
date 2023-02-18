@@ -106,9 +106,6 @@ public class LeafNode extends Node {
 
     }
 
-    Address getPointerAt(int index) {
-        return records.get(index);
-    }
 
     public Node findNodeByKey(int key, Node rootNode) {
         if (rootNode == null) {
@@ -141,6 +138,11 @@ public class LeafNode extends Node {
 
     public LeafNode getNext(){
         return nextNode;
+    }
+
+
+    Address removeAddPointerAt(int index) {
+        return records.remove(index);
     }
 
     @Override
