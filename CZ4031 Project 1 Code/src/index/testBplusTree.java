@@ -191,6 +191,7 @@ public class testBplusTree {
         // TODO: handle deletion in main memory
         if (node.isUnderUtilized(NODE_SIZE)) {
             // needs merging if underutilized
+            System.out.print("------------------------Rebalancing tree now ---------------------------\n\n");
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
         }
 
@@ -211,12 +212,27 @@ public class testBplusTree {
     private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex,
             int parentKeyIndex) throws IllegalStateException {
         if (parent == null) {
+            //Empty Tree
             // handleInvalidNonLeaf(underUtilizedNode);
+            if(underUtilizedNode.isLeaf()){ // Only node in B+ Tree - Root
+                ((LeafNode)underUtilizedNode).clear();
+                System.out.print("There exist no B+ Tree now.\n");
+            }
+            else{
+                NonLeafNode nonLeafRoot = (NonLeafNode) underUtilizedNode;
+                Node newRoot = nonLeafRoot.getChild(0);
+                newRoot.setParent(null);
+                rootNode = newRoot;
+            }
         } else if (underUtilizedNode.isLeaf()) {
             // handleInvalidNonLeaf(underUtilizedNode);
+            System.out.print("Tree rebalanced now.sdasdasd");
         } else if (underUtilizedNode.isNonLeaf()) {
             // TODO:
             // handleInvalidNonLeaf(underUtilizedNode);
+            System.out.print("Treeeeeeeeeeeeeeee rebalanced now.");
+    
+
         } else {
             throw new IllegalStateException("state is wrong!");
         }

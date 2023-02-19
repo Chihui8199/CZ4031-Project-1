@@ -525,10 +525,6 @@ public class Node {
     public void updateKey(int keyIndex, int newKey) {
         if (keyIndex >= 0 && keyIndex < keys.size()) {
             keys.set(keyIndex, newKey);
-        } else {
-            // Add a custom error message here to help with debugging
-            System.err.println("Invalid key index: " + keyIndex);
-        }
     }
     
 
