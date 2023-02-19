@@ -163,4 +163,9 @@ public class LeafNode extends Node {
         return map;
     }
 
+    public void clear() {
+        keys.clear();
+        records.clear();
+    }
+    
 }
