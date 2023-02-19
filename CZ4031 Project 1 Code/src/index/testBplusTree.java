@@ -231,7 +231,6 @@ public class testBplusTree {
             // TODO:
             // handleInvalidNonLeaf(underUtilizedNode);
             System.out.print("Treeeeeeeeeeeeeeee rebalanced now.");
-    
 
         } else {
             throw new IllegalStateException("state is wrong!");

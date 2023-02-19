@@ -75,10 +75,10 @@ public class Parser {
         // tree.insertKey(13,addr2);
         // tree.insertKey(14,addr4);
         // tree.insertKey(15,addr3);
-        System.out.print(tree.searchKey2(10));
-        System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
-        System.out.printf("\nKEY SEARCH %s", tree.searchKey(10));
-        System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(10, 10));
+        // System.out.print(tree.searchKey2(10));
+        // System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
+        // System.out.printf("\nKEY SEARCH %s", tree.searchKey(10));
+        // System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(10, 10));
         tree.printBPlusTree(testBplusTree.getRoot());
         System.out.printf("\nDELETION %s\n", tree.deleteKey(1));
         // System.out.printf("\nFIND IF DELETED KEY STILL EXISTS %s",
