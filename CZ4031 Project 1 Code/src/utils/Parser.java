@@ -43,13 +43,13 @@ public class Parser {
         tree.insertKey(3, addr3);
         tree.insertKey(7, addr3);
         tree.insertKey(10, addr4); //
-        // tree.insertKey(17, addr5); //
-        // tree.insertKey(21, addr5);
-        // tree.insertKey(31, addr2);
-        // tree.insertKey(25, addr1);
-        // tree.insertKey(19, addr2); //
-        // tree.insertKey(20, addr4); //
-        // tree.insertKey(28, addr5);
+        tree.insertKey(17, addr5); //
+        tree.insertKey(21, addr5);
+        tree.insertKey(31, addr2);
+        tree.insertKey(25, addr1);
+        tree.insertKey(19, addr2); //
+        tree.insertKey(20, addr4); //
+        tree.insertKey(28, addr5);
         // tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
@@ -81,10 +81,10 @@ public class Parser {
         // System.out.printf("\nKEY SEARCH %s", tree.searchKey(1));
         // System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(1, 4));
         tree.printBPlusTree(testBplusTree.getRoot());
-        System.out.printf("\nDELETION %s\n", tree.deleteKey(4));
+        System.out.printf("\nDELETION %s\n", tree.deleteKey(1));
         // System.out.printf("\nFIND IF DELETED KEY STILL EXISTS %s",
         // tree.searchKey(4));
-        System.out.printf("\n\n\n");
+        System.out.printf("\n\n\n New Tree");
         tree.printBPlusTree(testBplusTree.getRoot());
         // tree.insertKey(16,addr2);
         // tree.insertKey(17,addr4);
