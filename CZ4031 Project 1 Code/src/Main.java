@@ -10,7 +10,7 @@ public class Main {
     String fileName = dir +File.separator + "CZ4031 Project 1 Code" +File.separator + "src" + File.separator + "utils" + File.separator + "data"
         + File.separator + "data.tsv";
     System.out.print(fileName);
-    // String fileName = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1
+   //String fileName = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1 Code/src/utils/data/data.tsv";
     // Code/src/utils/data/data.tsv";
     // Read in the data and write to db
     File file = new File(fileName);

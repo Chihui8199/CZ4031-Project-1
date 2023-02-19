@@ -24,6 +24,7 @@ public class Node {
     private NonLeafNode parent;
     protected ArrayList<Integer> keys;
     Node rootNode;
+    private int nodeIndex;
 
     public Node() {
         this.rootNode = testBplusTree.getRoot();
@@ -42,6 +43,7 @@ public class Node {
     public boolean isNonLeaf() {
         return !isLeaf;
     }
+
 
     // set node as leaf
     public void setIsLeaf(boolean isALeaf) {
@@ -78,8 +80,16 @@ public class Node {
         return this.parent;
     }
 
+    public void removeKeyAtLast(){
+        this.keys.remove(keys.size()-1);
+    }
+
     private void removeParent(NonLeafNode parent) {
         this.parent = null;
+    }
+
+    void replaceKeyAt(int index, int key) {
+        keys.set(index, key);
     }
 
     // get arraylist of all keys
@@ -96,6 +106,12 @@ public class Node {
         return keys.size();
     }
 
+    public int getLastKey(){
+        return this.keys.get(keys.size() - 1);
+    }
+    public int getFirstKey(){
+        return this.keys.get(0);
+    }
     /**
      * Binary search stored keys. (wrapper of the recursive function)
      *
@@ -110,7 +126,12 @@ public class Node {
         return searchKey(0, keyCount - 1, key, upperBound);
     }
 
-    private int searchKey(int left, int right, int key, boolean upperBound) {
+    int removeKeyAt(int index) {
+        return keys.remove(index);
+    }
+
+
+        private int searchKey(int left, int right, int key, boolean upperBound) {
         if (left > right)
             return left;
 
@@ -134,13 +155,23 @@ public class Node {
         return keys.get(index);
     }
 
-    int removeKeyAt(int index) {
-        return keys.remove(index);
+    public int getLastIdx(){
+        int lastIdx = keys.size()-1;
+        return lastIdx;
     }
+
+
+    void insertKeyAt(int index, int key) {
+        System.out.printf("--> NODE CLASS: KEYS %s: ADD\n", keys);
+        keys.add(index, key);
+        System.out.printf("--> NODE CLASS: KEYS %s: ADD\n", keys);
+
+    }
+
 
     /**
      * Check if there a need to re-balance the tree
-     * 
+     *
      * @param maxKeyCount
      * @return
      */
@@ -525,8 +556,14 @@ public class Node {
     public void updateKey(int keyIndex, int newKey) {
         if (keyIndex >= 0 && keyIndex < keys.size()) {
             keys.set(keyIndex, newKey);
+        }
     }
-    
 
-}
+    public boolean isAbleToGiveOneKey(int maxKeyCount){
+        if (isNonLeaf())
+            return getKeySize() - 1 >= maxKeyCount / 2;
+        return getKeySize() - 1 >= (maxKeyCount + 1) / 2;
+
+    }
+
 }
