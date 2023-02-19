@@ -40,6 +40,7 @@ public class Parser {
 
         tree.insertKey(1, addr1);
         tree.insertKey(4, addr2);
+        tree.insertKey(3, addr3);
         tree.insertKey(7, addr3);
         tree.insertKey(10, addr4); //
         tree.insertKey(17, addr5); //
@@ -48,35 +49,16 @@ public class Parser {
         tree.insertKey(25, addr1);
         tree.insertKey(19, addr2); //
         tree.insertKey(20, addr4); //
-        System.out.printf("\n\n\n");
-        tree.printBPlusTree(testBplusTree.getRoot());
-
         tree.insertKey(28, addr5);
-        tree.insertKey(42, addr5);
-        tree.insertKey(43, addr4);
-        tree.insertKey(44, addr4);
-        tree.insertKey(45, addr4);
-        tree.insertKey(46, addr4);
-        tree.insertKey(47, addr4);
-        tree.insertKey(48, addr4);
-        tree.insertKey(55, addr4);
-        tree.insertKey(56, addr5);
-        tree.insertKey(57, addr5);
-        tree.insertKey(58, addr5);
-        tree.insertKey(59, addr5);
-        tree.insertKey(49, addr4);
-        tree.insertKey(50, addr5);
-        tree.insertKey(51, addr4);
-        tree.insertKey(52, addr4);
-        tree.insertKey(53, addr4);
-        tree.insertKey(54, addr4);
-    
-
+        // tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
 
-
-    
+        // tree.insertKey(1,addr1);
+        // tree.insertKey(2,addr2);
+        // tree.insertKey(3,addr3);
+        // tree.insertKey(4,addr4);
+        // tree.insertKey(5,addr5);
         // tree.insertKey(6,addr5);
         // tree.insertKey(4,addr2);
         // tree.insertKey(2,addr1);
@@ -86,31 +68,31 @@ public class Parser {
         // tree.insertKey(6,addr5);
         // tree.insertKey(7,addr1);
         // tree.insertKey(8,addr3);
-        tree.insertKey(9,addr4);
-        tree.insertKey(10,addr2);
-        tree.insertKey(11,addr4);
-        tree.insertKey(12,addr3);
-        tree.insertKey(13,addr2);
-        tree.insertKey(14,addr4);
-        tree.insertKey(15,addr3);
+        // tree.insertKey(9,addr4);
+        // tree.insertKey(10,addr2);
+        // tree.insertKey(11,addr4);
+        // tree.insertKey(12,addr3);
+        // tree.insertKey(13,addr2);
+        // tree.insertKey(14,addr4);
+        // tree.insertKey(15,addr3);
 
-        // System.out.print(tree.searchKey2(1));
-        System.out.printf("\n\n++++PRINTING NEW SEARCH METHODS++++\n");
+        System.out.print(tree.searchKey2(1));
+        System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
         // System.out.printf("\nKEY SEARCH %s", tree.searchKey(1));
         // System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(1, 4));
-        // tree.printBPlusTree(testBplusTree.getRoot());
-        // System.out.printf("\nDELETION %s\n", tree.deleteKey(4));
+        tree.printBPlusTree(testBplusTree.getRoot());
+        System.out.printf("\nDELETION %s\n", tree.deleteKey(1));
         // System.out.printf("\nFIND IF DELETED KEY STILL EXISTS %s",
         // tree.searchKey(4));
-
-        tree.insertKey(16,addr2);
-        tree.insertKey(17,addr4);
-        tree.insertKey(18,addr3);
-        tree.insertKey(19,addr2);
-        tree.insertKey(20,addr4);
-        tree.insertKey(21,addr3);
-        System.out.printf("\n\n\n");
+        System.out.printf("\n\n\n New Tree");
         tree.printBPlusTree(testBplusTree.getRoot());
+        // tree.insertKey(16,addr2);
+        // tree.insertKey(17,addr4);
+        // tree.insertKey(18,addr3);
+        // tree.insertKey(19,addr2);
+        // tree.insertKey(20,addr4);
+        // tree.insertKey(21,addr3);
+
         // // initialise database
         // Storage db = new Storage(MAX_DISK_CAPACITY, BLOCK_SIZE);
         // // start loading data
