@@ -44,6 +44,7 @@ public class Parser {
         tree.insertKey(7, addr3);
         tree.insertKey(10, addr4); //
         tree.insertKey(17, addr5); //
+        tree.insertKey(11, addr5);
         // tree.insertKey(21, addr5);
         // tree.insertKey(31, addr2);
         // tree.insertKey(25, addr1);
@@ -54,7 +55,7 @@ public class Parser {
         tree.insertKey(8, addr5);
         tree.insertKey(9, addr5);
         tree.insertKey(5, addr5);
-        tree.insertKey(6, addr5);\
+        tree.insertKey(6, addr5);
         
 
         // 1 4 7 10 17 21 31 25 19 20 28 42

@@ -377,19 +377,27 @@ public class Node {
                         System.out.println(testBplusTree.getRoot().getKeys());
                     }
 
-                    else {
-
-                        
-                        System.out.printf("\n\nProblematic split HEREEEE\n");
+                    else {          
+                        System.out.printf("\n\nProblematic split for non-end\n");
 
                         System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
                         System.out.println(this.getParent().isRoot());
+
+                        System.out.printf("\n\nCurrent Keys:");
+
+                        System.out.println(this.getKeys());
+                        Node currentNode = this;
+                        currentNode.printNode();
+                        newNode.printNode();
+                        NonLeafNode currentParent = currentNode.getParent();
+
+                        System.out.print(currentNode.getParent().getKeys());
 
                         // First, create a new node, new2Parent, that will be the parent of the
                         // current's node parent
                         NonLeafNode new2Parent = new NonLeafNode();
                         new2Parent.keys = new ArrayList<Integer>();
-                        new2Parent.addChild(this.getParent());
+                        // new2Parent.addChild(currentParent);
 
                         // if the current node's parent is a root, new2Parent which is its parent will
                         // become a root
@@ -398,46 +406,116 @@ public class Node {
                             new2Parent.setIsRoot(true);
                             testBplusTree.setRoot(new2Parent);
                         }
-                        this.getParent().setParent(new2Parent);
+                        // currentParent.setParent(new2Parent);
 
-                        // Removing rightmost child as well as the rightmost key
-                        this.getParent().removeChild(newNode.getNext());
-                        this.getParent().keys.remove(this.keys.size());
+                        try {
+                            int index= 0;
+                            for (Node iNode : currentParent.getChildren()) {
+                                System.out.printf("\nNode:");
+                                System.out.print(index);
+                                iNode.printNode();
+                                currentNode.printNode();
+                                if (iNode == currentNode ) {
+                                    currentParent.getChildren().add(index+1,newNode);
+                                    currentParent.keys.add(index,newNode.getKey(0));
+                                    break;
+                                }
+                                index++;
+                            }
+                            System.out.printf("\n\nCurrent Parent Node's keys");
+                            System.out.println(currentParent.getKeys());
+                            System.out.println(currentParent.getKeySize());
+                            System.out.println(currentParent.getChildren());
+    
+                        } catch (Exception e) {
+                            // e.printStackTrace();
+                        }
 
-                        System.out.printf("\n\nAdding key %d in NEW parent node\n", newNode.getKey(0));
+                        // if (currentParent.getKeySize() > NODE_SIZE) {
+                        //     splitNode(currentParent.getKeyAt(minLeafNodeSize), null);
+                        // }
+                        
+
+                        /******   Removing rightmost children as well as the rightmost keys  ******/
+                        System.out.printf("\n\nCurrent Parent's keys BEFORE removing: ");
+                        System.out.println(currentParent.keys);
+
+                        // currentParent.removeChild(newNode.getNext());
+                        // currentParent.keys.remove(this.keys.size());
+
                         NonLeafNode newParent = new NonLeafNode();
                         newParent.keys = new ArrayList<Integer>();
-                        newParent.addChild(newNode);
-                        newParent.addChild(newNode.getNext());
-                        newParent.keys.add(newNode.getNext().getKey(0));
-                        newNode.setParent(newParent);
-                        newNode.getNext().setParent(newParent);
 
-                        System.out.printf("\nKeys in newParent Node's ArrayList: ");
+                        int keyToSplitAt = currentParent.getKeyAt(minLeafNodeSize);
+                        for ( int k = currentParent.getKeySize(); k > 0; k--) {
+                            if ( currentParent.getKeyAt(k-1) < keyToSplitAt ) {
+                                break; // We've reached the end of the keys to move
+                            }
+                            int currentKey = currentParent.getKeyAt(k-1);
+                            // System.out.print(currentKey);
+                            Node currentChild = currentParent.getChild(k);
+                            // System.out.print(currentChild);
+                            
+                            // Add node and keys to new parent
+                            System.out.printf("\nAdding key %d in NEW parent node\n\n", currentKey);
+                            newParent.children.add(0,currentChild);
+                            newParent.keys.add(0,currentKey);
+                            currentChild.setParent(newParent);
+
+                            // Remove node and keys from old parent
+                            currentParent.removeChild(currentParent.getChild(k));
+                            currentParent.keys.remove(k-1);
+
+                        }
+
+                        System.out.printf("\n\nCurrent Parent's keys AFTER removing: ");
+                        System.out.println(currentParent.keys);
+                        System.out.printf("\n\nNew Parent's keys AFTER adding: ");
                         System.out.println(newParent.keys);
 
+                        // System.out.printf("\n\nAdding key %d in NEW parent node\n", newNode.getKey(0));
+                        // NonLeafNode newParent = new NonLeafNode();
+                        // newParent.keys = new ArrayList<Integer>();
+                        // newParent.addChild(newNode);
+                        // newParent.addChild(newNode.getNext());
+                        // newParent.keys.add(newNode.getNext().getKey(0));
+                        // newNode.setParent(newParent);
+                        // newNode.getNext().setParent(newParent);
+
+                        // System.out.printf("\nKeys in newParent Node's ArrayList: ");
+                        // System.out.println(newParent.keys);
+
+                        
+                        // Add both parents into new2parent
+                        new2Parent.addChild(currentParent);
                         new2Parent.addChild(newParent);
-                        new2Parent.keys.add(newNode.getKey(0));
+
+                        // Remove the first key from the new parent and add it to new2Parent
+                        new2Parent.keys.add(newParent.getKeyAt(0));
+                        newParent.keys.remove(0);
+
+                        // Set the new2Parent as the parent of the current parent and the new parent
+                        currentParent.setParent(new2Parent);
                         newParent.setParent(new2Parent);
 
-                        System.out.printf("\nKeys in new2Parent Node's ArrayList: ");
-                        System.out.println(new2Parent.keys);
+                        // System.out.printf("\nKeys in new2Parent Node's ArrayList: ");
+                        // System.out.println(new2Parent.keys);
 
-                        System.out.printf("\nKeys in new Node's ArrayList: ");
-                        System.out.println(newNode.keys);
+                        // System.out.printf("\nKeys in new Node's ArrayList: ");
+                        // System.out.println(newNode.keys);
 
-                        System.out.printf("\nKeys in new2Parent's index 0 child: ");
-                        System.out.print(new2Parent.getChild(0).keys);
-                        System.out.printf("\nKeys in new2Parent's index 1 child: ");
-                        System.out.println(new2Parent.getChild(1).keys);
+                        // System.out.printf("\nKeys in new2Parent's index 0 child: ");
+                        // System.out.print(new2Parent.getChild(0).keys);
+                        // System.out.printf("\nKeys in new2Parent's index 1 child: ");
+                        // System.out.println(new2Parent.getChild(1).keys);
 
-                        System.out.printf("\nKeys in newParent's index 0 child: ");
-                        System.out.print(newParent.getChild(0).keys);
-                        System.out.printf("\nKeys in newParent's index 1 child: ");
-                        System.out.println(newParent.getChild(1).keys);
+                        // System.out.printf("\nKeys in newParent's index 0 child: ");
+                        // System.out.print(newParent.getChild(0).keys);
+                        // System.out.printf("\nKeys in newParent's index 1 child: ");
+                        // System.out.println(newParent.getChild(1).keys);
 
-                        System.out.printf("\n******************KEYS IN ROOT: ");
-                        System.out.println(testBplusTree.getRoot().getKeys());
+                        // System.out.printf("\n******************KEYS IN ROOT: ");
+                        // System.out.println(testBplusTree.getRoot().getKeys());
                     }
 
                     
