@@ -2,6 +2,8 @@
 package index;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
+
 import storage.Address;
 
 public class testBplusTree {
@@ -161,15 +163,19 @@ public class testBplusTree {
     public ArrayList<Address> deleteNode(Node node, NonLeafNode parent, int parentPointerIndex, int parentKeyIndex,
             int key) {
         ArrayList<Address> addOfRecToDelete = new ArrayList<>();
+
         if (node.isLeaf()) {
             // search for the key to delete
             LeafNode leaf = (LeafNode) node;
             int keyIdx = node.searchKey(key, false);
-            if ((keyIdx == leaf.getKeySize()) || (key != leaf.getKeyAt(keyIdx)))
+            if ((keyIdx == leaf.getKeySize()) || (key != leaf.getKeyAt(keyIdx))) {
                 return null;
+            }
+
             // found keys to delete: 1) remove key in map 2) remove idx in records
             addOfRecToDelete.addAll(leaf.getAddressesForKey(key));
             leaf.removeKeyAt(keyIdx);
+
         } else {
             // traverse to leaf node to find records to delete
             NonLeafNode nonLeafNode = (NonLeafNode) node;
@@ -179,14 +185,19 @@ public class testBplusTree {
             // read the next level node (read action will be recorded in the next level)
             Node next = nonLeafNode.getChild(ptrIdx);
             addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key);
+
+            // update keys in non-leaf node
+            nonLeafNode.updateKey(ptrIdx - 1, next.getKeys().get(0));
         }
+
         // carry out re-balancing tree magic if needed
-        // TODO: change this to the calculated node_size once finalised
+        // TODO: change this to the calculated node_size once finalized
         // TODO: handle deletion in main memory
         if (node.isUnderUtilized(NODE_SIZE)) {
             // needs merging if underutilized
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
         }
+
         return addOfRecToDelete;
     }
 
@@ -204,11 +215,9 @@ public class testBplusTree {
     private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex,
             int parentKeyIndex) throws IllegalStateException {
         if (parent == null) {
-            // TODO:
-            // handleInvalidRoot(parent);
+            // handleInvalidNonLeaf(underUtilizedNode);
         } else if (underUtilizedNode.isLeaf()) {
-            // TODO
-            // handleInvalidLeaf(underUtilizedNode);
+            // handleInvalidNonLeaf(underUtilizedNode);
         } else if (underUtilizedNode.isNonLeaf()) {
             // TODO:
             // handleInvalidNonLeaf(underUtilizedNode);

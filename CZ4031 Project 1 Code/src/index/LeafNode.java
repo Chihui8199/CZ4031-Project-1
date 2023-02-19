@@ -10,24 +10,25 @@ public class LeafNode extends Node {
     protected ArrayList<Address> records;
     private LeafNode nextNode;
 
-    public LeafNode(){
+    public LeafNode() {
         super();
         setIsLeaf(true);
         setNext(null);
     }
 
     // TODO: Have to create function for findRecord
-    public ArrayList<Address> findRecord(int key){
-        if (this.map.containsKey(key) || this.keys.contains(key)){ 
-            
+    public ArrayList<Address> findRecord(int key) {
+        if (this.map.containsKey(key) || this.keys.contains(key)) {
+
             // Get the existing list of records associated with the key
             ArrayList<Address> existingRecords = map.get(key);
             return existingRecords;
-    }
+        }
         return null;
     }
-    public ArrayList<Address> getAddressesForKey(int key){
-       return map.get(key);
+
+    public ArrayList<Address> getAddressesForKey(int key) {
+        return map.get(key);
     }
 
     // Add record into both TreeMap and ArrayList of keys
@@ -36,16 +37,15 @@ public class LeafNode extends Node {
 
         System.out.printf("\nEntered addRecord\n");
 
-
         // if node is empty, create new Arraylist and TreeMap
-        if (this.keys == null){
+        if (this.keys == null) {
             this.records = new ArrayList<Address>();
             this.records.add(add);
             System.out.printf("Record added to Address ArrayList:");
             System.out.print(this.records);
             this.map = new TreeMap<Integer, ArrayList<Address>>();
-            this.map.put(key,records);
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+            this.map.put(key, records);
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
 
             this.keys = new ArrayList<Integer>();
@@ -57,8 +57,8 @@ public class LeafNode extends Node {
             return;
         }
 
-        else if (this.map.containsKey(key) || this.keys.contains(key)){ 
-            
+        else if (this.map.containsKey(key) || this.keys.contains(key)) {
+
             // Get the existing list of records associated with the key
             ArrayList<Address> existingRecords = map.get(key);
 
@@ -66,26 +66,26 @@ public class LeafNode extends Node {
             existingRecords.add(add);
 
             // Put the updated list of records back into the map
-            map.put(key,existingRecords);
+            map.put(key, existingRecords);
 
             System.out.printf("Current Key: ");
             System.out.println(key);
             System.out.printf("Current Address: ");
             System.out.println(add);
-            
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
         }
 
         // else if keysize not full, insert the key into the ArrayList in sorted order
-        else if (this.keys.size() < n){
+        else if (this.keys.size() < n) {
             this.records = new ArrayList<Address>();
             this.records.add(add);
             System.out.printf("Record added to Address ArrayList:");
             System.out.print(this.records);
 
-            this.map.put(key,records);
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n",key);
+            this.map.put(key, records);
+            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
 
             insertInOrder(this.keys, key);
@@ -96,7 +96,7 @@ public class LeafNode extends Node {
         }
 
         // else, the arraylist and treemap is full, split the node
-        else{
+        else {
             System.out.printf("Keys in ArrayList Before Splitting******************************\n");
             System.out.println(this.keys);
             this.splitNode(key, add);
@@ -106,12 +106,11 @@ public class LeafNode extends Node {
 
     }
 
-
     public Node findNodeByKey(int key, Node rootNode) {
         if (rootNode == null) {
-            return null;    
+            return null;
         }
-        for (Node child : ((NonLeafNode)rootNode).getChildren()) {
+        for (Node child : ((NonLeafNode) rootNode).getChildren()) {
             Node foundNode = findNodeByKey(key, child);
             if (foundNode != null) {
                 return foundNode;
@@ -120,13 +119,13 @@ public class LeafNode extends Node {
         return null;
     }
 
-    public static void insertInOrder(ArrayList<Integer> list, int num) { 
-        int i = 0; 
-        
-        while (i < list.size() && list.get(i) < num) { 
-            i++; 
-        } 
-        list.add(i, num); 
+    public static void insertInOrder(ArrayList<Integer> list, int num) {
+        int i = 0;
+
+        while (i < list.size() && list.get(i) < num) {
+            i++;
+        }
+        list.add(i, num);
         System.out.printf("\nList:");
         System.out.print(list);
     }
@@ -136,10 +135,9 @@ public class LeafNode extends Node {
         nextNode = sibling;
     }
 
-    public LeafNode getNext(){
+    public LeafNode getNext() {
         return nextNode;
     }
-
 
     Address removeAddPointerAt(int index) {
         return records.remove(index);
@@ -147,6 +145,12 @@ public class LeafNode extends Node {
 
     @Override
     public String toString() {
-       return String.format("\n--------LEAF NODE CONTAINS: map %s records %s, nextNode ------------\n", map.toString(), records, nextNode);
+        return String.format("\n--------LEAF NODE CONTAINS: map %s records %s, nextNode ------------\n", map.toString(),
+                records, nextNode);
     }
+
+    public TreeMap<Integer, ArrayList<Address>> getMap() {
+        return map;
+    }
+
 }
