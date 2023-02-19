@@ -470,7 +470,7 @@ public class Node {
 
                         System.out.printf("\n\nCurrent Parent's keys AFTER removing: ");
                         System.out.println(currentParent.keys);
-                        System.out.printf("\n\nNew Parent's keys AFTER adding: ");
+                        System.out.printf("New Parent's keys AFTER adding: ");
                         System.out.println(newParent.keys);
 
                         // System.out.printf("\n\nAdding key %d in NEW parent node\n", newNode.getKey(0));
