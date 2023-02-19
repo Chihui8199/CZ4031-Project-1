@@ -238,13 +238,20 @@ public class Node {
 
             if (((LeafNode) this).getNext() != null) {
                 newNode.setNext(((LeafNode) this).getNext());
+                ((LeafNode) this).getNext().setPrevious(newNode);
             }
+
+            // setting next node
             ((LeafNode) this).setNext(newNode);
             System.out.printf("\nKeys in old Node's next node:\n");
             System.out.print(((LeafNode) this).getNext().getKeys());
 
-            // Handling the parent node of the old
-            // node---------------------------------------------------------------
+            // setting previous node
+            (newNode).setPrevious((LeafNode) this);
+            System.out.printf("\nKeys in new Node's previous node:\n");
+            System.out.print(newNode.getPrevious().getKeys());
+
+            // Handling the parent node of the old node---------------------------------------------------------------
             // if parent node exists, insert new node into this node
 
             if (this.getParent() != null) {
