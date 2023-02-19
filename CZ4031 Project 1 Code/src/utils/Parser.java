@@ -45,11 +45,11 @@ public class Parser {
         tree.insertKey(10, addr4); //
         tree.insertKey(17, addr5); //
         tree.insertKey(21, addr5);
-//        tree.insertKey(31, addr2);
-//        tree.insertKey(25, addr1);
-//        tree.insertKey(19, addr2); //
-//        tree.insertKey(20, addr4); //
-//        tree.insertKey(28, addr5);
+       tree.insertKey(31, addr2);
+       tree.insertKey(25, addr1);
+       tree.insertKey(19, addr2); //
+       tree.insertKey(20, addr4); //
+       tree.insertKey(28, addr5);
 //         tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
@@ -87,7 +87,7 @@ public class Parser {
 //        System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(10, 10));
         System.out.println("ORIGINAL TREE--> \n");
          tree.printBPlusTree(testBplusTree.getRoot());
-         System.out.printf("\nDELETION %s\n", tree.deleteKey(3));
+         System.out.printf("\nDELETION %s\n", tree.deleteKey(19));
         System.out.println("MODIFIED TREE--> ");
 
         tree.printBPlusTree(testBplusTree.getRoot());
