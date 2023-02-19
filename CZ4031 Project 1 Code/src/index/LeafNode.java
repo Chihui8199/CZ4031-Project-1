@@ -9,11 +9,13 @@ public class LeafNode extends Node {
     protected TreeMap<Integer, ArrayList<Address>> map;
     protected ArrayList<Address> records;
     private LeafNode nextNode;
+    private LeafNode prevNode;
 
     public LeafNode() {
         super();
         setIsLeaf(true);
         setNext(null);
+        setPrevious(null);
     }
 
     public ArrayList<Address> findRecord(int key) {
@@ -110,6 +112,14 @@ public class LeafNode extends Node {
 
     public LeafNode getNext() {
         return nextNode;
+    }
+
+    public void setPrevious(LeafNode prev) {
+        prevNode = prev;
+    }
+
+    public LeafNode getPrevious() {
+        return prevNode;
     }
 
     Address removeAddPointerAt(int index) {
