@@ -284,16 +284,22 @@ public class testBplusTree {
                                 int rightPointerIdx, int inBetweenKeyIdx){
         System.out.printf("++++++++++++\n"+ right.getFirstKey());
 
+
         int moveKeyCount = right.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
-            int removedKey = right.removeKeyAt(0);
-            System.out.printf("----->>>>>>>\n"+ removedKey +  right.getFirstKey());
-            int leftLastIdx = left.getLastIdx();
-            left.insertKeyAt(leftLastIdx,removedKey);
+            int removedKey = right.removeKeyAt(0); 
+            int leftLastIdx = left.getLastIdx(); 
+            left.insertKeyAt(leftLastIdx+1,removedKey);
             // 2. Move over the records
             left.insertByRedistribution(removedKey, right.getAddressesForKey(removedKey));
             right.removeKeyInMap(removedKey);
+            
         }
+        
+         // now handle the top pointer
+//        parent.removePointerAt(rightPointerIdx);
+//        parent.removeKeyAt(inBetweenKeyIdx);
+
         // update the double-linked pointers
         left.setNext(right.getNext());
         // update the prev pointer of right next node (if any)
@@ -302,9 +308,7 @@ public class testBplusTree {
            // rightNext.setPrevious(left.getBlockIndex());
         }
 
-        // now handle the top pointer
-//        parent.removePointerAt(rightPointerIdx);
-//        parent.removeKeyAt(inBetweenKeyIdx);
+        
 
     }
 
