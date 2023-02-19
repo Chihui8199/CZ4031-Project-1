@@ -7,10 +7,11 @@ public class Main {
 
   public static void main(String[] args) {
     String dir = System.getProperty("user.dir");
-    String fileName = dir + File.separator + File.separator + "src" + File.separator + "utils" + File.separator + "data"
-        + File.separator + "data.tsv";
+    // String fileName = dir + File.separator + File.separator + "src" + File.separator + "utils" + File.separator + "data"
+        // + File.separator + "data.tsv";
     // String fileName = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1
     // Code/src/utils/data/data.tsv";
+    String fileName = "/Users/ragne/OneDrive/Documents/GitHub/CZ4031-Project-1/CZ4031 Project 1 Code/src/utils/data/data.tsv";
     // Read in the data and write to db
     File file = new File(fileName);
     if (file.exists()) {

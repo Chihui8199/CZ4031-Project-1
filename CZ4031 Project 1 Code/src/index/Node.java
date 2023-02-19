@@ -240,6 +240,7 @@ public class Node {
                 newNode.setNext(((LeafNode) this).getNext());
             }
             ((LeafNode) this).setNext(newNode);
+
             System.out.printf("\nKeys in old Node's next node:\n");
             System.out.print(((LeafNode) this).getNext().getKeys());
 
@@ -254,6 +255,64 @@ public class Node {
 
                 // Check if parent is full, if yes
                 if (this.getParent().keys.size() == NODE_SIZE) {
+
+                    // 
+                    // System.out.printf("\nI AM HEREEEEEEE:\n");
+                    // Node oldNode = this;
+                    // oldNode.printNode();
+                    // newNode.printNode();
+                    // System.out.print(oldNode.getParent().getKeys());
+                    // newNode.setParent(oldNode.getParent());
+                    // System.out.print(newNode.getParent().getKeys());
+
+                    // //insert newNode into OLD parent node children in ascending order
+                    // int index = 0;
+                    // boolean insertedNode = false;
+
+                    // try {
+                    //     for (Node currentNode : this.getParent().getChildren()) {
+
+                    //         // if there is a node > than newNode, insert inbetween that node
+                    //         if (newNode.getKey(newNode.getKeySize() - 1) < currentNode.getKey(0) ) {
+                    //             // System.out.print(index);
+                    //             // System.out.printf("\nIF:\n");
+                    //             // System.out.print(currentNode.getKeys());
+                    //             // System.out.print(newNode.getKeys());
+                    //             this.getParent().getChildren().add(index,newNode);
+                    //             this.getParent().keys.add(index-1,newNode.getKey(0));
+                    //             insertedNode = true;
+                    //             break;
+                    //         } 
+                    //         index ++;
+                    //     }
+                            
+                    //     if (insertedNode == false){
+                    //         this.getParent().getChildren().add(newNode);
+                    //         this.getParent().keys.add(newNode.getKey(0));
+                    //     }
+
+                    // } catch (Exception e) {
+                    //     // TODO: sometimes will have error at the for loop, likely cos starting root
+                    //     e.printStackTrace();
+                    //     this.getParent().getChildren().add(newNode);
+                    //     this.getParent().keys.add(newNode.getKey(0));
+                    // }
+
+                    
+                    
+                    // // System.out.printf("\nParent node;s children AFTER adding:\n");
+                    // // System.out.print(this.getParent().getChildren());
+                    // System.out.printf("\nKeys in parent node AFTER adding:\n");
+                    // System.out.print(this.getParent().keys);
+
+                    // newNode.setParent(this.getParent());
+
+                    // if (this.getParent().getKeySize() == NODE_SIZE) {
+                    //     splitNode(newNode.getKey(0), null);
+                    // }
+                    
+
+                    
 
                     // if the newNode is added to the end
                     if (newNode.getNext() == null) {
@@ -320,7 +379,8 @@ public class Node {
 
                     else {
 
-                        System.out.printf("\n\nProblematic split\n");
+                        
+                        System.out.printf("\n\nProblematic split HEREEEE\n");
 
                         System.out.printf("\n\nTHE CURRENT PARENT IS A ROOT:");
                         System.out.println(this.getParent().isRoot());
@@ -380,13 +440,57 @@ public class Node {
                         System.out.println(testBplusTree.getRoot().getKeys());
                     }
 
+                    
                 }
 
                 // else if parent is not full or parent is empty
                 else if (this.getParent().keys == null || this.getParent().keys.size() != NODE_SIZE) {
                     System.out.printf("\n\nAdding key %d in OLD parent node\n", newNode.getKey(0));
-                    this.getParent().addChild(newNode);
-                    this.getParent().keys.add(newNode.getKey(0));
+                    
+
+                    // System.out.printf("\nParent node's children BEFORE adding:\n");
+                    // System.out.print(this.getParent().getChildren());
+                    System.out.printf("\nKeys in parent node BEFORE adding:\n");
+                    System.out.print(this.getParent().keys);
+
+                    //insert newNode into OLD parent node children in ascending order
+                    int index = 0;
+                    boolean insertedNode = false;
+
+                    try {
+                        for (Node currentNode : this.getParent().getChildren()) {
+
+                            // if there is a node > than newNode, insert inbetween that node
+                            if (newNode.getKey(newNode.getKeySize() - 1) < currentNode.getKey(0) ) {
+                                // System.out.print(index);
+                                // System.out.printf("\nIF:\n");
+                                // System.out.print(currentNode.getKeys());
+                                // System.out.print(newNode.getKeys());
+                                this.getParent().getChildren().add(index,newNode);
+                                this.getParent().keys.add(index-1,newNode.getKey(0));
+                                insertedNode = true;
+                                break;
+                            } 
+                            index ++;
+                        }
+                            
+                        if (insertedNode == false){
+                            this.getParent().getChildren().add(newNode);
+                            this.getParent().keys.add(newNode.getKey(0));
+                        }
+
+                    } catch (Exception e) {
+                        // TODO: sometimes will have error at the for loop, likely cos starting root
+                        e.printStackTrace();
+                        this.getParent().getChildren().add(newNode);
+                        this.getParent().keys.add(newNode.getKey(0));
+                    }
+                    
+                    // System.out.printf("\nParent node;s children AFTER adding:\n");
+                    // System.out.print(this.getParent().getChildren());
+                    System.out.printf("\nKeys in parent node AFTER adding:\n");
+                    System.out.print(this.getParent().keys);
+
                     newNode.setParent(this.getParent());
 
                 }
