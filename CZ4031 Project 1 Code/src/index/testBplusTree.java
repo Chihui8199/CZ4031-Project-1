@@ -18,6 +18,7 @@ public class testBplusTree {
 
     public LeafNode createFirstNode() {
         LeafNode newNode = new LeafNode();
+        PerformanceRecorder.addOneNode();
         newNode.setIsRoot(true);
         newNode.setIsLeaf(true);
         setRoot(newNode);
@@ -26,6 +27,7 @@ public class testBplusTree {
 
     public static Node createNode() {
         Node newNode = new Node();
+        PerformanceRecorder.addOneNode();
         return newNode;
     }
 
@@ -92,6 +94,7 @@ public class testBplusTree {
             // node's (nodeToInsertTo) child is a leaf node
 
             while (!((NonLeafNode) nodeToInsertTo).getChild(0).isLeaf()) {
+                
 
                 keys = nodeToInsertTo.getKeys();
 
@@ -369,7 +372,9 @@ public class testBplusTree {
     }
 
     public ArrayList<Address> searchValue(Node node, int key) {
-        // Find if key is within the rootNode
+        PerformanceRecorder.addOneNodeReads();
+
+        // Find if key is within the rootNode       
         if (node.isLeaf()) {
             int ptrIdx = node.searchKey(key, false);
             if (ptrIdx >= 0 && ptrIdx < node.getKeySize() && key == node.getKeyAt(ptrIdx)) {
@@ -400,6 +405,7 @@ public class testBplusTree {
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
+        PerformanceRecorder.addOneLeafNodeReads();
         if (node.isLeaf()) {
             ptrIdx = node.searchKey(minKey, false); // if minKey is in key array, get key index
             LeafNode leaf = (LeafNode) node;
@@ -449,6 +455,7 @@ public class testBplusTree {
      * @param indent the current indentation level
      */
     private void printBPlusTreeHelper(Node node, String indent) {
+        
         if (node == null) {
             return;
         }
@@ -460,6 +467,7 @@ public class testBplusTree {
             }
             System.out.println();
         } else {
+            
             NonLeafNode nonLeaf = (NonLeafNode) node;
             System.out.print(indent + "NonLeafNode: ");
             for (int key : nonLeaf.getKeys()) {
@@ -469,7 +477,106 @@ public class testBplusTree {
             for (Node child : nonLeaf.getChildren()) {
                 printBPlusTreeHelper(child, indent + "  ");
             }
+            PerformanceRecorder.addOneTreeDegree();
         }
+        
+    }
+    
+    public static void experimentTwo(){
+        System.out.println("\n----------------------EXPERIMENT 2-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        System.out.println("Parameter n: " + NODE_SIZE);
+
+        System.out.print("No. of Nodes in B+ tree: ");
+        System.out.println(performance.getTotalNodes());
+
+        System.out.print("No. of Levels in B+ tree: ");
+        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
+        System.out.println(performance.getTreeDegree());
+        
+        System.out.print("Content of the root node: ");
+        System.out.println(testBplusTree.getRoot().keys);
+    }
+
+    public static void experimentThree(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 3-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        System.out.print("\nMovies with the “numVotes” equal to 500: ");
+        
+        long startTime = System.nanoTime();
+        System.out.println(tree.searchKey(500));
+        // have to return the actual records with block no. and offset from searchKey
+        long endTime = System.nanoTime();
+
+        System.out.print("\nNo. of Index Nodes the process accesses: ");
+        System.out.println(performance.getNodeReads());
+
+        // System.out.print("No. of Data Blocks the process accesses: ");
+
+        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+        
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+
+        // System.out.print("No. of data blocks: ");
+
+        // System.out.print("Running time of brute-force linear scan:  ");
+
+    }
+
+    public static void experimentFour(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 4-----------------------");
+
+        PerformanceRecorder performance = new PerformanceRecorder();
+        
+        
+        System.out.print("\nMovies with the “numVotes” from 30,000 to 40,000, both inclusively: ");
+        
+        long startTime = System.nanoTime();
+        System.out.println(tree.rangeSearch(30000,40000));
+        long endTime = System.nanoTime();
+
+        System.out.print("\nNo. of Index Nodes the process accesses: ");
+        System.out.println(performance.getLeafNodeReads());
+
+        // System.out.print("No. of Data Blocks the process accesses: ");
+        
+        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+        
+        // System.out.print("No. of data blocks: ");
+        
+        // System.out.print("Running time of brute-force linear scan on: ");
+
+    }
+
+    public static void experimentFive(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 5-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        long startTime = System.nanoTime();
+        // carry out deletion here
+        long endTime = System.nanoTime();
+
+        
+
+        System.out.print("No. of Nodes in updated B+ tree: ");
+        System.out.println(performance.getTotalNodes());
+
+        System.out.print("No. of Levels in updated B+ tree: ");
+        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
+        System.out.println(performance.getTreeDegree());
+        
+        System.out.print("Content of the root node in updated B+ tree: ");
+        System.out.println(testBplusTree.getRoot().keys);
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+        
+        // System.out.print("No. of data blocks: ");
+        
+        // System.out.print("Running time of brute-force linear scan on: ");
     }
 
 }

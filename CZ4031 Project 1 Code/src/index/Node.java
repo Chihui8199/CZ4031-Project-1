@@ -232,6 +232,7 @@ public class Node {
 
     public void createFirstParentNode(LeafNode newNode) {
         NonLeafNode newParent = new NonLeafNode();
+        PerformanceRecorder.addOneNode();
         newParent.keys = new ArrayList<Integer>();
         newParent.addChild(this);
         newParent.addChild(newNode);
@@ -245,6 +246,7 @@ public class Node {
 
     public void createRootNode(NonLeafNode newNode) {
         NonLeafNode newParent = new NonLeafNode();
+        PerformanceRecorder.addOneNode();
         newParent.keys = new ArrayList<Integer>();
         newParent.addChild(this);
         newParent.addChild(newNode);
@@ -261,6 +263,7 @@ public class Node {
 
     public LeafNode leafSplitAndDistribute(int key, Address addr) {
         LeafNode newNode = new LeafNode();
+        PerformanceRecorder.addOneNode();
         ((LeafNode) this).records = new ArrayList<Address>();
         ((LeafNode) this).records.add(addr);
         ((LeafNode) this).map.put(key, ((LeafNode) this).records);
@@ -316,6 +319,7 @@ public class Node {
         System.out.println(currentParent.keys);
 
         NonLeafNode newParent = new NonLeafNode();
+        PerformanceRecorder.addOneNode();
         newParent.keys = new ArrayList<Integer>();
 
         int keyToSplitAt = currentParent.getKeyAt(minNonLeafNodeSize);
@@ -398,6 +402,7 @@ public class Node {
             // it is the root
             System.out.println("NO PARENT");
             NonLeafNode newRoot = new NonLeafNode();
+            PerformanceRecorder.addOneNode();
             newRoot.keys = new ArrayList<Integer>();
             newRoot.keys.add(newParent.getKeyAt(0));
 

@@ -29,6 +29,7 @@ public class Parser {
     // conversin
     // TODO: each Record should be stored as a fixed length and is not now
     public static void readTSVFile(String filePath) {
+        PerformanceRecorder performance = new PerformanceRecorder();
         // try {
         Address addr1 = new Address(1, 1);
         Address addr2 = new Address(2, 2);
@@ -36,20 +37,23 @@ public class Parser {
         Address addr4 = new Address(4, 4);
         Address addr5 = new Address(5, 5);
         testBplusTree tree = new testBplusTree();
-        tree.createFirstNode();
 
+        System.out.println(performance.toString()); 
         tree.insertKey(1, addr1);
         tree.insertKey(4, addr2);
         tree.insertKey(3, addr3);
-        tree.insertKey(7, addr3);
+        tree.insertKey(500, addr3);
         tree.insertKey(10, addr4); //
         tree.insertKey(17, addr5); //
-        tree.insertKey(21, addr5);
-       tree.insertKey(31, addr2);
-       tree.insertKey(25, addr1);
-       tree.insertKey(19, addr2); //
-       tree.insertKey(20, addr4); //
-       tree.insertKey(28, addr5);
+        tree.insertKey(30000, addr5);
+        tree.insertKey(31000, addr5);
+        tree.insertKey(32000, addr2);
+        tree.insertKey(33000, addr2);
+        tree.insertKey(34000, addr2);
+        tree.insertKey(40000, addr1);
+        tree.insertKey(19, addr2); //
+        tree.insertKey(20, addr4); //
+        tree.insertKey(28, addr5);
 //         tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
@@ -89,9 +93,13 @@ public class Parser {
         //  tree.printBPlusTree(testBplusTree.getRoot());
         //  System.out.printf("\nDELETION %s\n", tree.deleteKey(19));
         // System.out.println("MODIFIED TREE--> ");
-
+        System.out.println("\n\n");
         tree.printBPlusTree(testBplusTree.getRoot());
-
+        
+        testBplusTree.experimentTwo(); 
+        testBplusTree.experimentThree(tree);  
+        testBplusTree.experimentFour(tree); 
+        testBplusTree.experimentFive(tree); 
 //        System.out.println("ADDING KEY --> ");
 //        tree.insertKey(100, addr1);
 //        tree.insertKey(200, addr1);
@@ -136,17 +144,9 @@ public class Parser {
         // e.printStackTrace();
         // }
     
-        // time function
-        long startTime = System.nanoTime();
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime)/1000000;  //divide by 1000000 to get milliseconds.
-        System.out.printf("\nTime elasped: %d milliseconds\n",duration);
-        
-        // prints performance details
-        PerformanceRecorder performance = new PerformanceRecorder();
-        performance.toString();
-    
+     
     }
+
 
     /**
      * for each line of data read in create a record object and stores it into the
