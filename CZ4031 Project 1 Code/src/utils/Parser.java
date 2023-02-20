@@ -135,6 +135,17 @@ public class Parser {
         // } catch (IOException e) {
         // e.printStackTrace();
         // }
+    
+        // time function
+        long startTime = System.nanoTime();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime)/1000000;  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nTime elasped: %d milliseconds\n",duration);
+        
+        // prints performance details
+        PerformanceRecorder performance = new PerformanceRecorder();
+        performance.toString();
+    
     }
 
     /**
