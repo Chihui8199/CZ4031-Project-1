@@ -296,8 +296,10 @@ public class Node {
 
         if (((LeafNode) this).getNext() != null) {
             newNode.setNext(((LeafNode) this).getNext());
+            ((LeafNode) this).getNext().setPrevious(newNode);
         }
         ((LeafNode) this).setNext(newNode);
+        newNode.setPrevious(((LeafNode) this));
         return newNode;
     }
 
