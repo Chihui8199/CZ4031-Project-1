@@ -170,6 +170,7 @@ public class testBplusTree {
             // found keys to delete: 1) remove key in map 2) remove idx in records
             addOfRecToDelete.addAll(leaf.getAddressesForKey(key));
             leaf.removeKeyAt(keyIdx);
+            leaf.removeKeyInMap(key);
 
         } else {
             // traverse to leaf node to find records to delete
@@ -183,6 +184,7 @@ public class testBplusTree {
 
             // update keys in non-leaf node
             nonLeafNode.updateKey(ptrIdx - 1, next.getKeys().get(0));
+        
         }
 
         // carry out re-balancing tree magic if needed
@@ -215,6 +217,7 @@ public class testBplusTree {
                     parentPointerIndex, parentKeyIndex);
             System.out.print("Tree rebalanced now.sdasdasd");
         } else if (underUtilizedNode.isNonLeaf()) {
+            
         } else {
             throw new IllegalStateException("state is wrong!");
         }
@@ -282,8 +285,9 @@ public class testBplusTree {
 
     private void mergeLeafNodes(LeafNode left, LeafNode right, NonLeafNode parent,
                                 int rightPointerIdx, int inBetweenKeyIdx){
-        System.out.printf("++++++++++++\n"+ right.getFirstKey());
+        System.out.printf("++++++++++++\n"+ inBetweenKeyIdx);
 
+        int rightKey = right.getKeyAt(0);
 
         int moveKeyCount = right.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
@@ -295,20 +299,22 @@ public class testBplusTree {
             right.removeKeyInMap(removedKey);
             
         }
+
+
+        // now handle the top pointer
+        parent.removeChild(right);
+        parent.removeKeyAt(inBetweenKeyIdx);
         
-         // now handle the top pointer
-//        parent.removePointerAt(rightPointerIdx);
-//        parent.removeKeyAt(inBetweenKeyIdx);
+        System.out.print("PArent keys: " + parent.getKeys());
 
         // update the double-linked pointers
         left.setNext(right.getNext());
         // update the prev pointer of right next node (if any)
         if(right.getNext() != null) {
             LeafNode rightNext = right.getNext();
-           // rightNext.setPrevious(left.getBlockIndex());
+        //    rightNext.setPrevious(left.getBlockIndex());
+            rightNext.setPrevious(right.getPrevious());
         }
-
-        
 
     }
 
