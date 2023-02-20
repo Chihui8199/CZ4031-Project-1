@@ -51,8 +51,8 @@ public class testBplusTree {
         // nodeToInsertTo is the leafnode
         nodeToInsertTo = searchNode(key);
 
-        System.out.printf("Keys of node to insert to: ");
-        System.out.print(nodeToInsertTo.getKeys());
+        System.out.print("Keys of node to insert to: ");
+        System.out.println(nodeToInsertTo.getKeys());
 
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
@@ -78,13 +78,10 @@ public class testBplusTree {
     public LeafNode searchNode(int key) {
         ArrayList<Integer> keys;
 
-        System.out.printf("Searching Node for Key %d\n", key);
-
         // If root is a leaf node, means its still at the first node, hence return the
         // rootNode
         if (testBplusTree.rootNode.isLeaf()) {
             setRoot(rootNode);
-            System.out.printf("Found Node : Root\n");
             return (LeafNode) rootNode;
         }
 
@@ -138,7 +135,6 @@ public class testBplusTree {
             // return the child node once found
             for (int i = keys.size() - 1; i >= 0; i--) {
                 if (keys.get(i) <= key) {
-                    System.out.printf("Found key: %d\n", nodeToInsertTo.getKey(i));
                     return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(i + 1);
                 }
             }

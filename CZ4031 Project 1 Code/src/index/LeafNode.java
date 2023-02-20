@@ -16,7 +16,6 @@ public class LeafNode extends Node {
         setNext(null);
     }
 
-    // TODO: Have to create function for findRecord
     public ArrayList<Address> findRecord(int key) {
         if (this.map.containsKey(key) || this.keys.contains(key)) {
 
@@ -35,25 +34,18 @@ public class LeafNode extends Node {
     public void addRecord(int key, Address add) {
         int n = NODE_SIZE;
 
-        System.out.printf("\nEntered addRecord\n");
-
         // if node is empty, create new Arraylist and TreeMap
         if (this.keys == null) {
+
             this.records = new ArrayList<Address>();
             this.records.add(add);
-            System.out.printf("Record added to Address ArrayList:");
-            System.out.print(this.records);
+
             this.map = new TreeMap<Integer, ArrayList<Address>>();
             this.map.put(key, records);
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
 
             this.keys = new ArrayList<Integer>();
             insertInOrder(this.keys, key);
-            System.out.printf("\nKey added to Key ArrayList:");
-            System.out.print(this.keys);
-            System.out.printf("\nCurrent node's Key Size:");
-            System.out.print(this.keys.size());
             return;
         }
 
@@ -68,12 +60,6 @@ public class LeafNode extends Node {
             // Put the updated list of records back into the map
             map.put(key, existingRecords);
 
-            System.out.printf("Current Key: ");
-            System.out.println(key);
-            System.out.printf("Current Address: ");
-            System.out.println(add);
-
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
         }
 
@@ -81,27 +67,16 @@ public class LeafNode extends Node {
         else if (this.keys.size() < n) {
             this.records = new ArrayList<Address>();
             this.records.add(add);
-            System.out.printf("Record added to Address ArrayList:");
-            System.out.print(this.records);
 
             this.map.put(key, records);
-            System.out.printf("\nAddress ArrayList is added to key %d in TreeMap \n", key);
             System.out.print(this.map);
 
             insertInOrder(this.keys, key);
-            System.out.printf("\nKey added to Key ArrayList:");
-            System.out.print(this.keys);
-            System.out.printf("\nCurrent node's Key Size:");
-            System.out.print(this.keys.size());
         }
 
         // else, the arraylist and treemap is full, split the node
         else {
-            System.out.printf("Keys in ArrayList Before Splitting******************************\n");
-            System.out.println(this.keys);
-            this.splitNode(key, add);
-            System.out.printf("\nKeys in ArrayList After Splitting******************************\n");
-            System.out.print(this.keys);
+            this.splitLeafNode(key, add);
         }
 
     }
@@ -126,8 +101,6 @@ public class LeafNode extends Node {
             i++;
         }
         list.add(i, num);
-        System.out.printf("\nList:");
-        System.out.print(list);
     }
 
     // Set sibling node as nextNode
