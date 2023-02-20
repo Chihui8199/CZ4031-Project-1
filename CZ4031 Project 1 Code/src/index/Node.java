@@ -18,6 +18,7 @@ public class Node {
     private int minNonLeafNodeSize;
 
     // We set the node size to 3 first as its easier to check if its correct
+    // static final int NODE_SIZE = 3;
     static final int NODE_SIZE = 3;
     private boolean isLeaf;
     private boolean isRoot;

@@ -217,18 +217,19 @@ public class testBplusTree {
         if (parent == null) {
            handleInvalidRoot(underUtilizedNode);
         } else if (underUtilizedNode.isLeaf()) {
+            System.out.print("\n\nEntering rebalancing of Leaf node!!!");
             handleInvalidLeaf(underUtilizedNode, parent,
                     parentPointerIndex, parentKeyIndex);
-            System.out.print("Tree rebalanced now.sdasdasd");
         } else if (underUtilizedNode.isNonLeaf()) {
-            
+            System.out.print("\n\nEntering rebalancing of Non-leaf node!!!");
+            handleInvalidInternal(underUtilizedNode, parent,
+                    parentPointerIndex, parentKeyIndex);
         } else {
             throw new IllegalStateException("state is wrong!");
         }
     }
 
     public void handleInvalidRoot(Node underUtilizedNode){
-        System.out.println("HANDING PARENT == NULLL");
         // handleInvalidNonLeaf(underUtilizedNode);
         if(underUtilizedNode.isLeaf()){ // Only node in B+ Tree - Root
             ((LeafNode)underUtilizedNode).clear();
@@ -259,24 +260,19 @@ public class testBplusTree {
         // b. second try merge with left
         System.out.println("--> handle invalid leaf");
         if (prevNode != null && prevNode.isAbleToGiveOneKey(NODE_SIZE)){
-            System.out.println("--> handle invalid leaf: right to left ");
+            //handle invalid leaf: right to left 
             moveOneKey(prevNode, underUtilizedLeaf, true, parent, parentKeyIndex+1);
         }
         else if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
-            System.out.println("--> handle invalid leaf: leaf to right");
+            // handle invalid leaf: leaf to right
             moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
         } // we can't redistribute, try merging with next
         else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE) {
             // it's the case where under utilized node is the left node from parent
-            System.out.printf("PRINTING KEYS cur LEFT"+ underUtilizedNode.keys);
-            System.out.printf("PRINTING KEYS NEXT RIGHT"+ nextNode.keys);
-
             mergeLeafNodes(underUtilizedLeaf, nextNode, parent,parentPointerIndex+1, parentKeyIndex+1);
         }
         else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE))
         {
-            System.out.printf("PRINTING KEYS 2" + nextNode.keys);
-
             // it's the case where split node is in the left from parent
             mergeLeafNodes(prevNode, underUtilizedLeaf, parent, parentPointerIndex, parentKeyIndex);
         }
@@ -287,11 +283,134 @@ public class testBplusTree {
         }
     }
 
+    private void handleInvalidInternal(Node underUtilizedNode,
+                                       NonLeafNode parent,
+                                       int parentPointerIndex,
+                                       int parentKeyIndex) throws IllegalStateException {
+
+        NonLeafNode underUtilizedInternal = (NonLeafNode) underUtilizedNode;
+
+        // load the adjacent nodes
+        
+        NonLeafNode nextInternal = (NonLeafNode) parent.getChild(parentPointerIndex + 1);
+        NonLeafNode prevInternal = (NonLeafNode) parent.getChild(parentPointerIndex - 1);
+
+        System.out.print(nextInternal + "/n and /n "+ prevInternal +"/n!!!");
+
+        // NonLeafNode nextInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex + 1);
+        // NonLeafNode prevInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex - 1);
+
+
+        if (nextInternal == null && prevInternal == null)
+            throw new IllegalStateException("Both prevInternal and nextInternal is null for " + underUtilizedNode);
+        // check if we can redistribute with the next node
+        if (nextInternal != null && nextInternal.isAbleToGiveOneKey(NODE_SIZE)) {
+            moveOneKeyNonLeafNode(nextInternal, underUtilizedInternal, false, parent, parentKeyIndex + 1);
+            
+        }
+        // check if we can redistribute with the previous node
+        else if (prevInternal != null && prevInternal.isAbleToGiveOneKey(NODE_SIZE)) {
+            moveOneKeyNonLeafNode(prevInternal, underUtilizedInternal, true, parent, parentKeyIndex);
+            
+        }
+        // // check if we can merge with the right node
+        else if (nextInternal != null &&
+                (underUtilizedInternal.getKeySize() + nextInternal.getKeySize()) <= NODE_SIZE) {
+                    mergeNonLeafNodes(underUtilizedInternal, nextInternal, parent,
+                    parentPointerIndex + 1, parentKeyIndex + 1);
+        }
+        // now, check if we can merge with the left node
+        else if (prevInternal != null &&
+                (underUtilizedInternal.getKeySize() + prevInternal.getKeySize()) <= NODE_SIZE) {
+                    mergeNonLeafNodes(prevInternal, underUtilizedInternal, parent,
+                    parentPointerIndex, parentKeyIndex);
+        } else {
+            throw new IllegalStateException("Can't merge or redistribute internal node " + underUtilizedInternal);
+        }
+    }
+
+    /**
+     * Move one key from receiver to giver, update parent key afterwards
+     *
+     * @param receiver node to receive 1 key and 1 pointers
+     * @param giver node that we take 1 key and 1 pointers
+     * @param giverOnLeft if true, move last n pointer to receiver
+     *                    if false, move first n
+     * @param parent the internal node parenting both
+     * @param inBetweenKeyIdx index of the key in parent's key list
+     *                       that is in between the neighbor receiver & giver pair
+     */
+    private void moveOneKeyNonLeafNode(NonLeafNode giver, NonLeafNode receiver,
+                                   boolean giverOnLeft, NonLeafNode parent,
+                                   int inBetweenKeyIdx){
+        // new_key and old_key all refers to the ones in parent key arrayList
+
+        // int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
+        // if(giverOnLeft) {
+        //     // receiver.insertPointerAt(0, giver.removePointerAtLast());
+        //     // receiver.insertKeyAt(0, oldKey);
+        //     // newKey = giver.removeKeyAtLast();
+        //     int lastKey = giver.getLastKey();
+        // }
+        // else {
+        //     receiver.insertKeyAtLast(oldKey);
+        //     receiver.insertPointerAtLast(giver.removePointerAt(0));
+        //     newKey = giver.removeKeyAt(0);
+        // }
+        // // in either case update the parent key
+        // parent.replaceKeyAt(inBetweenKeyIdx, newKey);
+        
+    }
+
+
+    /**
+     * Expected structure:
+     *                            parent
+     *      ... [leftNodePointer]  key  [rightNodePointer] <-- pass in index of
+     *                              ^                           rightNodePointer as rightParentPointerIndex
+     *                              ^---- pass in index of key as the betweenNodeParentKeyIndex
+     *                  /                        \
+     *          [lp1] left [lp2]        [rp1]  right    [rp2]
+     *
+     * @param left left-most internal node to merge
+     * @param right right-most internal node to merge
+     * @param parent parent of both internal nodes.
+     * @param rightPointerIdx index of the parent that has these two pointers
+     * @param inBetweenKeyIdx the key that's in between the merging pair
+     *                              of node
+     */
+    private void mergeNonLeafNodes(NonLeafNode left, NonLeafNode right, NonLeafNode parent,
+                                int rightPointerIdx,
+                                int inBetweenKeyIdx){
+
+        // left.insertKeyAtLast(parent.removeKeyAt(inBetweenKeyIdx));
+
+        // // merge the right node to left
+        // int moveKeyCount = right.getKeyCount();
+        // for (int i = 0; i < moveKeyCount; i++) {
+        //     left.insertKeyAtLast(right.removeKeyAt(0));
+        //     left.insertPointerAtLast(right.removePointerAt(0));
+        // }
+        // // move over the last pointer
+        // left.insertPointerAtLast(right.getPointerAt(0));
+        // // handle parent's pointers
+        // parent.removePointerAt(rightPointerIdx);
+
+        // // commit changes made to nodes
+        // mainMemory.overWriteNode(parent);
+        // mainMemory.overWriteNode(left);
+        // mainMemory.removeBlockAt(right.getBlockIndex());// remove right node
+
+        // // record the changes
+        // recorder.addToInternalNodeWrites(3);
+        // recorder.deleteOneInternalNode();
+        // recorder.addToDeletionWrites(3);
+    }
+
+
     private void mergeLeafNodes(LeafNode left, LeafNode right, NonLeafNode parent,
                                 int rightPointerIdx, int inBetweenKeyIdx){
         System.out.printf("++++++++++++\n"+ inBetweenKeyIdx);
-
-        int rightKey = right.getKeyAt(0);
 
         int moveKeyCount = right.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
@@ -360,6 +479,13 @@ public class testBplusTree {
         }
         // update parent ptr
         parent.replaceKeyAt(inBetweenKeyIdx, key);
+
+        //TODO:: Case where lead node becomes root node after shifting
+        /* E.g. Nonleafnode : [7]
+            Leafnode : [3,4]
+            Leafnode : [7,10]
+            deletion of 10 will move 7 to [3,4] therefore becoming the root node  
+         */ 
     }
 
     /**
