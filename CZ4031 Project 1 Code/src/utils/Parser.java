@@ -54,27 +54,27 @@ public class Parser {
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
 
-//        tree.insertKey(1,addr3);
-//         tree.insertKey(2,addr2);
-//         tree.insertKey(3,addr3);
-//         tree.insertKey(4,addr4);
-//         tree.insertKey(5,addr5);
-//         tree.insertKey(6,addr5);
-//         tree.insertKey(4,addr2);
-//         tree.insertKey(2,addr1);
-//         tree.insertKey(3,addr2);
-//         tree.insertKey(4,addr4);
-//         tree.insertKey(5,addr5);
-//         tree.insertKey(6,addr5);
-//         tree.insertKey(7,addr1);
-//         tree.insertKey(8,addr3);
-//         tree.insertKey(9,addr4);
-//         tree.insertKey(10,addr2);
-//         tree.insertKey(11,addr4);
-//         tree.insertKey(12,addr3);
-//         tree.insertKey(13,addr2);
-//         tree.insertKey(14,addr4);
-//         tree.insertKey(15,addr3);
+       tree.insertKey(1,addr3);
+        tree.insertKey(2,addr2);
+        tree.insertKey(3,addr3);
+        tree.insertKey(4,addr4);
+        tree.insertKey(5,addr5);
+        tree.insertKey(6,addr5);
+        tree.insertKey(4,addr2);
+        tree.insertKey(2,addr1);
+        tree.insertKey(3,addr2);
+        tree.insertKey(4,addr4);
+        tree.insertKey(5,addr5);
+        tree.insertKey(6,addr5);
+        tree.insertKey(7,addr1);
+        tree.insertKey(8,addr3);
+        tree.insertKey(9,addr4);
+        tree.insertKey(10,addr2);
+        tree.insertKey(11,addr4);
+        tree.insertKey(12,addr3);
+        tree.insertKey(13,addr2);
+        tree.insertKey(14,addr4);
+        tree.insertKey(15,addr3);
 
         // System.out.print(tree.searchKey2(10));
         // System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
@@ -85,10 +85,10 @@ public class Parser {
 //        System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
 //        System.out.printf("\nKEY SEARCH %s", tree.searchKey(10));
 //        System.out.printf("\nRANGE SEARCH %s\n\n", tree.rangeSearch(10, 10));
-        System.out.println("ORIGINAL TREE--> \n");
-         tree.printBPlusTree(testBplusTree.getRoot());
-         System.out.printf("\nDELETION %s\n", tree.deleteKey(19));
-        System.out.println("MODIFIED TREE--> ");
+        // System.out.println("ORIGINAL TREE--> \n");
+        //  tree.printBPlusTree(testBplusTree.getRoot());
+        //  System.out.printf("\nDELETION %s\n", tree.deleteKey(19));
+        // System.out.println("MODIFIED TREE--> ");
 
         tree.printBPlusTree(testBplusTree.getRoot());
 
