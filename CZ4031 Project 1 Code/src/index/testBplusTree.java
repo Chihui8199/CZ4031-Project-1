@@ -2,7 +2,6 @@
 package index;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import storage.Address;
 
@@ -194,7 +193,7 @@ public class testBplusTree {
         // TODO: change this to the calculated node_size once finalized
         // TODO: handle deletion in main memory
         if (node.isUnderUtilized(NODE_SIZE)) {
-            // needs merging if underutilized
+            System.out.print("------------------------Rebalancing tree now ---------------------------\n\n");
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
         }
 
@@ -211,19 +210,150 @@ public class testBplusTree {
      * @param parentPointerIndex
      * @param parentKeyIndex
      */
-
     private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex,
             int parentKeyIndex) throws IllegalStateException {
         if (parent == null) {
-            // handleInvalidNonLeaf(underUtilizedNode);
+           handleInvalidRoot(underUtilizedNode);
         } else if (underUtilizedNode.isLeaf()) {
-            // handleInvalidNonLeaf(underUtilizedNode);
+            handleInvalidLeaf(underUtilizedNode, parent,
+                    parentPointerIndex, parentKeyIndex);
+            System.out.print("Tree rebalanced now.sdasdasd");
         } else if (underUtilizedNode.isNonLeaf()) {
-            // TODO:
-            // handleInvalidNonLeaf(underUtilizedNode);
         } else {
             throw new IllegalStateException("state is wrong!");
         }
+    }
+
+    public void handleInvalidRoot(Node underUtilizedNode){
+        System.out.println("HANDING PARENT == NULLL");
+        // handleInvalidNonLeaf(underUtilizedNode);
+        if(underUtilizedNode.isLeaf()){ // Only node in B+ Tree - Root
+            ((LeafNode)underUtilizedNode).clear();
+            System.out.print("There exist no B+ Tree now.\n");
+        }
+        else{
+            NonLeafNode nonLeafRoot = (NonLeafNode) underUtilizedNode;
+            Node newRoot = nonLeafRoot.getChild(0);
+            newRoot.setParent(null);
+            rootNode = newRoot;
+        }
+    }
+    private void handleInvalidLeaf(Node underUtilizedNode,
+                                   NonLeafNode parent,
+                                   int parentPointerIndex,
+                                   int parentKeyIndex) throws IllegalStateException {
+
+        // load the neighbors
+        LeafNode underUtilizedLeaf = (LeafNode) underUtilizedNode;
+        LeafNode nextNode = (LeafNode) underUtilizedLeaf.getNext();
+        LeafNode prevNode = (LeafNode) underUtilizedLeaf.getPrevious();
+        if(nextNode == null && prevNode == null)
+            throw new IllegalStateException("Both prevNode and nextNode is null for " + underUtilizedNode + "This is wrong!");
+        // 2. Check if we can redistribute with next
+        // 1. Check if we can redistribute with prev
+        // 3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
+        // a. first try merge with right
+        // b. second try merge with left
+        System.out.println("--> handle invalid leaf");
+        if (prevNode != null && prevNode.isAbleToGiveOneKey(NODE_SIZE)){
+            System.out.println("--> handle invalid leaf: right to left ");
+            moveOneKey(prevNode, underUtilizedLeaf, true, parent, parentKeyIndex+1);
+        }
+        else if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
+            System.out.println("--> handle invalid leaf: leaf to right");
+            moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
+        } // we can't redistribute, try merging with next
+        else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE) {
+            // it's the case where under utilized node is the left node from parent
+            System.out.printf("PRINTING KEYS cur LEFT"+ underUtilizedNode.keys);
+            System.out.printf("PRINTING KEYS NEXT RIGHT"+ nextNode.keys);
+
+            mergeLeafNodes(underUtilizedLeaf, nextNode, parent,parentPointerIndex+1, parentKeyIndex+1);
+        }
+        else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE))
+        {
+            System.out.printf("PRINTING KEYS 2" + nextNode.keys);
+
+            // it's the case where split node is in the left from parent
+            mergeLeafNodes(prevNode, underUtilizedLeaf, parent, parentPointerIndex, parentKeyIndex);
+        }
+        else {
+            throw new IllegalStateException("Can't have both leaf " +
+                    "pointers null and not be root or no " +
+                    "common parent");
+        }
+    }
+
+    private void mergeLeafNodes(LeafNode left, LeafNode right, NonLeafNode parent,
+                                int rightPointerIdx, int inBetweenKeyIdx){
+        System.out.printf("++++++++++++\n"+ right.getFirstKey());
+
+
+        int moveKeyCount = right.getKeySize();
+        for (int i = 0; i < moveKeyCount; i++) {
+            int removedKey = right.removeKeyAt(0); 
+            int leftLastIdx = left.getLastIdx(); 
+            left.insertKeyAt(leftLastIdx+1,removedKey);
+            // 2. Move over the records
+            left.insertByRedistribution(removedKey, right.getAddressesForKey(removedKey));
+            right.removeKeyInMap(removedKey);
+            
+        }
+        
+         // now handle the top pointer
+//        parent.removePointerAt(rightPointerIdx);
+//        parent.removeKeyAt(inBetweenKeyIdx);
+
+        // update the double-linked pointers
+        left.setNext(right.getNext());
+        // update the prev pointer of right next node (if any)
+        if(right.getNext() != null) {
+            LeafNode rightNext = right.getNext();
+           // rightNext.setPrevious(left.getBlockIndex());
+        }
+
+        
+
+    }
+
+
+    // TODO: modify this
+//    private boolean isSameParent(Node node, NonLeafNode parent, int parentIndex) {
+//        return(parent.getKeySize() >= parentIndex && parentIndex >= 0 &&
+//                (node.getBlockIndex() == parent.getPointerAt(parentIndex)));
+//    }
+
+
+    private void moveOneKey(LeafNode giver, LeafNode receiver,
+                            boolean giverOnLeft, NonLeafNode parent,
+                            int inBetweenKeyIdx){
+        int key;
+        //true --> giver on left
+        if(giverOnLeft){
+            System.out.println("--> move the key from left node to right");
+            // move the key from left node to right
+            // 1. Move and edit map records
+            int giverKey = giver.getLastKey();
+            receiver.insertByRedistribution(giverKey, giver.getAddressesForKey(giverKey));
+            giver.removeKeyInMap(giverKey);
+            // 2. Move and edit key in node
+            receiver.insertKeyAt(0, giverKey);
+            giver.removeKeyAtLast();
+            key = receiver.getKeyAt(0);
+        } else {
+            System.out.println("--> move key from right node to left node\n");
+            // move the key from right node to left
+            // 1. Move and edit map records
+            int giverKey = giver.getFirstKey();
+            receiver.insertByRedistribution(giverKey, giver.getAddressesForKey(giverKey));
+            giver.removeKeyInMap(giverKey);
+            // 2. Move and edit key in node
+            giver.removeKeyAt(0);
+            receiver.insertKeyAt(receiver.getKeySize(), giverKey);
+            key = giver.getKeyAt(0);
+        }
+        // update parent ptr
+        parent.replaceKeyAt(inBetweenKeyIdx, key);
     }
 
     /**
@@ -320,7 +450,6 @@ public class testBplusTree {
         if (node == null) {
             return;
         }
-
         if (node.isLeaf()) {
             LeafNode leaf = (LeafNode) node;
             System.out.print(indent + "LeafNode: ");

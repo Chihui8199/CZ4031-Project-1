@@ -18,6 +18,21 @@ public class LeafNode extends Node {
         setPrevious(null);
     }
 
+    public void insertByRedistribution(int key, ArrayList<Address> add){
+        System.out.printf("--> MAP BEFORE: ADDING %s\n", map);
+        map.put(key, add);
+        System.out.printf("--> MAP AFTER: ADDING %s\n", map);
+    }
+
+    public void removeKeyInMap(int key) {
+        System.out.printf("--> MAP BEFORE: REMOVING %s\n", map);
+        map.remove(key);
+        System.out.printf("--> MAP AFTER: REMOVING %s\n", map);
+    }
+
+
+
+
     // TODO: Have to create function for findRecord
     public ArrayList<Address> findRecord(int key) {
         if (this.map.containsKey(key) || this.keys.contains(key)) {
@@ -32,6 +47,7 @@ public class LeafNode extends Node {
     public ArrayList<Address> getAddressesForKey(int key) {
         return map.get(key);
     }
+
 
     // Add record into both TreeMap and ArrayList of keys
     public void addRecord(int key, Address add) {
@@ -163,4 +179,9 @@ public class LeafNode extends Node {
         return map;
     }
 
+    public void clear() {
+        keys.clear();
+        records.clear();
+    }
+    
 }
