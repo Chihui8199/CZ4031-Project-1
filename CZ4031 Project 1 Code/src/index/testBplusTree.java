@@ -2,6 +2,7 @@
 package index;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import storage.Address;
 
@@ -187,7 +188,13 @@ public class testBplusTree {
             addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key);
 
             // update keys in non-leaf node
-            nonLeafNode.updateKey(ptrIdx - 1, next.getKeys().get(0));
+            // nonLeafNode.updateKey(ptrIdx - 1, next.getKeys().get(0));
+            List<Integer> keys = next.getKeys();
+            if (!keys.isEmpty()) {
+                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0));
+            }
+
+            
         
         }
 
@@ -345,20 +352,19 @@ public class testBplusTree {
                                    int inBetweenKeyIdx){
         // new_key and old_key all refers to the ones in parent key arrayList
 
-        // int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
-        // if(giverOnLeft) {
-        //     // receiver.insertPointerAt(0, giver.removePointerAtLast());
-        //     // receiver.insertKeyAt(0, oldKey);
-        //     // newKey = giver.removeKeyAtLast();
-        //     int lastKey = giver.getLastKey();
-        // }
-        // else {
-        //     receiver.insertKeyAtLast(oldKey);
-        //     receiver.insertPointerAtLast(giver.removePointerAt(0));
-        //     newKey = giver.removeKeyAt(0);
-        // }
-        // // in either case update the parent key
-        // parent.replaceKeyAt(inBetweenKeyIdx, newKey);
+        int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
+        if(giverOnLeft) {
+            receiver.insertPointerAt(0, giver.removePointerAtLast());
+            receiver.insertKeyAt(0, oldKey);
+            newKey = giver.removeKeyAtLast();
+        }
+        else {
+            receiver.insertKeyAtLast(oldKey);
+            receiver.insertPointerAtLast(giver.removePointerAt(0));
+            newKey = giver.removeKeyAt(0);
+        }
+        // in either case update the parent key
+        parent.replaceKeyAt(inBetweenKeyIdx, newKey);
         
     }
 
