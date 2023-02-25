@@ -4,6 +4,8 @@ package index;
 import java.util.ArrayList;
 
 import storage.Address;
+import storage.Record;
+import storage.Storage;
 
 public class testBplusTree {
 
@@ -405,11 +407,12 @@ public class testBplusTree {
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
-        PerformanceRecorder.addOneLeafNodeReads();
+        PerformanceRecorder.addOneRangeNodeReads();
         if (node.isLeaf()) {
             ptrIdx = node.searchKey(minKey, false); // if minKey is in key array, get key index
             LeafNode leaf = (LeafNode) node;
             while (true) {
+                
                 if (ptrIdx == leaf.getKeySize()) {
                     // check if we have a next node to load.
                     // Assuming that next node return a null if there's no next node
@@ -418,6 +421,7 @@ public class testBplusTree {
                     // Traverse to the next node and start searching from index 0 within the next
                     // node again
                     leaf = (LeafNode) (leaf.getNext());
+                    PerformanceRecorder.addOneRangeNodeReads();
 
                     ptrIdx = 0;
                     if (ptrIdx >= leaf.getKeySize())
@@ -501,10 +505,11 @@ public class testBplusTree {
     public static void experimentThree(testBplusTree tree){
         System.out.println("\n----------------------EXPERIMENT 3-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
-        System.out.print("\nMovies with the “numVotes” equal to 500: ");
+        System.out.print("\nMovies with the 'numVotes' equal to 500: ");
         
         long startTime = System.nanoTime();
-        System.out.println(tree.searchKey(500));
+        ArrayList<Address> searchResults = tree.searchKey(500);
+        System.out.println(searchResults);
         // have to return the actual records with block no. and offset from searchKey
         long endTime = System.nanoTime();
 
@@ -530,14 +535,14 @@ public class testBplusTree {
         PerformanceRecorder performance = new PerformanceRecorder();
         
         
-        System.out.print("\nMovies with the “numVotes” from 30,000 to 40,000, both inclusively: ");
+        System.out.print("\nMovies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
         
         long startTime = System.nanoTime();
         System.out.println(tree.rangeSearch(30000,40000));
         long endTime = System.nanoTime();
 
         System.out.print("\nNo. of Index Nodes the process accesses: ");
-        System.out.println(performance.getLeafNodeReads());
+        System.out.println(performance.getRangeNodeReads());
 
         // System.out.print("No. of Data Blocks the process accesses: ");
         
@@ -565,7 +570,6 @@ public class testBplusTree {
         System.out.println(performance.getTotalNodes());
 
         System.out.print("No. of Levels in updated B+ tree: ");
-        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
         System.out.println(performance.getTreeDegree());
         
         System.out.print("Content of the root node in updated B+ tree: ");
