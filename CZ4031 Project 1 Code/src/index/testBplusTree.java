@@ -9,7 +9,7 @@ import storage.Storage;
 
 public class testBplusTree {
 
-    static final int NODE_SIZE = 3;
+    static final int NODE_SIZE = 16;
     static Node rootNode;
     Node nodeToInsertTo;
 
@@ -509,44 +509,40 @@ public class testBplusTree {
         
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.searchKey(500);
+        long endTime = System.nanoTime();
+        int totalAverageRating = 0;
+        int totalCount = 0;
+
         ArrayList<Record> results = new ArrayList<>();
          if(resultAdd != null){
              for(Address add:resultAdd) {
                  Record record = db.getRecord(add);
+                 System.out.print("\n" + record );
                  results.add(record);
+                 totalAverageRating += record.getAverageRating();
+                 totalCount++;
              }
          }
-        System.out.printf("Records: %s", results);
-
-        //TODO: have to return the actual records with block no. and offset from searchKey
-        long endTime = System.nanoTime();
-
-        //TODO: have to return the actual records with block no. and offset from searchKey
-        for ( Address address : searchResults) {
-            
-            System.out.print("\n" + address );
-            
-        }
-        
+        // System.out.printf("Records: %s", results);
 
         // TODO: searchKey counter not counting smth
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getNodeReads());
 
-        // System.out.print("No. of Data Blocks the process accesses: ");
+        // TODO: System.out.print("No. of Data Blocks the process accesses: ");
 
-        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double)totalAverageRating/totalCount);
         
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
 
-        // System.out.print("No. of data blocks: ");
+        //TODO: System.out.print("No. of data blocks: ");
 
-        // System.out.print("Running time of brute-force linear scan:  ");
+        //TODO: System.out.print("Running time of brute-force linear scan:  ");
 
     }
 
-    public static void experimentFour(testBplusTree tree){
+    public static void experimentFour(Storage db, testBplusTree tree){
         System.out.println("\n----------------------EXPERIMENT 4-----------------------");
 
         PerformanceRecorder performance = new PerformanceRecorder();
@@ -555,23 +551,37 @@ public class testBplusTree {
         System.out.print("\nMovies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
         
         long startTime = System.nanoTime();
-        System.out.println(tree.rangeSearch(30000,40000));
+        ArrayList<Address> resultAdd = tree.rangeSearch(30000,40000);
         long endTime = System.nanoTime();
+
+        int totalAverageRating = 0;
+        int totalCount = 0;
+
+        ArrayList<Record> results = new ArrayList<>();
+        if(resultAdd != null){
+            for(Address add:resultAdd) {
+                Record record = db.getRecord(add);
+                System.out.print("\n" + record );
+                results.add(record);
+                totalAverageRating += record.getAverageRating();
+                totalCount++;
+            }
+        }
 
         // TODO: rangeSearch not counting all the levels?
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getRangeNodeReads());
 
-        // System.out.print("No. of Data Blocks the process accesses: ");
+        // TODO: System.out.print("No. of Data Blocks the process accesses: ");
         
-        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double)totalAverageRating/totalCount);
 
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
         
-        // System.out.print("No. of data blocks: ");
+        //TODO: System.out.print("No. of data blocks: ");
         
-        // System.out.print("Running time of brute-force linear scan on: ");
+        //TODO: System.out.print("Running time of brute-force linear scan on: ");
 
     }
 
@@ -596,9 +606,9 @@ public class testBplusTree {
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
         
-        // System.out.print("No. of data blocks: ");
+        //TODO: System.out.print("No. of data blocks: ");
         
-        // System.out.print("Running time of brute-force linear scan on: ");
+        //TODO: System.out.print("Running time of brute-force linear scan on: ");
     }
 
 }

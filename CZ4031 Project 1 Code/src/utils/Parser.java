@@ -53,8 +53,8 @@ public class Parser {
             reader.close();
             testBplusTree.experimentTwo(); 
             testBplusTree.experimentThree(db, tree);
-            testBplusTree.experimentFour(tree); 
-            testBplusTree.experimentFive(tree); 
+            testBplusTree.experimentFour(db, tree); 
+            // testBplusTree.experimentFive(tree); 
 
         } catch (IOException e) {
             e.printStackTrace();
