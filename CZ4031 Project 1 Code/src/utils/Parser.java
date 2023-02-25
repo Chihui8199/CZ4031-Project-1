@@ -92,18 +92,4 @@ public class Parser {
         return rec;
     }
 
-//    public void checkIfDataExceedsDiskSize(byte[] data) {
-//        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(filename, true))) {
-//            File file = new File(filename);
-//            long fileSize = file.length();
-//            if (fileSize + data.length > MIN_DISK_CAPACITY && fileSize + data.length < MAX_DISK_CAPACITY) {
-//                output.write(data);
-//            } else {
-//                System.out.println("Error: disk capacity exceeded");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 }
