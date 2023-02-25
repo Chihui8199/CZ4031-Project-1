@@ -69,7 +69,6 @@ public class Parser {
         
             testBplusTree.experimentTwo(); 
             testBplusTree.experimentThree(tree);  
-            testBplusTree.experimentFour(tree); 
             testBplusTree.experimentFour(tree);
             testBplusTree.experimentFive(tree); 
 
