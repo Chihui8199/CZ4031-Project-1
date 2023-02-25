@@ -52,8 +52,6 @@ public class Parser {
                 int numVotes = Integer.parseInt(fields[2]);
                 Record rec = createRecord(tconst, averageRating, numVotes);
                 Address add = db.writeRecordToStorage(rec);
-                
-                // TODO: to be implemented
                 int key = rec.getNumVotes();
                 tree.insertKey(key, add); // TODO: not sure what are the other params tbc
             }
@@ -66,9 +64,8 @@ public class Parser {
             System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
             System.out.printf("Size of database: %sMB\n", (float) db.getNumberBlockUsed() * BLOCK_SIZE/1000000);
             reader.close();
-        
             testBplusTree.experimentTwo(); 
-            testBplusTree.experimentThree(tree);  
+            testBplusTree.experimentThree(db, tree);
             testBplusTree.experimentFour(tree); 
             testBplusTree.experimentFive(tree); 
 
