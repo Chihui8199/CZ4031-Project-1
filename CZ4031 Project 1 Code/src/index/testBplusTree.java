@@ -4,6 +4,8 @@ package index;
 import java.util.ArrayList;
 
 import storage.Address;
+import storage.Record;
+import storage.Storage;
 
 public class testBplusTree {
 
@@ -500,13 +502,23 @@ public class testBplusTree {
         System.out.println(testBplusTree.getRoot().keys);
     }
 
-    public static void experimentThree(testBplusTree tree){
+    public static void experimentThree(Storage db, testBplusTree tree){
         System.out.println("\n----------------------EXPERIMENT 3-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.print("\nMovies with the 'numVotes' equal to 500: ");
         
         long startTime = System.nanoTime();
-        ArrayList<Address> searchResults = tree.searchKey(500);
+        ArrayList<Address> resultAdd = tree.searchKey(500);
+        ArrayList<Record> results = new ArrayList<>();
+         if(resultAdd != null){
+             for(Address add:resultAdd) {
+                 Record record = db.getRecord(add);
+                 results.add(record);
+             }
+         }
+        System.out.printf("Records: %s", results);
+
+        //TODO: have to return the actual records with block no. and offset from searchKey
         long endTime = System.nanoTime();
 
         //TODO: have to return the actual records with block no. and offset from searchKey

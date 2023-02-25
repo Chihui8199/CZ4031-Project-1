@@ -77,6 +77,21 @@ public class Storage {
         return filledBlocks.size();
     }
 
+    private Block getBlock(int blockNumber) {
+        Block block = null;
+        if (blockNumber >= 0) {
+            // 1 I/O
+            block = blocks[blockNumber];
+            blockAccesses++;
+        }
+        return block;
+    }
+
+    public Record getRecord(Address add) {
+        Block block = getBlock(add.getBlockId());
+        return block.getRecord(add.getOffset());
+    }
+
 
     public void printDatabaseInfo(){
         System.out.println(String.format("Total Memory Size: %f MB", (float) memdiskSize/Math.pow(10, 6)));

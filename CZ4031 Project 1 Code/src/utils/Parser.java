@@ -1,14 +1,8 @@
 package utils;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.*;
-
-import java.util.Scanner;
-
 import storage.Address;
 import storage.Record;
 import storage.Storage;
@@ -17,14 +11,7 @@ import index.*;
 
 public class Parser {
 
-    private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024; // TODO: i think this calculation is not correct
-
-    // private static final int MAX_DISK_CAPACITY = 500 * 1024 * 1024;
     private static final int BLOCK_SIZE = 200;
-    private String filename;
-
-    private static final int MAX_DISK_CAPACITY = 500 * (int) (Math.pow(10, 6));
-
     /**
      * Loads in the data and stores it in the database
      * 
@@ -52,8 +39,6 @@ public class Parser {
                 int numVotes = Integer.parseInt(fields[2]);
                 Record rec = createRecord(tconst, averageRating, numVotes);
                 Address add = db.writeRecordToStorage(rec);
-                
-                // TODO: to be implemented
                 int key = rec.getNumVotes();
                 tree.insertKey(key, add);
             }
@@ -66,10 +51,9 @@ public class Parser {
             System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
             System.out.printf("Size of database: %sMB\n", (float) db.getNumberBlockUsed() * BLOCK_SIZE/1000000);
             reader.close();
-        
             testBplusTree.experimentTwo(); 
-            testBplusTree.experimentThree(tree);  
-            testBplusTree.experimentFour(tree);
+            testBplusTree.experimentThree(db, tree);
+            testBplusTree.experimentFour(tree); 
             testBplusTree.experimentFive(tree); 
 
         } catch (IOException e) {
@@ -87,23 +71,8 @@ public class Parser {
      * @param numVotes      number of votes the title has received
      */
     public static Record createRecord(String tconst, float averageRating, int numVotes) {
-        // creates a new Record object
         Record rec = new Record(tconst, averageRating, numVotes);
         return rec;
     }
-
-//    public void checkIfDataExceedsDiskSize(byte[] data) {
-//        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(filename, true))) {
-//            File file = new File(filename);
-//            long fileSize = file.length();
-//            if (fileSize + data.length > MIN_DISK_CAPACITY && fileSize + data.length < MAX_DISK_CAPACITY) {
-//                output.write(data);
-//            } else {
-//                System.out.println("Error: disk capacity exceeded");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 }

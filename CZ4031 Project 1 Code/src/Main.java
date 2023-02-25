@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception{
         int diskSize = getDiskInput();
         // Path filePath = Path.of("data.tsv");
-        String filePath = "C://Github//CZ4031-Project-1//CZ4031 Project 1 Code//src//data.tsv";
+        String filePath = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1 Code/src/data.tsv";
         File file = new File(String.valueOf(filePath));
         if (file.exists()) {
             System.out.print("Yes File Exist\nStarting to read data...\n");
