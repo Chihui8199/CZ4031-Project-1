@@ -1,14 +1,8 @@
 package utils;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.*;
-
-import java.util.Scanner;
-
 import storage.Address;
 import storage.Record;
 import storage.Storage;
@@ -17,14 +11,7 @@ import index.*;
 
 public class Parser {
 
-    private static final int MIN_DISK_CAPACITY = 100 * 1024 * 1024; // TODO: i think this calculation is not correct
-
-    // private static final int MAX_DISK_CAPACITY = 500 * 1024 * 1024;
     private static final int BLOCK_SIZE = 200;
-    private String filename;
-
-    private static final int MAX_DISK_CAPACITY = 500 * (int) (Math.pow(10, 6));
-
     /**
      * Loads in the data and stores it in the database
      * 
@@ -84,7 +71,6 @@ public class Parser {
      * @param numVotes      number of votes the title has received
      */
     public static Record createRecord(String tconst, float averageRating, int numVotes) {
-        // creates a new Record object
         Record rec = new Record(tconst, averageRating, numVotes);
         return rec;
     }
