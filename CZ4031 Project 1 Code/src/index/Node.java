@@ -400,7 +400,7 @@ public class Node {
 
         } else {
             // it is the root
-            System.out.println("NO PARENT");
+            // System.out.println("NO PARENT");
             NonLeafNode newRoot = new NonLeafNode();
             PerformanceRecorder.addOneNode();
             newRoot.keys = new ArrayList<Integer>();

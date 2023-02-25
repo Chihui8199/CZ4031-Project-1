@@ -490,6 +490,7 @@ public class testBplusTree {
         System.out.print("No. of Nodes in B+ tree: ");
         System.out.println(performance.getTotalNodes());
 
+        //TODO: error here
         System.out.print("No. of Levels in B+ tree: ");
         PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
         System.out.println(performance.getTreeDegree());
@@ -501,13 +502,14 @@ public class testBplusTree {
     public static void experimentThree(testBplusTree tree){
         System.out.println("\n----------------------EXPERIMENT 3-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
-        System.out.print("\nMovies with the “numVotes” equal to 500: ");
+        System.out.print("\nMovies with the 'numVotes' equal to 500: ");
         
         long startTime = System.nanoTime();
         System.out.println(tree.searchKey(500));
-        // have to return the actual records with block no. and offset from searchKey
+        //TODO: have to return the actual records with block no. and offset from searchKey
         long endTime = System.nanoTime();
 
+        // TODO: error here
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getNodeReads());
 
@@ -530,12 +532,13 @@ public class testBplusTree {
         PerformanceRecorder performance = new PerformanceRecorder();
         
         
-        System.out.print("\nMovies with the “numVotes” from 30,000 to 40,000, both inclusively: ");
+        System.out.print("\nMovies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
         
         long startTime = System.nanoTime();
         System.out.println(tree.rangeSearch(30000,40000));
         long endTime = System.nanoTime();
 
+        // TODO: error here also
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getLeafNodeReads());
 
@@ -556,14 +559,14 @@ public class testBplusTree {
         System.out.println("\n----------------------EXPERIMENT 5-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         long startTime = System.nanoTime();
-        // carry out deletion here
+        //TODO: carry out deletion here
         long endTime = System.nanoTime();
 
-        
 
         System.out.print("No. of Nodes in updated B+ tree: ");
         System.out.println(performance.getTotalNodes());
 
+        //TODO: error here
         System.out.print("No. of Levels in updated B+ tree: ");
         PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
         System.out.println(performance.getTreeDegree());
