@@ -50,9 +50,9 @@ public class Parser {
                 Record rec = createRecord(tconst, averageRating, numVotes);
                 Address add = db.writeRecordToStorage(rec);
                 // create a BP+ indexing as we read the file
-                // BPTree tree = new BPTree(); // TODO: to be implemented
+                testBplusTree tree = new testBplusTree(); // TODO: to be implemented
                 int key = rec.getNumVotes();
-                // tree.insertKey(key, add) // TODO: not sure what are the other params tbc
+                tree.insertKey(key, add); // TODO: not sure what are the other params tbc
             }
             db.printDatabaseInfo();
             System.out.println("All data has been stored in database successfully!");
