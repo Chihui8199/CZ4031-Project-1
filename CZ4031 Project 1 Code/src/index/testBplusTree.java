@@ -490,7 +490,7 @@ public class testBplusTree {
         System.out.print("No. of Nodes in B+ tree: ");
         System.out.println(performance.getTotalNodes());
 
-        //TODO: error here
+        // Only works if you call printBPlusTree() before this
         System.out.print("No. of Levels in B+ tree: ");
         PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
         System.out.println(performance.getTreeDegree());
@@ -566,9 +566,8 @@ public class testBplusTree {
         System.out.print("No. of Nodes in updated B+ tree: ");
         System.out.println(performance.getTotalNodes());
 
-        //TODO: error here
+        // Only works if you call printBPlusTree() before this
         System.out.print("No. of Levels in updated B+ tree: ");
-        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
         System.out.println(performance.getTreeDegree());
         
         System.out.print("Content of the root node in updated B+ tree: ");

@@ -58,6 +58,9 @@ public class Parser {
                 tree.insertKey(key, add); // TODO: not sure what are the other params tbc
             }
             db.printDatabaseInfo();
+
+            tree.printBPlusTree(testBplusTree.getRoot());
+
             System.out.println("All data has been stored in database successfully!");
             System.out.println("\n---------------Experiment 1------------------");
             System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
@@ -68,7 +71,7 @@ public class Parser {
             testBplusTree.experimentThree(tree);  
             testBplusTree.experimentFour(tree); 
             testBplusTree.experimentFive(tree); 
-            // tree.printBPlusTree(testBplusTree.getRoot());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
