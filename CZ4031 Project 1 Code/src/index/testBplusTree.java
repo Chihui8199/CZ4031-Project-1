@@ -252,49 +252,57 @@ public class testBplusTree {
                                    NonLeafNode parent,
                                    int parentPointerIndex,
                                    int parentKeyIndex) throws IllegalStateException {
-
+        int numChildrenOfNextParent = 0;
+        int numChildrenOfNodeParent = 0;
+        LeafNode nextNode;
+        nextNode = null;
         // load the neighbors
         LeafNode underUtilizedLeaf = (LeafNode) underUtilizedNode;
-        LeafNode nextNode = (LeafNode) underUtilizedLeaf.getNext();
+        if (underUtilizedLeaf.getNext() != null){
+            nextNode = (LeafNode) underUtilizedLeaf.getNext();
+            if (nextNode.getParent() != null) {
+            numChildrenOfNextParent = nextNode.getParent().getChildren().size();
+            }
+        }
+        
         LeafNode prevNode = (LeafNode) underUtilizedLeaf.getPrevious();
 
-        int numChildrenOfNodeParent = 0;
-        int numChildrenOfNextParent = 0;
+        
         if (underUtilizedNode.getParent() != null) {
             numChildrenOfNodeParent = underUtilizedNode.getParent().getChildren().size();
         }
-        if (nextNode.getParent() != null) {
-            numChildrenOfNextParent = nextNode.getParent().getChildren().size();
-}
         
-
+        
 
         if(nextNode == null && prevNode == null)
             throw new IllegalStateException("Both prevNode and nextNode is null for " + underUtilizedNode + "This is wrong!");
-        // 2. Check if we can redistribute with next
-        // 1. Check if we can redistribute with prev
-        // 3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
-        // a. first try merge with right
-        // b. second try merge with left
+            // 1. Check if we can redistribute with next
+            // 2. Check if we can redistribute with prev
+            // 3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
+            // a. first try merge with right
+            // b. second try merge with left
         System.out.println("--> handle invalid leaf");
-        if (prevNode != null && prevNode.isAbleToGiveOneKey(NODE_SIZE)){
+        if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
+            System.out.print("Move one key from left to right");
+            // handle invalid leaf: leaf to right
+            moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
+        }
+        else if (prevNode != null && prevNode.isAbleToGiveOneKey(NODE_SIZE)){
+            System.out.print("Move one key from right to left");
             //handle invalid leaf: right to left 
             moveOneKey(prevNode, underUtilizedLeaf, true, parent, parentKeyIndex+1);
         }
-        else if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
-            // handle invalid leaf: leaf to right
-            moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
-        } // we can't redistribute, try merging with next
-        else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE && (numChildrenOfNextParent >=  underUtilizedNode.getParent().getMinNonLeafNodeSize())) {
-            // it's the case where under utilized node is the left node from parent
-            System.out.print("merge with left node");
-            mergeLeafNodes(underUtilizedLeaf, nextNode, parent,parentPointerIndex+1, parentKeyIndex+1);
-        }
+         // we can't redistribute, try merging with next
         else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE && (numChildrenOfNodeParent >= underUtilizedNode.getParent().getMinNonLeafNodeSize())))
         {
             // it's the case where split node is in the left from parent
+            System.out.print("merge with left node");
+            mergeLeafNodes(prevNode, underUtilizedLeaf, parent, parentPointerIndex, parentKeyIndex, false);
+        }
+        else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE && (numChildrenOfNextParent >=  underUtilizedNode.getParent().getMinNonLeafNodeSize())) {
+            // it's the case where under utilized node is the left node from parent
             System.out.print("merge with right node");
-            mergeLeafNodes(prevNode, underUtilizedLeaf, parent, parentPointerIndex, parentKeyIndex);
+            mergeLeafNodes(underUtilizedLeaf, nextNode, parent,parentPointerIndex+1, parentKeyIndex+1, true);
         }
         else {
             throw new IllegalStateException("Can't have both leaf " +
@@ -431,47 +439,86 @@ public class testBplusTree {
     }
 
 
-    private void mergeLeafNodes(LeafNode left, LeafNode right, NonLeafNode parent,
-                                int rightPointerIdx, int inBetweenKeyIdx){
+    private void mergeLeafNodes(LeafNode nodeToMergeTo, LeafNode current, NonLeafNode parent,
+                                int rightPointerIdx, int inBetweenKeyIdx, boolean mergetoright){
         System.out.printf("++++++++++++\n"+ inBetweenKeyIdx);
 
-        int moveKeyCount = right.getKeySize();
+        int moveKeyCount = current.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
-            int removedKey = right.removeKeyAt(0); 
-            int leftLastIdx = left.getLastIdx(); 
-            left.insertKeyAt(leftLastIdx+1,removedKey);
+            int removedKey = current.removeKeyAt(0); 
+            int leftLastIdx = nodeToMergeTo.getLastIdx(); 
+            nodeToMergeTo.insertKeyAt(leftLastIdx+1,removedKey);
             // 2. Move over the records
-            left.insertByRedistribution(removedKey, right.getAddressesForKey(removedKey));
-            right.removeKeyInMap(removedKey);
+            nodeToMergeTo.insertByRedistribution(removedKey, current.getAddressesForKey(removedKey));
+            current.removeKeyInMap(removedKey);
             
         }
 
         System.out.print("Parent keys: " + parent.getKeys()); 
-        // now handle the top pointer
-
-        parent.removeChild(right);
         
-        if (parent.getKeySize() > parent.getMinNonLeafNodeSize()) {
-            parent.removeKeyAt(inBetweenKeyIdx-1);
-        }
-        System.out.print("After remove Parent keys: " + parent.getKeys());
+        parent.removeChild(current); //To remove the empty leaf node
+    
+        // parent.removeKeyAt(0);
+        System.out.print("New Parent key:"+ parent.getKeys());
 
-        // update the double-linked pointers
-        //TODO: check for prev and remove link
+        if ((parent.getChildren().size()) == (parent.getKeySize())){ 
+            System.out.print("No need to update parent");
+        }
+        else{
+            parent.removeKeyAt(inBetweenKeyIdx);
+        }
+        
+        if (mergetoright == true){
+            // update the prev pointer of right next node (if any)
+            if(current.getNext() != null) {
+                LeafNode currentNext = current.getNext();
+                currentNext.setPrevious(current.getPrevious());
+            }
+
+            nodeToMergeTo.setNext(current.getNext());
+            if(current.getKeySize()==0){
+                NonLeafNode currParent = current.getNext().getParent();
+                currParent.removeChild(current);
+                //Check if parent key satisfy min node size
+                if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
+                    currParent.removeKeyAt(0);
+                }
+                
+            }
+        }
+        else{
+            // update the prev pointer of left getprevious node (if any)
+            
+            if(current.getPrevious() != null) {
+                LeafNode currentPrev= current.getPrevious();
+                if (currentPrev!= null && (currentPrev.getPrevious()!= null)){
+                    currentPrev.getPrevious().setPrevious(current.getPrevious());
+                }
+                
+            }
+            
+            if(current.getNext()!= null){
+                nodeToMergeTo.setNext(current.getNext());
+                current.getNext().setPrevious(nodeToMergeTo);
+            }
+            if(current.getKeySize()==0 && (current.getNext()!=null)){
+                NonLeafNode currParent = current.getNext().getParent();
+                currParent.removeChild(current);
+                //Check if parent key satisfy min node size
+                if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
+                    currParent.removeKeyAt(0);
+                }
+                
+            }
+            else{
+                NonLeafNode currParent = current.getParent();
+                if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
+                    currParent.removeKeyAtLast();
+                }
+            }
+        }
         
         
-        // update the prev pointer of right next node (if any)
-        if(right.getNext() != null) {
-            LeafNode rightNext = right.getNext();
-            rightNext.setPrevious(right.getPrevious());
-        }
-
-        if (right.getKeySize()==0){
-            right.setNext(null);
-            right.setPrevious(null);
-        }
-
-        left.setNext(right.getNext());
         
     }
 
@@ -512,9 +559,11 @@ public class testBplusTree {
             key = giver.getKeyAt(0);
         }
         // update parent ptr
-        parent.replaceKeyAt(inBetweenKeyIdx, key);
 
-        //TODO:: Case where lead node becomes root node after shifting
+        parent.replaceKeyAt(inBetweenKeyIdx-1, key);
+
+        //TODO:: Case where lead node becomes root node after shifting // WIll never happen unless we r so zai
+
         /* E.g. Nonleafnode : [7]
             Leafnode : [3,4]
             Leafnode : [7,10]
