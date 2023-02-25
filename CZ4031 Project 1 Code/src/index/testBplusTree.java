@@ -8,7 +8,7 @@ import storage.Address;
 
 public class testBplusTree {
 
-    static final int NODE_SIZE = 3;
+    static final int NODE_SIZE = 4;
     static Node rootNode;
     Node nodeToInsertTo;
 
@@ -19,6 +19,7 @@ public class testBplusTree {
 
     public LeafNode createFirstNode() {
         LeafNode newNode = new LeafNode();
+        PerformanceRecorder.addOneNode();
         newNode.setIsRoot(true);
         newNode.setIsLeaf(true);
         setRoot(newNode);
@@ -27,6 +28,7 @@ public class testBplusTree {
 
     public static Node createNode() {
         Node newNode = new Node();
+        PerformanceRecorder.addOneNode();
         return newNode;
     }
 
@@ -51,8 +53,8 @@ public class testBplusTree {
         // nodeToInsertTo is the leafnode
         nodeToInsertTo = searchNode(key);
 
-        System.out.printf("Keys of node to insert to: ");
-        System.out.print(nodeToInsertTo.getKeys());
+        System.out.print("Keys of node to insert to: ");
+        System.out.println(nodeToInsertTo.getKeys());
 
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
@@ -78,13 +80,10 @@ public class testBplusTree {
     public LeafNode searchNode(int key) {
         ArrayList<Integer> keys;
 
-        System.out.printf("Searching Node for Key %d\n", key);
-
         // If root is a leaf node, means its still at the first node, hence return the
         // rootNode
         if (testBplusTree.rootNode.isLeaf()) {
             setRoot(rootNode);
-            System.out.printf("Found Node : Root\n");
             return (LeafNode) rootNode;
         }
 
@@ -96,6 +95,7 @@ public class testBplusTree {
             // node's (nodeToInsertTo) child is a leaf node
 
             while (!((NonLeafNode) nodeToInsertTo).getChild(0).isLeaf()) {
+                
 
                 keys = nodeToInsertTo.getKeys();
 
@@ -138,7 +138,6 @@ public class testBplusTree {
             // return the child node once found
             for (int i = keys.size() - 1; i >= 0; i--) {
                 if (keys.get(i) <= key) {
-                    System.out.printf("Found key: %d\n", nodeToInsertTo.getKey(i));
                     return (LeafNode) ((NonLeafNode) nodeToInsertTo).getChild(i + 1);
                 }
             }
@@ -229,8 +228,8 @@ public class testBplusTree {
                     parentPointerIndex, parentKeyIndex);
         } else if (underUtilizedNode.isNonLeaf()) {
             System.out.print("\n\nEntering rebalancing of Non-leaf node!!!");
-            handleInvalidInternal(underUtilizedNode, parent,
-                    parentPointerIndex, parentKeyIndex);
+            // handleInvalidInternal(underUtilizedNode, parent,
+            //         parentPointerIndex, parentKeyIndex);
         } else {
             throw new IllegalStateException("state is wrong!");
         }
@@ -258,6 +257,18 @@ public class testBplusTree {
         LeafNode underUtilizedLeaf = (LeafNode) underUtilizedNode;
         LeafNode nextNode = (LeafNode) underUtilizedLeaf.getNext();
         LeafNode prevNode = (LeafNode) underUtilizedLeaf.getPrevious();
+
+        int numChildrenOfNodeParent = 0;
+        int numChildrenOfNextParent = 0;
+        if (underUtilizedNode.getParent() != null) {
+            numChildrenOfNodeParent = underUtilizedNode.getParent().getChildren().size();
+        }
+        if (nextNode.getParent() != null) {
+            numChildrenOfNextParent = nextNode.getParent().getChildren().size();
+}
+        
+
+
         if(nextNode == null && prevNode == null)
             throw new IllegalStateException("Both prevNode and nextNode is null for " + underUtilizedNode + "This is wrong!");
         // 2. Check if we can redistribute with next
@@ -274,13 +285,15 @@ public class testBplusTree {
             // handle invalid leaf: leaf to right
             moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
         } // we can't redistribute, try merging with next
-        else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE) {
+        else if(nextNode!=null && (nextNode.getKeySize() + underUtilizedLeaf.getKeySize()) <= NODE_SIZE && (numChildrenOfNextParent >=  underUtilizedNode.getParent().getMinNonLeafNodeSize())) {
             // it's the case where under utilized node is the left node from parent
+            System.out.print("merge with left node");
             mergeLeafNodes(underUtilizedLeaf, nextNode, parent,parentPointerIndex+1, parentKeyIndex+1);
         }
-        else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE))
+        else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE && (numChildrenOfNodeParent >= underUtilizedNode.getParent().getMinNonLeafNodeSize())))
         {
             // it's the case where split node is in the left from parent
+            System.out.print("merge with right node");
             mergeLeafNodes(prevNode, underUtilizedLeaf, parent, parentPointerIndex, parentKeyIndex);
         }
         else {
@@ -290,51 +303,51 @@ public class testBplusTree {
         }
     }
 
-    private void handleInvalidInternal(Node underUtilizedNode,
-                                       NonLeafNode parent,
-                                       int parentPointerIndex,
-                                       int parentKeyIndex) throws IllegalStateException {
+    // private void handleInvalidInternal(Node underUtilizedNode,
+    //                                    NonLeafNode parent,
+    //                                    int parentPointerIndex,
+    //                                    int parentKeyIndex) throws IllegalStateException {
 
-        NonLeafNode underUtilizedInternal = (NonLeafNode) underUtilizedNode;
+    //     NonLeafNode underUtilizedInternal = (NonLeafNode) underUtilizedNode;
 
-        // load the adjacent nodes
+    //     // load the adjacent nodes
         
-        NonLeafNode nextInternal = (NonLeafNode) parent.getChild(parentPointerIndex + 1);
-        NonLeafNode prevInternal = (NonLeafNode) parent.getChild(parentPointerIndex - 1);
+    //     NonLeafNode nextInternal = (NonLeafNode) parent.getChild(parentPointerIndex + 1);
+    //     NonLeafNode prevInternal = (NonLeafNode) parent.getChild(parentPointerIndex - 1);
 
-        System.out.print(nextInternal + "/n and /n "+ prevInternal +"/n!!!");
+    //     System.out.print(nextInternal + "/n and /n "+ prevInternal +"/n!!!");
 
-        // NonLeafNode nextInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex + 1);
-        // NonLeafNode prevInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex - 1);
+    //     // NonLeafNode nextInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex + 1);
+    //     // NonLeafNode prevInternal = (NonLeafNode) parent.getPointerAt(parentPointerIndex - 1);
 
 
-        if (nextInternal == null && prevInternal == null)
-            throw new IllegalStateException("Both prevInternal and nextInternal is null for " + underUtilizedNode);
-        // check if we can redistribute with the next node
-        if (nextInternal != null && nextInternal.isAbleToGiveOneKey(NODE_SIZE)) {
-            moveOneKeyNonLeafNode(nextInternal, underUtilizedInternal, false, parent, parentKeyIndex + 1);
+    //     if (nextInternal == null && prevInternal == null)
+    //         throw new IllegalStateException("Both prevInternal and nextInternal is null for " + underUtilizedNode);
+    //     // check if we can redistribute with the next node
+    //     if (nextInternal != null && nextInternal.isAbleToGiveOneKey(NODE_SIZE)) {
+    //         moveOneKeyNonLeafNode(nextInternal, underUtilizedInternal, false, parent, parentKeyIndex + 1);
             
-        }
-        // check if we can redistribute with the previous node
-        else if (prevInternal != null && prevInternal.isAbleToGiveOneKey(NODE_SIZE)) {
-            moveOneKeyNonLeafNode(prevInternal, underUtilizedInternal, true, parent, parentKeyIndex);
+    //     }
+    //     // check if we can redistribute with the previous node
+    //     else if (prevInternal != null && prevInternal.isAbleToGiveOneKey(NODE_SIZE)) {
+    //         moveOneKeyNonLeafNode(prevInternal, underUtilizedInternal, true, parent, parentKeyIndex);
             
-        }
-        // // check if we can merge with the right node
-        else if (nextInternal != null &&
-                (underUtilizedInternal.getKeySize() + nextInternal.getKeySize()) <= NODE_SIZE) {
-                    mergeNonLeafNodes(underUtilizedInternal, nextInternal, parent,
-                    parentPointerIndex + 1, parentKeyIndex + 1);
-        }
-        // now, check if we can merge with the left node
-        else if (prevInternal != null &&
-                (underUtilizedInternal.getKeySize() + prevInternal.getKeySize()) <= NODE_SIZE) {
-                    mergeNonLeafNodes(prevInternal, underUtilizedInternal, parent,
-                    parentPointerIndex, parentKeyIndex);
-        } else {
-            throw new IllegalStateException("Can't merge or redistribute internal node " + underUtilizedInternal);
-        }
-    }
+    //     }
+    //     // // check if we can merge with the right node
+    //     else if (nextInternal != null &&
+    //             (underUtilizedInternal.getKeySize() + nextInternal.getKeySize()) <= NODE_SIZE) {
+    //                 mergeNonLeafNodes(underUtilizedInternal, nextInternal, parent,
+    //                 parentPointerIndex + 1, parentKeyIndex + 1);
+    //     }
+    //     // now, check if we can merge with the left node
+    //     else if (prevInternal != null &&
+    //             (underUtilizedInternal.getKeySize() + prevInternal.getKeySize()) <= NODE_SIZE) {
+    //                 mergeNonLeafNodes(prevInternal, underUtilizedInternal, parent,
+    //                 parentPointerIndex, parentKeyIndex);
+    //     } else {
+    //         throw new IllegalStateException("Can't merge or redistribute internal node " + underUtilizedInternal);
+    //     }
+    // }
 
     /**
      * Move one key from receiver to giver, update parent key afterwards
@@ -352,19 +365,23 @@ public class testBplusTree {
                                    int inBetweenKeyIdx){
         // new_key and old_key all refers to the ones in parent key arrayList
 
-        int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
-        if(giverOnLeft) {
-            receiver.insertPointerAt(0, giver.removePointerAtLast());
-            receiver.insertKeyAt(0, oldKey);
-            newKey = giver.removeKeyAtLast();
-        }
-        else {
-            receiver.insertKeyAtLast(oldKey);
-            receiver.insertPointerAtLast(giver.removePointerAt(0));
-            newKey = giver.removeKeyAt(0);
-        }
-        // in either case update the parent key
-        parent.replaceKeyAt(inBetweenKeyIdx, newKey);
+        // int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
+        // if(giverOnLeft) {
+        //     receiver.insertPointerAt(0, giver.removePointerAtLast());
+
+                //cr8 remove last child funct
+                //removechild (size-1)
+
+        //     receiver.insertKeyAt(0, oldKey);
+        //     newKey = giver.removeKeyAtLast();
+        // }
+        // else {
+        //     receiver.insertKeyAtLast(oldKey);
+        //     receiver.insertPointerAtLast(giver.removePointerAt(0));
+        //     newKey = giver.removeKeyAt(0);
+        // }
+        // // in either case update the parent key
+        // parent.replaceKeyAt(inBetweenKeyIdx, newKey);
         
     }
 
@@ -429,22 +446,33 @@ public class testBplusTree {
             
         }
 
-
+        System.out.print("Parent keys: " + parent.getKeys()); 
         // now handle the top pointer
+
         parent.removeChild(right);
-        parent.removeKeyAt(inBetweenKeyIdx);
         
-        System.out.print("PArent keys: " + parent.getKeys());
+        if (parent.getKeySize() > parent.getMinNonLeafNodeSize()) {
+            parent.removeKeyAt(inBetweenKeyIdx-1);
+        }
+        System.out.print("After remove Parent keys: " + parent.getKeys());
 
         // update the double-linked pointers
-        left.setNext(right.getNext());
+        //TODO: check for prev and remove link
+        
+        
         // update the prev pointer of right next node (if any)
         if(right.getNext() != null) {
             LeafNode rightNext = right.getNext();
-        //    rightNext.setPrevious(left.getBlockIndex());
             rightNext.setPrevious(right.getPrevious());
         }
 
+        if (right.getKeySize()==0){
+            right.setNext(null);
+            right.setPrevious(null);
+        }
+
+        left.setNext(right.getNext());
+        
     }
 
 
@@ -505,7 +533,9 @@ public class testBplusTree {
     }
 
     public ArrayList<Address> searchValue(Node node, int key) {
-        // Find if key is within the rootNode
+        PerformanceRecorder.addOneNodeReads();
+
+        // Find if key is within the rootNode       
         if (node.isLeaf()) {
             int ptrIdx = node.searchKey(key, false);
             if (ptrIdx >= 0 && ptrIdx < node.getKeySize() && key == node.getKeyAt(ptrIdx)) {
@@ -536,6 +566,7 @@ public class testBplusTree {
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
+        PerformanceRecorder.addOneLeafNodeReads();
         if (node.isLeaf()) {
             ptrIdx = node.searchKey(minKey, false); // if minKey is in key array, get key index
             LeafNode leaf = (LeafNode) node;
@@ -585,6 +616,7 @@ public class testBplusTree {
      * @param indent the current indentation level
      */
     private void printBPlusTreeHelper(Node node, String indent) {
+        
         if (node == null) {
             return;
         }
@@ -596,6 +628,7 @@ public class testBplusTree {
             }
             System.out.println();
         } else {
+            
             NonLeafNode nonLeaf = (NonLeafNode) node;
             System.out.print(indent + "NonLeafNode: ");
             for (int key : nonLeaf.getKeys()) {
@@ -605,7 +638,106 @@ public class testBplusTree {
             for (Node child : nonLeaf.getChildren()) {
                 printBPlusTreeHelper(child, indent + "  ");
             }
+            PerformanceRecorder.addOneTreeDegree();
         }
+        
+    }
+    
+    public static void experimentTwo(){
+        System.out.println("\n----------------------EXPERIMENT 2-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        System.out.println("Parameter n: " + NODE_SIZE);
+
+        System.out.print("No. of Nodes in B+ tree: ");
+        System.out.println(performance.getTotalNodes());
+
+        System.out.print("No. of Levels in B+ tree: ");
+        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
+        System.out.println(performance.getTreeDegree());
+        
+        System.out.print("Content of the root node: ");
+        System.out.println(testBplusTree.getRoot().keys);
+    }
+
+    public static void experimentThree(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 3-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        System.out.print("\nMovies with the “numVotes” equal to 500: ");
+        
+        long startTime = System.nanoTime();
+        System.out.println(tree.searchKey(500));
+        // have to return the actual records with block no. and offset from searchKey
+        long endTime = System.nanoTime();
+
+        System.out.print("\nNo. of Index Nodes the process accesses: ");
+        System.out.println(performance.getNodeReads());
+
+        // System.out.print("No. of Data Blocks the process accesses: ");
+
+        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+        
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+
+        // System.out.print("No. of data blocks: ");
+
+        // System.out.print("Running time of brute-force linear scan:  ");
+
+    }
+
+    public static void experimentFour(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 4-----------------------");
+
+        PerformanceRecorder performance = new PerformanceRecorder();
+        
+        
+        System.out.print("\nMovies with the “numVotes” from 30,000 to 40,000, both inclusively: ");
+        
+        long startTime = System.nanoTime();
+        System.out.println(tree.rangeSearch(30000,40000));
+        long endTime = System.nanoTime();
+
+        System.out.print("\nNo. of Index Nodes the process accesses: ");
+        System.out.println(performance.getLeafNodeReads());
+
+        // System.out.print("No. of Data Blocks the process accesses: ");
+        
+        // System.out.print("Average of 'averageRating's' of the records accessed: ");
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+        
+        // System.out.print("No. of data blocks: ");
+        
+        // System.out.print("Running time of brute-force linear scan on: ");
+
+    }
+
+    public static void experimentFive(testBplusTree tree){
+        System.out.println("\n----------------------EXPERIMENT 5-----------------------");
+        PerformanceRecorder performance = new PerformanceRecorder();
+        long startTime = System.nanoTime();
+        // carry out deletion here
+        long endTime = System.nanoTime();
+
+        
+
+        System.out.print("No. of Nodes in updated B+ tree: ");
+        System.out.println(performance.getTotalNodes());
+
+        System.out.print("No. of Levels in updated B+ tree: ");
+        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
+        System.out.println(performance.getTreeDegree());
+        
+        System.out.print("Content of the root node in updated B+ tree: ");
+        System.out.println(testBplusTree.getRoot().keys);
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n",duration);
+        
+        // System.out.print("No. of data blocks: ");
+        
+        // System.out.print("Running time of brute-force linear scan on: ");
     }
 
 }
