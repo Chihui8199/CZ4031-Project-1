@@ -11,7 +11,7 @@ public class PerformanceRecorder {
 
     private static int totalNodeReads;
     // private int totalNonLeafNodeReads;
-    private static int totalLeafNodeReads;
+    private static int totalRangeNodeReads;
 
     // private int totalNodeWrites;
     // private int totalNonLeafNodeWrites;
@@ -77,12 +77,12 @@ public class PerformanceRecorder {
         totalNodeReads++;
     }
 
-    public int getLeafNodeReads() {
-        return totalLeafNodeReads;
+    public int getRangeNodeReads() {
+        return totalRangeNodeReads;
     }
 
-    static void addOneLeafNodeReads() {
-        totalLeafNodeReads++;
+    static void addOneRangeNodeReads() {
+        totalRangeNodeReads++;
         addOneNodeReads();
     }
     

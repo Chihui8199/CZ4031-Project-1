@@ -405,7 +405,7 @@ public class testBplusTree {
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
-        PerformanceRecorder.addOneLeafNodeReads();
+        PerformanceRecorder.addOneRangeNodeReads();
         if (node.isLeaf()) {
             ptrIdx = node.searchKey(minKey, false); // if minKey is in key array, get key index
             LeafNode leaf = (LeafNode) node;
@@ -418,6 +418,7 @@ public class testBplusTree {
                     // Traverse to the next node and start searching from index 0 within the next
                     // node again
                     leaf = (LeafNode) (leaf.getNext());
+                    PerformanceRecorder.addOneRangeNodeReads();
 
                     ptrIdx = 0;
                     if (ptrIdx >= leaf.getKeySize())
@@ -492,7 +493,7 @@ public class testBplusTree {
 
         // Only works if you call printBPlusTree() before this
         System.out.print("No. of Levels in B+ tree: ");
-        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1 maybe
+        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1
         System.out.println(performance.getTreeDegree());
         
         System.out.print("Content of the root node: ");
@@ -505,11 +506,18 @@ public class testBplusTree {
         System.out.print("\nMovies with the 'numVotes' equal to 500: ");
         
         long startTime = System.nanoTime();
-        System.out.println(tree.searchKey(500));
-        //TODO: have to return the actual records with block no. and offset from searchKey
+        ArrayList<Address> searchResults = tree.searchKey(500);
         long endTime = System.nanoTime();
 
-        // TODO: error here
+        //TODO: have to return the actual records with block no. and offset from searchKey
+        for ( Address address : searchResults) {
+            
+            System.out.print("\n" + address );
+            
+        }
+        
+
+        // TODO: searchKey counter not counting smth
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getNodeReads());
 
@@ -538,9 +546,9 @@ public class testBplusTree {
         System.out.println(tree.rangeSearch(30000,40000));
         long endTime = System.nanoTime();
 
-        // TODO: error here also
+        // TODO: rangeSearch not counting all the levels?
         System.out.print("\nNo. of Index Nodes the process accesses: ");
-        System.out.println(performance.getLeafNodeReads());
+        System.out.println(performance.getRangeNodeReads());
 
         // System.out.print("No. of Data Blocks the process accesses: ");
         

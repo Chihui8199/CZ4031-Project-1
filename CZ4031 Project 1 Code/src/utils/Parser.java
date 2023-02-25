@@ -55,7 +55,7 @@ public class Parser {
                 
                 // TODO: to be implemented
                 int key = rec.getNumVotes();
-                tree.insertKey(key, add); // TODO: not sure what are the other params tbc
+                tree.insertKey(key, add);
             }
             db.printDatabaseInfo();
 
@@ -70,6 +70,7 @@ public class Parser {
             testBplusTree.experimentTwo(); 
             testBplusTree.experimentThree(tree);  
             testBplusTree.experimentFour(tree); 
+            testBplusTree.experimentFour(tree);
             testBplusTree.experimentFive(tree); 
 
         } catch (IOException e) {
