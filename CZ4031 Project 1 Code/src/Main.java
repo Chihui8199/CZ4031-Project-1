@@ -11,7 +11,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         int diskSize = getDiskInput();
-        Path filePath = Path.of("data.tsv");
+        // Path filePath = Path.of("data.tsv");
+        String filePath = "C://Github//CZ4031-Project-1//CZ4031 Project 1 Code//src//data.tsv";
         File file = new File(String.valueOf(filePath));
         if (file.exists()) {
             System.out.print("Yes File Exist\nStarting to read data...\n");
@@ -32,7 +33,7 @@ public class Main {
                     System.out.print("Disk Size must be between 200-500MB: ");
                     n++;
                 } else {
-                    return diskSize;
+                    return diskSize * (int)(Math.pow(10,6));
                 }
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("No argument detected, falling back to default disk size: " + DEFAULT_MAX_DISK_CAPACITY);
