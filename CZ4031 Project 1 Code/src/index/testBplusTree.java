@@ -43,17 +43,17 @@ public class testBplusTree {
     // have to first search for the LeafNode to insert to, then add a record add
     // that LeafNode
     public void insertKey(int key, Address add) {
-        System.out.printf(
-                "\n\n\nInserting Key %d --------------------------------------------------------------------------------------------------------------------\n",
-                key);
-        System.out.printf("Current Root:");
-        System.out.println(testBplusTree.getRoot().getKeys());
+        // System.out.printf(
+                // "\n\n\nInserting Key %d --------------------------------------------------------------------------------------------------------------------\n",
+                // key);
+        // System.out.printf("Current Root:");
+        // System.out.println(testBplusTree.getRoot().getKeys());
 
         // nodeToInsertTo is the leafnode
         nodeToInsertTo = searchNode(key);
 
-        System.out.print("Keys of node to insert to: ");
-        System.out.println(nodeToInsertTo.getKeys());
+        // System.out.print("Keys of node to insert to: ");
+        // System.out.println(nodeToInsertTo.getKeys());
 
         ((LeafNode) nodeToInsertTo).addRecord(key, add);
     }
@@ -63,14 +63,14 @@ public class testBplusTree {
         System.out.printf(
                 "\n\nSearching Key %d --------------------------------------------------------------------------------------------------------------------\n",
                 key);
-        System.out.printf("Current Root:");
-        System.out.println(testBplusTree.getRoot().getKeys());
+        // System.out.printf("Current Root:");
+        // System.out.println(testBplusTree.getRoot().getKeys());
 
         // nodeToInsertTo is the leafnode
         nodeToInsertTo = searchNode(key);
 
-        System.out.printf("Keys of node to search: ");
-        System.out.println(nodeToInsertTo.getKeys());
+        // System.out.printf("Keys of node to search: ");
+        // System.out.println(nodeToInsertTo.getKeys());
 
         return ((LeafNode) nodeToInsertTo).findRecord(key);
     }
@@ -128,8 +128,8 @@ public class testBplusTree {
 
             keys = nodeToInsertTo.getKeys();
 
-            System.out.print("Keys of found parent: ");
-            System.out.println(keys);
+            // System.out.print("Keys of found parent: ");
+            // System.out.println(keys);
 
             // Looping through the current node's indexes to find which of its leaf/child
             // node to insert the key into, similar to above but this is to obtain the leaf

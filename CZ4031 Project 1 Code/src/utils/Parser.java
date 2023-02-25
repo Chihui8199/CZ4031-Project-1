@@ -39,6 +39,9 @@ public class Parser {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); // skip the first line (the column line)
             String line;
+
+            testBplusTree tree = new testBplusTree(); // create a BP+ indexing as we read the file
+            
             while ((line = reader.readLine()) != null) {
                 counter++;
                 if(counter%50000==0)
@@ -49,8 +52,8 @@ public class Parser {
                 int numVotes = Integer.parseInt(fields[2]);
                 Record rec = createRecord(tconst, averageRating, numVotes);
                 Address add = db.writeRecordToStorage(rec);
-                // create a BP+ indexing as we read the file
-                testBplusTree tree = new testBplusTree(); // TODO: to be implemented
+                
+                // TODO: to be implemented
                 int key = rec.getNumVotes();
                 tree.insertKey(key, add); // TODO: not sure what are the other params tbc
             }
@@ -60,6 +63,12 @@ public class Parser {
             System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
             System.out.printf("Size of database: %sMB\n", (float) db.getNumberBlockUsed() * BLOCK_SIZE/1000000);
             reader.close();
+        
+            testBplusTree.experimentTwo(); 
+            testBplusTree.experimentThree(tree);  
+            testBplusTree.experimentFour(tree); 
+            testBplusTree.experimentFive(tree); 
+            tree.printBPlusTree(testBplusTree.getRoot());
         } catch (IOException e) {
             e.printStackTrace();
         }

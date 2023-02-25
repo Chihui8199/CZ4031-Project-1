@@ -20,7 +20,7 @@ public class Node {
     private int minNonLeafNodeSize;
 
     // We set the node size to 3 first as its easier to check if its correct
-    static final int NODE_SIZE = 3;
+    static final int NODE_SIZE = 16;
     private boolean isLeaf;
     private boolean isRoot;
     private NonLeafNode parent;
@@ -214,7 +214,7 @@ public class Node {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             this.getParent().getChildren().add(newNode);
             this.getParent().keys.add(newNode.getKey(0));
         }
@@ -254,8 +254,8 @@ public class Node {
         this.setParent(newParent);
         newNode.setParent(newParent);
 
-        System.out.printf("\nKeys in new ParentNode's ArrayList:");
-        System.out.print(newParent.keys);
+        // System.out.printf("\nKeys in new ParentNode's ArrayList:");
+        // System.out.print(newParent.keys);
     }
 
 
@@ -310,13 +310,13 @@ public class Node {
 
 
     public NonLeafNode nonLeafSplitAndDistribute() {
-        System.out.printf("\nProblematic split");
+        // System.out.printf("\nProblematic split");
 
         NonLeafNode currentParent = (NonLeafNode) (this);
         /****** Removing rightmost children as well as the rightmost keys ******/
 
-        System.out.printf("\nCurrent Parent's keys BEFORE removing: ");
-        System.out.println(currentParent.keys);
+        // System.out.printf("\nCurrent Parent's keys BEFORE removing: ");
+        // System.out.println(currentParent.keys);
 
         NonLeafNode newParent = new NonLeafNode();
         PerformanceRecorder.addOneNode();
@@ -341,10 +341,10 @@ public class Node {
 
         }
 
-        System.out.printf("Current Parent's keys AFTER removing: ");
-        System.out.println(currentParent.keys);
-        System.out.printf("New Parent's keys AFTER adding: ");
-        System.out.println(newParent.keys);
+        // System.out.printf("Current Parent's keys AFTER removing: ");
+        // System.out.println(currentParent.keys);
+        // System.out.printf("New Parent's keys AFTER adding: ");
+        // System.out.println(newParent.keys);
 
         return newParent;
     }

@@ -57,7 +57,7 @@ public class LeafNode extends Node {
 
             this.map = new TreeMap<Integer, ArrayList<Address>>();
             this.map.put(key, records);
-            System.out.print(this.map);
+            // System.out.print(this.map);
 
             this.keys = new ArrayList<Integer>();
             insertInOrder(this.keys, key);
@@ -75,7 +75,7 @@ public class LeafNode extends Node {
             // Put the updated list of records back into the map
             map.put(key, existingRecords);
 
-            System.out.print(this.map);
+            // System.out.print(this.map);
         }
 
         // else if keysize not full, insert the key into the ArrayList in sorted order
@@ -84,7 +84,7 @@ public class LeafNode extends Node {
             this.records.add(add);
 
             this.map.put(key, records);
-            System.out.print(this.map);
+            // System.out.print(this.map);
 
             insertInOrder(this.keys, key);
         }
