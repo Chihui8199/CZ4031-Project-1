@@ -51,8 +51,8 @@ public class Parser {
             System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
             System.out.printf("Size of database: %sMB\n", (float) db.getNumberBlockUsed() * BLOCK_SIZE/1000000);
             reader.close();
-            testBplusTree.experimentTwo(tree); 
-            testBplusTree.experimentThree(db, tree);
+            // testBplusTree.experimentTwo(tree); 
+            // testBplusTree.experimentThree(db, tree);
             // testBplusTree.experimentFour(db, tree); 
             // testBplusTree.experimentFive(tree); 
 

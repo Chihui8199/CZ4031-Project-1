@@ -492,6 +492,7 @@ public class testBplusTree {
             node = nonLeaf.getChild(0);
             PerformanceRecorder.addOneTreeDegree();
         }
+        PerformanceRecorder.addOneTreeDegree();
     }
     
     public static void experimentTwo(testBplusTree tree){
