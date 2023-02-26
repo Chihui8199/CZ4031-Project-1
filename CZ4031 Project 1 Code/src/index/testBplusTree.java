@@ -388,6 +388,7 @@ public class testBplusTree {
         // results
         else {
             int ptrIdx = node.searchKey(key, false); // looks for the upper bound of the key in the node
+            
             NonLeafNode nonLeafNode = (NonLeafNode) node; // descends into childnode at the corresponding ptr
             Node childNode = ((NonLeafNode) node).getChild(ptrIdx);
             return (searchValue(childNode, key));
@@ -480,12 +481,20 @@ public class testBplusTree {
             for (Node child : nonLeaf.getChildren()) {
                 printBPlusTreeHelper(child, indent + "  ");
             }
-            PerformanceRecorder.addOneTreeDegree();
+            
         }
         
     }
+
+    private void countLevel(Node node){
+        while (!node.isLeaf()){
+            NonLeafNode nonLeaf = (NonLeafNode) node;
+            node = nonLeaf.getChild(0);
+            PerformanceRecorder.addOneTreeDegree();
+        }
+    }
     
-    public static void experimentTwo(){
+    public static void experimentTwo(testBplusTree tree){
         System.out.println("\n----------------------EXPERIMENT 2-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Parameter n: " + NODE_SIZE);
@@ -495,7 +504,8 @@ public class testBplusTree {
 
         // Only works if you call printBPlusTree() before this
         System.out.print("No. of Levels in B+ tree: ");
-        PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1
+        // PerformanceRecorder.deleteOneTreeDegree(); // - minus one because the count starts from 1
+        tree.countLevel(tree.getRoot());
         System.out.println(performance.getTreeDegree());
         
         System.out.print("Content of the root node: ");
@@ -525,7 +535,6 @@ public class testBplusTree {
          }
         // System.out.printf("Records: %s", results);
 
-        // TODO: searchKey counter not counting smth
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getNodeReads());
 
@@ -568,7 +577,6 @@ public class testBplusTree {
             }
         }
 
-        // TODO: rangeSearch not counting all the levels?
         System.out.print("\nNo. of Index Nodes the process accesses: ");
         System.out.println(performance.getRangeNodeReads());
 
