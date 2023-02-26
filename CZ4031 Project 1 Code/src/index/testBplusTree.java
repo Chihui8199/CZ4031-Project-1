@@ -9,7 +9,7 @@ import storage.Storage;
 
 public class testBplusTree {
 
-    static final int NODE_SIZE = 16;
+    static final int NODE_SIZE = 17;
     static Node rootNode;
     Node nodeToInsertTo;
 

@@ -20,7 +20,7 @@ public class Node {
     private int minNonLeafNodeSize;
 
     // We set the node size to 3 first as its easier to check if its correct
-    static final int NODE_SIZE = 16;
+    static final int NODE_SIZE = testBplusTree.NODE_SIZE;
     private boolean isLeaf;
     private boolean isRoot;
     private NonLeafNode parent;
