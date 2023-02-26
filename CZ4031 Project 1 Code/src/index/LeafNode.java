@@ -140,12 +140,6 @@ public class LeafNode extends Node {
         return records.remove(index);
     }
 
-    @Override
-    public String toString() {
-        return String.format("\n--------LEAF NODE CONTAINS: map %s records %s, nextNode ------------\n", map.toString(),
-                records, nextNode);
-    }
-
     public TreeMap<Integer, ArrayList<Address>> getMap() {
         return map;
     }

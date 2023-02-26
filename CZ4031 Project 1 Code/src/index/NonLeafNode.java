@@ -31,6 +31,11 @@ public class NonLeafNode extends Node{
         this.children.remove(child);
 	}
 
+    public void removeChild(int index) {
+        this.children.remove(index);
+    }
+
+
     public void sortChildren(Node parent){
         
     }
