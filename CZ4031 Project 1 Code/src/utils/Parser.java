@@ -38,19 +38,19 @@ public class Parser {
         Address addr5 = new Address(5, 5);
         testBplusTree tree = new testBplusTree();
 
-    //     tree.insertKey(1, addr1);
-    //     tree.insertKey(4, addr2);
-    //     tree.insertKey(3, addr3);
-    //     tree.insertKey(7, addr3);
-    //     tree.insertKey(10, addr4); //
-    //     tree.insertKey(17, addr5); //
-    // //     tree.insertKey(21, addr5);
-    // //    tree.insertKey(31, addr2);
-    //    tree.insertKey(25, addr1);
-    //    tree.insertKey(19, addr2); //
-    //    tree.insertKey(20, addr4); //
-    //    tree.insertKey(28, addr5);
-    //     tree.insertKey(42, addr5);
+        tree.insertKey(1, addr1);
+        tree.insertKey(4, addr2);
+        // tree.insertKey(3, addr3);
+        tree.insertKey(7, addr3);
+        tree.insertKey(10, addr4); //
+        tree.insertKey(17, addr5); //
+        tree.insertKey(19, addr5); //
+        tree.insertKey(20, addr5);
+       tree.insertKey(21, addr2);
+       tree.insertKey(25, addr1);
+       tree.insertKey(28, addr2); //
+       tree.insertKey(31, addr4); //
+       tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
 
@@ -103,7 +103,7 @@ public class Parser {
 
         // System.out.printf("\nDELETION %s\n", tree.10(20));
         
-        System.out.printf("\nDELETION %s\n", tree.deleteKey(3));
+        System.out.printf("\nDELETION %s\n", tree.deleteKey(42));
         
         // System.out.printf("\nDELETION %s\n", tree.deleteKey(25)) ;
         
