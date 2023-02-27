@@ -8,7 +8,7 @@ import storage.Address;
 
 public class testBplusTree {
 
-    static final int NODE_SIZE = 4;
+    static final int NODE_SIZE = 3;
     static Node rootNode;
     Node nodeToInsertTo;
 
@@ -149,6 +149,31 @@ public class testBplusTree {
 
     }
 
+    public int checkForLowerbound(int key){
+
+        // if (rootNode.isNonLeaf()){return 0;}
+        NonLeafNode node = (NonLeafNode)rootNode;
+        boolean found = false;
+
+        // loop from back to front to find the first key that is smaller than the key
+        for (int i = node.getKeySize() - 1; i >= 0; i--){
+            if (key >= node.getKeyAt(i)){
+                node = (NonLeafNode)node.getChild(i+1);
+                found = true;
+                break;
+            }
+        }
+        if (found == false) {node = (NonLeafNode)node.getChild(0);}
+        System.out.println(node.getKeys());
+
+        // loop till get leftmost key
+        while (!node.getChild(0).isLeaf()){
+                node = (NonLeafNode)node.getChild(0);
+            }
+        return(node.getChild(0).getKeyAt(0));
+
+    }
+
     /**
      * Wrapper function for deleting node
      * 
@@ -156,11 +181,19 @@ public class testBplusTree {
      * @return AraryList of address to be removed from database
      */
     public ArrayList<Address> deleteKey(int key) {
-        return (deleteNode(rootNode, null, -1, -1, key));
+        int lowerbound = 0;
+        int index = 0;
+        //Get child from lower bound of subtree
+        
+        System.out.println("\n\n -----------------------------Deleting Key: "+ key + "--------------------------------");
+        lowerbound = checkForLowerbound(key);
+        System.out.print("\nLowerbound is: "+ lowerbound);
+        return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
     }
 
+    //recursive
     public ArrayList<Address> deleteNode(Node node, NonLeafNode parent, int parentPointerIndex, int parentKeyIndex,
-            int key) {
+            int key, int lowerbound) {
         ArrayList<Address> addOfRecToDelete = new ArrayList<>();
 
         if (node.isLeaf()) {
@@ -184,13 +217,12 @@ public class testBplusTree {
 
             // read the next level node (read action will be recorded in the next level)
             Node next = nonLeafNode.getChild(ptrIdx);
-            addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key);
+            addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key, lowerbound);
 
             // update keys in non-leaf node
-            // nonLeafNode.updateKey(ptrIdx - 1, next.getKeys().get(0));
             List<Integer> keys = next.getKeys();
             if (!keys.isEmpty()) {
-                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0));
+                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0), true, lowerbound);
             }
 
             
@@ -201,7 +233,7 @@ public class testBplusTree {
         // TODO: change this to the calculated node_size once finalized
         // TODO: handle deletion in main memory
         if (node.isUnderUtilized(NODE_SIZE)) {
-            System.out.print("------------------------Rebalancing tree now ---------------------------\n\n");
+            System.out.print("\n\n------------------------Rebalancing tree now ---------------------------\n\n");
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
         }
 
@@ -441,11 +473,11 @@ public class testBplusTree {
 
     private void mergeLeafNodes(LeafNode nodeToMergeTo, LeafNode current, NonLeafNode parent,
                                 int rightPointerIdx, int inBetweenKeyIdx, boolean mergetoright){
-        System.out.printf("++++++++++++\n"+ inBetweenKeyIdx);
-
+        System.out.printf("\n++++++++++++"+ inBetweenKeyIdx);
+        int removedKey = 0;
         int moveKeyCount = current.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
-            int removedKey = current.removeKeyAt(0); 
+            removedKey = current.removeKeyAt(0); 
             int leftLastIdx = nodeToMergeTo.getLastIdx(); 
             nodeToMergeTo.insertKeyAt(leftLastIdx+1,removedKey);
             // 2. Move over the records
@@ -454,15 +486,15 @@ public class testBplusTree {
             
         }
 
-        System.out.print("Parent keys: " + parent.getKeys()); 
+        System.out.print("\nParent keys: " + parent.getKeys()); 
         
         parent.removeChild(current); //To remove the empty leaf node
     
         // parent.removeKeyAt(0);
-        System.out.print("New Parent key:"+ parent.getKeys());
+        System.out.print("\nNew Parent key:"+ parent.getKeys());
 
         if ((parent.getChildren().size()) == (parent.getKeySize())){ 
-            System.out.print("No need to update parent");
+            System.out.print("\nNo need to update parent\n");
         }
         else{
             parent.removeKeyAt(inBetweenKeyIdx);
@@ -470,6 +502,7 @@ public class testBplusTree {
         
         if (mergetoright == true){
             // update the prev pointer of right next node (if any)
+            System.out.println("Merge to right ,,, "+ current.getFirstKey());
             if(current.getNext() != null) {
                 LeafNode currentNext = current.getNext();
                 currentNext.setPrevious(current.getPrevious());
@@ -501,24 +534,61 @@ public class testBplusTree {
                 nodeToMergeTo.setNext(current.getNext());
                 current.getNext().setPrevious(nodeToMergeTo);
             }
-            if(current.getKeySize()==0 && (current.getNext()!=null)){
+            // if(current.getKeySize()==0 && (current.getNext()!=null)){
+            if(current.getKeySize()==0 && (current.getPrevious()!=null)){
+                
+                NonLeafNode currParent = current.getParent();
+                
+                System.out.println("removing get prev: "+ currParent.getLastKey());
+                if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
+                    if(inBetweenKeyIdx>=0){
+                        
+                        currParent.removeKeyAt(inBetweenKeyIdx);
+                    }
+                    
+                    // currParent.removeKeyAtLast();
+
+                }
+
+                
+            }
+            else{
+
                 NonLeafNode currParent = current.getNext().getParent();
                 currParent.removeChild(current);
                 //Check if parent key satisfy min node size
                 if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
+                    
+                    System.out.print("&&&>>>>>>>>>"+currParent.getKey(0));
                     currParent.removeKeyAt(0);
-                }
-                
-            }
-            else{
-                NonLeafNode currParent = current.getParent();
-                if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
-                    currParent.removeKeyAtLast();
+
                 }
             }
+
+
         }
+
         
+        int lowerbound = checkForLowerbound(removedKey);
+        System.out.print("\n\nUPDating key for merge nodes>>>"+ lowerbound);
+
+        // return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
+        current.getParent().updateKey( inBetweenKeyIdx - 1, parent.getKey(0), true, lowerbound);
         
+        // nonLeafNode.updateKey( inBetweenKeyIdx - 1, 0, true, lowerbound);
+
+        
+
+        /*
+         * // traverse to leaf node to find records to delete
+            
+
+            // update keys in non-leaf node
+            List<Integer> keys = next.getKeys();
+            if (!keys.isEmpty()) {
+                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0), true, lowerbound);
+            }
+         */
         
     }
 
@@ -542,6 +612,7 @@ public class testBplusTree {
             int giverKey = giver.getLastKey();
             receiver.insertByRedistribution(giverKey, giver.getAddressesForKey(giverKey));
             giver.removeKeyInMap(giverKey);
+            System.out.print("\n\nGiver : "+ giverKey);
             // 2. Move and edit key in node
             receiver.insertKeyAt(0, giverKey);
             giver.removeKeyAtLast();
@@ -553,15 +624,37 @@ public class testBplusTree {
             int giverKey = giver.getFirstKey();
             receiver.insertByRedistribution(giverKey, giver.getAddressesForKey(giverKey));
             giver.removeKeyInMap(giverKey);
+            
             // 2. Move and edit key in node
             giver.removeKeyAt(0);
             receiver.insertKeyAt(receiver.getKeySize(), giverKey);
             key = giver.getKeyAt(0);
+            
         }
         // update parent ptr
+        if (inBetweenKeyIdx > 0) {
+            System.out.println("Replacing key now@@@@@@ :" +key + "\n\n");  
+            
+            System.out.println("Replacing key now@@@@@@ :" +inBetweenKeyIdx + "\n\n");  
+            
+            System.out.println("Replacing key now### :" +parent.getChild(inBetweenKeyIdx).getFirstKey() + "\n\n");  
+            
+            int keytoupdate = parent.getChild(inBetweenKeyIdx).getFirstKey();
+            // parent.replaceKeyAt(inBetweenKeyIdx-1, key);// 49 51 54
+            parent.replaceKeyAt(inBetweenKeyIdx-1, keytoupdate);
+            // for (int i=0; i<parent.getChildren().size()-1;i++){
+                
+            //     parent.replaceKeyAt(i, parent.getChild(i+1).getFirstKey());
+            // }
+        }
 
-        parent.replaceKeyAt(inBetweenKeyIdx-1, key);
+        // int lowerbound = checkForLowerbound(key);
+        // System.out.println("key:" + key);
+        // System.out.print("\n\nMoveonkey>>>"+ lowerbound);
 
+        // return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
+        // current.getParent().updateKey( inBetweenKeyIdx - 1, parent.getKey(0), true, lowerbound);
+        
         //TODO:: Case where lead node becomes root node after shifting // WIll never happen unless we r so zai
 
         /* E.g. Nonleafnode : [7]

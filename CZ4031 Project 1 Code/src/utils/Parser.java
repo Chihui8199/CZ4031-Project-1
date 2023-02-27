@@ -44,48 +44,73 @@ public class Parser {
         tree.insertKey(7, addr3);
         tree.insertKey(10, addr4); //
         tree.insertKey(17, addr5); //
-        tree.insertKey(19, addr5); //
-        tree.insertKey(20, addr5);
-       tree.insertKey(21, addr2);
+        tree.insertKey(21, addr5);
+       tree.insertKey(31, addr2);
        tree.insertKey(25, addr1);
-       tree.insertKey(28, addr2); //
-       tree.insertKey(31, addr4); //
-       tree.insertKey(42, addr5);
+       tree.insertKey(19, addr2); //
+       tree.insertKey(20, addr4); //
+       tree.insertKey(28, addr5);
+        tree.insertKey(42, addr5);
 
         // 1 4 7 10 17 21 31 25 19 20 28 42
 
-    //    tree.insertKey(1,addr3);
-    //     tree.insertKey(2,addr2);
-    //     tree.insertKey(3,addr3);
-    //     tree.insertKey(4,addr4);
-        // tree.insertKey(5,addr5);
-    //     tree.insertKey(6,addr5);
-    //     tree.insertKey(7,addr2);
-    //     tree.insertKey(8,addr1);
-        // tree.insertKey(3,addr2);
-        // tree.insertKey(4,addr4);
-        // tree.insertKey(5,addr5);
+       tree.insertKey(1,addr3);
+        tree.insertKey(2,addr2);
+        // tree.insertKey(3,addr3);
+        tree.insertKey(4,addr4);
+        tree.insertKey(5,addr5);
         // tree.insertKey(6,addr5);
-        // tree.insertKey(7,addr1);
-        // tree.insertKey(8,addr3);
-        // tree.insertKey(9,addr4);
-        // tree.insertKey(10,addr2);
-        // tree.insertKey(11,addr4);
-        // tree.insertKey(12,addr3);
-        // tree.insertKey(13,addr2);
-        // tree.insertKey(14,addr4);
-        // tree.insertKey(15,addr3);
+        tree.insertKey(7,addr2);
+        tree.insertKey(8,addr1);
+        // tree.insertKey(3,addr2);
+        tree.insertKey(4,addr4);
+        tree.insertKey(5,addr5);
+        // tree.insertKey(6,addr5);
+        tree.insertKey(7,addr1);
+        tree.insertKey(8,addr3);
+        tree.insertKey(9,addr4);
+        tree.insertKey(10,addr2);
+        tree.insertKey(11,addr4);
+        tree.insertKey(12,addr3);
+        tree.insertKey(13,addr2);
+        tree.insertKey(14,addr4);
+        tree.insertKey(15,addr3);
 
 
-        // tree.insertKey(1,addr3);
-        // tree.insertKey(4,addr3);
-        // tree.insertKey(7,addr3);
-        // tree.insertKey(10,addr3);
-        // tree.insertKey(20,addr3);
-        // tree.insertKey(21,addr3);
-        // tree.insertKey(25,addr3);
-        // tree.insertKey(31,addr3);
-        // tree.insertKey(16,addr3);
+        tree.insertKey(1,addr3);
+        tree.insertKey(4,addr3);
+        tree.insertKey(7,addr3);
+        tree.insertKey(10,addr3);
+        tree.insertKey(20,addr3);
+        tree.insertKey(21,addr3);
+        tree.insertKey(25,addr3);
+        tree.insertKey(31,addr3);
+        tree.insertKey(17,addr3);
+        tree.insertKey(18,addr3);
+        tree.insertKey(16,addr3);
+        tree.insertKey(20,addr3);
+        tree.insertKey(22,addr3);
+        tree.insertKey(22,addr3);
+        tree.insertKey(21,addr3);
+
+
+        tree.insertKey(43,addr3);
+        tree.insertKey(44,addr3);
+        tree.insertKey(45,addr3);
+        tree.insertKey(46,addr3);
+        tree.insertKey(47,addr3);
+        tree.insertKey(48,addr3);
+        tree.insertKey(49,addr3);
+        tree.insertKey(50,addr3);
+        tree.insertKey(51,addr3);
+        tree.insertKey(52,addr3);
+        tree.insertKey(53,addr3);
+        tree.insertKey(54,addr3);
+        tree.insertKey(55,addr3);
+        tree.insertKey(3,addr3);
+        tree.insertKey(6,addr5);
+
+        // tree.insertKey(56,addr3);
 
         // System.out.print(tree.searchKey2(10));
         // System.out.printf("++++PRINTING NEW SEARCH METHODS++++\n");
@@ -103,9 +128,9 @@ public class Parser {
 
         // System.out.printf("\nDELETION %s\n", tree.10(20));
         
-        System.out.printf("\nDELETION %s\n", tree.deleteKey(42));
-        
-        // System.out.printf("\nDELETION %s\n", tree.deleteKey(25)) ;
+        // System.out.printf("\nDELETION %s\n", tree.deleteKey(50));
+        // System.out.printf("\nDELETION %s\n", tree.deleteKey(44));
+        System.out.printf("\nDELETION %s\n", tree.deleteKey(51)) ;
         
         System.out.println("MODIFIED TREE--> ");
 

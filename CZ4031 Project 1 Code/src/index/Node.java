@@ -172,9 +172,7 @@ public class Node {
 
 
     void insertKeyAt(int index, int key) {
-        System.out.printf("--> NODE CLASS: KEYS %s: ADD\n", keys);
         keys.add(index, key);
-        System.out.printf("--> NODE CLASS: KEYS %s: ADD\n", keys);
 
     }
 
@@ -226,26 +224,26 @@ public class Node {
 
 
 
-    public void updateKey(int keyIndex, int newKey) {
-        if (keyIndex >= 0 && keyIndex < keys.size()) {
+    public void updateKey(int keyIndex, int newKey, boolean AA, int lowerbound) {
+        if (keyIndex >= 0 && keyIndex < keys.size() && !AA) {
             keys.set(keyIndex, newKey);
         }
-        // if (parent != null){
-        //     int childIndex = parent.getChildren().indexOf(this);
-        //     if (childIndex>0){
-        //         //Replacing key at higher level
-        //         if (childIndex>1){
-        //             parent.replaceKeyAt(childIndex-1, newKey);
-        //         }
+        if (parent != null){
+            int childIndex = parent.getChildren().indexOf(this);
+            if (childIndex>0){
+                //Replacing key at higher level
+                if (childIndex>1){
+                    parent.replaceKeyAt(childIndex-1, newKey);
+                }
 
-        //         if (parent.isNonLeaf()){
+                if (parent.isNonLeaf()){
                     
-        //             parent.updateKey(childIndex-1, lowerbound,false,lowerbound);
-        //         }
+                    parent.updateKey(childIndex-1, lowerbound,false,lowerbound);
+                }
                 
-        //     }
+            }
             
-        // }
+        }
 
     }   
 
