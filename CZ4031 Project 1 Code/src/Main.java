@@ -1,9 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
-import index.testBplusTree;
-
 import utils.Parser;
 
 public class Main {
@@ -13,9 +12,14 @@ public class Main {
     public static void main(String[] args) throws Exception{
         int diskSize = getDiskInput();
         // Path filePath = Path.of("data.tsv");
+        // Path path = FileSystems.getDefault().getPath("data.tsv");
         // String filePath = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1 Code/src/data.tsv";
-        // String filePath = "/Github/CZ4031-Project-1/CZ4031 Project 1 Code/src/data.tsv";
-        String filePath = "/Github Projects/CZ4031-Project-1/CZ4031 Project 1 Code/src/data.tsv";
+
+        String separator = System.getProperty("file.separator");
+        String filePath = new File("").getAbsolutePath();
+        filePath = filePath.concat(separator + "CZ4031 Project 1 Code" + separator + "src" + separator + "data.tsv");
+        System.out.print(filePath + "\n");
+
         File file = new File(String.valueOf(filePath));
         if (file.exists()) {
             System.out.print("Yes File Exist\nStarting to read data...\n");
