@@ -151,9 +151,11 @@ public class testBplusTree {
 
     public int checkForLowerbound(int key){
 
-        // if (rootNode.isNonLeaf()){return 0;}
+        System.out.printf("\nChecking Lowerbound of Key -> ",key);
+
         NonLeafNode node = (NonLeafNode)rootNode;
         boolean found = false;
+        int lowerbound = 0;
 
         // loop from back to front to find the first key that is smaller than the key
         for (int i = node.getKeySize() - 1; i >= 0; i--){
@@ -170,7 +172,9 @@ public class testBplusTree {
         while (!node.getChild(0).isLeaf()){
                 node = (NonLeafNode)node.getChild(0);
             }
-        return(node.getChild(0).getKeyAt(0));
+
+        lowerbound = node.getChild(0).getKeyAt(0);
+        return(lowerbound);
 
     }
 
@@ -209,29 +213,39 @@ public class testBplusTree {
             leaf.removeKeyAt(keyIdx);
             leaf.removeKeyInMap(key);
 
+            //Update Key after deleting
+            int ptrIdx = node.searchKey(key, true); 
+            keyIdx = ptrIdx - 1;
+            
+            LeafNode LeafNode = (LeafNode) node;
+            int newLowerBound = 0;
+
+            // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
+            if (LeafNode.getKeySize() >= (keyIdx+1)) {
+                newLowerBound = lowerbound;
+                List<Integer> keys = LeafNode.getKeys();
+                LeafNode.updateKey(ptrIdx - 1, keys.get(0), false, newLowerBound);
+                // keys.set(ptrIdx-1, keys.get(0));
+            }
+            else{
+                newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
+                List<Integer> keys = LeafNode.getKeys();
+                LeafNode.updateKey(ptrIdx - 1, keys.get(0), true, newLowerBound);
+            }
+
         } else {
             // traverse to leaf node to find records to delete
             NonLeafNode nonLeafNode = (NonLeafNode) node;
-            int ptrIdx = node.searchKey(key, true);
+            int ptrIdx = node.searchKey(key, true); 
             int keyIdx = ptrIdx - 1;
 
             // read the next level node (read action will be recorded in the next level)
             Node next = nonLeafNode.getChild(ptrIdx);
             addOfRecToDelete = deleteNode(next, nonLeafNode, ptrIdx, keyIdx, key, lowerbound);
 
-            // update keys in non-leaf node
-            List<Integer> keys = next.getKeys();
-            if (!keys.isEmpty()) {
-                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0), true, lowerbound);
-            }
-
-            
-        
         }
 
         // carry out re-balancing tree magic if needed
-        // TODO: change this to the calculated node_size once finalized
-        // TODO: handle deletion in main memory
         if (node.isUnderUtilized(NODE_SIZE)) {
             System.out.print("\n\n------------------------Rebalancing tree now ---------------------------\n\n");
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
@@ -240,16 +254,6 @@ public class testBplusTree {
         return addOfRecToDelete;
     }
 
-    /**
-     * This function is used to handle the redistribution of nodes (i.e borrowing
-     * from sibiling) or merging or nodes
-     * 
-     * @param underUtilizedNode  current tree is wrong and current node is
-     *                           underutlised
-     * @param parent
-     * @param parentPointerIndex
-     * @param parentKeyIndex
-     */
     private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex,
             int parentKeyIndex) throws IllegalStateException {
         if (parent == null) {
@@ -315,14 +319,14 @@ public class testBplusTree {
             // b. second try merge with left
         System.out.println("--> handle invalid leaf");
         if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
-            System.out.print("Move one key from left to right");
+            System.out.print("Move one key from right to left");
             // handle invalid leaf: leaf to right
             moveOneKey(nextNode, underUtilizedLeaf, false, parent, parentKeyIndex+1);
         }
         else if (prevNode != null && prevNode.isAbleToGiveOneKey(NODE_SIZE)){
-            System.out.print("Move one key from right to left");
+            System.out.print("Move one key from left to righ");
             //handle invalid leaf: right to left 
-            moveOneKey(prevNode, underUtilizedLeaf, true, parent, parentKeyIndex+1);
+            moveOneKey(prevNode, underUtilizedLeaf, true, parent, parentKeyIndex);
         }
          // we can't redistribute, try merging with next
         else if((prevNode!=null && (prevNode.getKeySize()+underUtilizedLeaf.getKeySize())<=NODE_SIZE && (numChildrenOfNodeParent >= underUtilizedNode.getParent().getMinNonLeafNodeSize())))
@@ -616,6 +620,7 @@ public class testBplusTree {
             // 2. Move and edit key in node
             receiver.insertKeyAt(0, giverKey);
             giver.removeKeyAtLast();
+            // key = receiver.getKeyAt(0);
             key = receiver.getKeyAt(0);
         } else {
             System.out.println("--> move key from right node to left node\n");
@@ -628,40 +633,47 @@ public class testBplusTree {
             // 2. Move and edit key in node
             giver.removeKeyAt(0);
             receiver.insertKeyAt(receiver.getKeySize(), giverKey);
-            key = giver.getKeyAt(0);
+            // key = giver.getKeyAt(0);
+            key = receiver.getKeyAt(0);
             
         }
-        // update parent ptr
-        if (inBetweenKeyIdx > 0) {
-            System.out.println("Replacing key now@@@@@@ :" +key + "\n\n");  
-            
-            System.out.println("Replacing key now@@@@@@ :" +inBetweenKeyIdx + "\n\n");  
-            
-            System.out.println("Replacing key now### :" +parent.getChild(inBetweenKeyIdx).getFirstKey() + "\n\n");  
-            
-            int keytoupdate = parent.getChild(inBetweenKeyIdx).getFirstKey();
-            // parent.replaceKeyAt(inBetweenKeyIdx-1, key);// 49 51 54
-            parent.replaceKeyAt(inBetweenKeyIdx-1, keytoupdate);
-            // for (int i=0; i<parent.getChildren().size()-1;i++){
-                
-            //     parent.replaceKeyAt(i, parent.getChild(i+1).getFirstKey());
-            // }
-        }
-
-        // int lowerbound = checkForLowerbound(key);
-        // System.out.println("key:" + key);
-        // System.out.print("\n\nMoveonkey>>>"+ lowerbound);
-
-        // return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
-        // current.getParent().updateKey( inBetweenKeyIdx - 1, parent.getKey(0), true, lowerbound);
+       
         
-        //TODO:: Case where lead node becomes root node after shifting // WIll never happen unless we r so zai
+        // Update receiver parent
+        if (inBetweenKeyIdx == -1){
+            System.out.print("\nDo not update parent");
+        }
+        else if (inBetweenKeyIdx>=0) {
+            parent.replaceKeyAt(inBetweenKeyIdx, key);
+            //if giver is from the same parent, update parent @ index+1 with firstkey
+            if (giver.getParent().getChild(inBetweenKeyIdx+1).getFirstKey() != key){
+                giver.getParent().replaceKeyAt(inBetweenKeyIdx, giver.getParent().getChild(inBetweenKeyIdx+1).getFirstKey());
+            }
+        }
+        else{
+            parent.replaceKeyAt(inBetweenKeyIdx-1, key);
+        }
+        
+        int ptrIdx = receiver.searchKey(key, true); 
+        int keyIdx = ptrIdx - 1;
+        
+        LeafNode LeafNode = (LeafNode) receiver;
+        int lowerbound = checkForLowerbound(key);
+        int newLowerBound = 0;
 
-        /* E.g. Nonleafnode : [7]
-            Leafnode : [3,4]
-            Leafnode : [7,10]
-            deletion of 10 will move 7 to [3,4] therefore becoming the root node  
-         */ 
+        // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
+        if (LeafNode.getKeySize() >= (keyIdx+1)) {
+            newLowerBound = lowerbound;
+        }
+        else{
+            newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
+            parent.updateKey(inBetweenKeyIdx-1, parent.getChild(inBetweenKeyIdx).getFirstKey(), false, checkForLowerbound(key));
+        
+        }   
+        
+        // parent.updateKey(inBetweenKeyIdx-1, parent.getChild(inBetweenKeyIdx).getFirstKey(), false, checkForLowerbound(key));
+        
+    
     }
 
     /**

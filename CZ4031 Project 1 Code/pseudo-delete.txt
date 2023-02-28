@@ -1,0 +1,48 @@
+1. Look for key to delete recursively
+    - Check if key is leaf -> delete   
+    - else, continue to check the children
+
+    After Deleting key from leaf node, check if deleted key is a lower bound  
+    -if yes, verify whether the leaf node can obtain a new lower bound by using the right key from the deleted key.
+        -Update the tree recursively
+    -if no, lowerbound remains the same 
+
+    Check if tree is balance (resursively)
+    1. Check if leaf node is balance
+        1. Check if we can redistribute with next (Borrow from left: move one key from left to right)
+        2. Check if we can redistribute with prev (Borrow from right: move one key from right to left)
+        3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
+            a. first try merge with left node
+            b. second try merge with right node
+    
+    -----------
+    Borrow from left
+    1. (Redistribute) get last key from giver and add it to first pos receivernode 
+    2. Remove giver key from the giver node's map
+
+    
+    Borrow from right
+    1. (Redistribute) get first key from giver and add it to last pos receivernode 
+    2. Remove giver key from the giver node's map
+    
+    After borrowing the keys, check if giver is from the same parent
+    - if yes, update parent @ index+1 with firstkey
+
+    updateKey at higher levels with the correct lowerbound
+
+    
+    *EXTRA (Edge cases we did not look into):
+    - MERGE NODE WITH PREVIOUS / NEXT NODE'S PARENT IF CURRENT PARENT DOES NOT FULFIL MIN NODE SIZE REQ
+    - DELETING LAST KEY WILL AFFECT ROOT NODE 
+    
+    ----------
+    Merge to left
+    1. 
+
+    Merge to right
+    1. 
+
+
+
+
+

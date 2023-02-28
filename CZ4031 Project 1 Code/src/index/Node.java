@@ -1,6 +1,7 @@
  
 package index;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -224,26 +225,27 @@ public class Node {
 
 
 
-    public void updateKey(int keyIndex, int newKey, boolean AA, int lowerbound) {
-        if (keyIndex >= 0 && keyIndex < keys.size() && !AA) {
+    public void updateKey(int keyIndex, int newKey, boolean leafNotUpdated, int lowerbound) {
+        //run only once to make leaf updated
+        if (keyIndex >= 0 && keyIndex < keys.size() && !leafNotUpdated) { 
             keys.set(keyIndex, newKey);
         }
-        if (parent != null){
+        if (parent!=null && parent.isNonLeaf()){
             int childIndex = parent.getChildren().indexOf(this);
-            if (childIndex>0){
-                //Replacing key at higher level
-                if (childIndex>1){
-                    parent.replaceKeyAt(childIndex-1, newKey);
-                }
 
-                if (parent.isNonLeaf()){
-                    
-                    parent.updateKey(childIndex-1, lowerbound,false,lowerbound);
+            if (childIndex>= 0){
+                if (childIndex>0){
+                    parent.replaceKeyAt(childIndex-1, keys.get(0));
+
                 }
-                
+                parent.updateKey(childIndex-1, newKey, false, lowerbound);
             }
-            
         }
+        else if (parent!=null && parent.isLeaf()){
+            
+            parent.updateKey(keyIndex, newKey, false, lowerbound);
+        }
+        
 
     }   
 
