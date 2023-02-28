@@ -14,6 +14,7 @@
         3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
             a. first try merge with left node
             b. second try merge with right node
+    2. Check if non-leaf node is balance
     
     -----------
     Borrow from left
@@ -34,15 +35,23 @@
     *EXTRA (Edge cases we did not look into):
     - MERGE NODE WITH PREVIOUS / NEXT NODE'S PARENT IF CURRENT PARENT DOES NOT FULFIL MIN NODE SIZE REQ
     - DELETING LAST KEY WILL AFFECT ROOT NODE 
-    
+
     ----------
     Merge to left
-    1. 
+    -Check if previous node exists
+    -Set the previous pointer of the previous node to the current node's next node
+    -Set the next pointer of the current node's next node to the next node
+    -Check if parent key satisfy min node size then remove current node from parent if it is empty
 
     Merge to right
-    1. 
+    -Check if next node exists
+    -Set the previous pointer of the next node to the current node's previous node
+    -Set the next pointer of the current node's previous node to the next node
+    -Check if parent key satisfy min node size then remove current node from parent if it is empty
+    
+    After merging, UpdateKey at higher levels with the correct lowerbound
 
-
+    
 
 
 

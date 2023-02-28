@@ -223,6 +223,11 @@ public class Node {
     }
 
 
+    public void updateOneKeyOnly(int keyIndex, int newKey) {
+        if (keyIndex >= 0 && keyIndex < keys.size()) { 
+            keys.set(keyIndex, newKey);
+        }
+    }
 
 
     public void updateKey(int keyIndex, int newKey, boolean leafNotUpdated, int lowerbound) {

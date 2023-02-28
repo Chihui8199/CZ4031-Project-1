@@ -222,12 +222,15 @@ public class testBplusTree {
 
             // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
             if (LeafNode.getKeySize() >= (keyIdx+1)) {
+                System.out.print("DELETING HERE");
                 newLowerBound = lowerbound;
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), false, newLowerBound);
                 // keys.set(ptrIdx-1, keys.get(0));
             }
             else{
+                
+                System.out.print("DELETING OVERHERE");
                 newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), true, newLowerBound);
@@ -477,7 +480,6 @@ public class testBplusTree {
 
     private void mergeLeafNodes(LeafNode nodeToMergeTo, LeafNode current, NonLeafNode parent,
                                 int rightPointerIdx, int inBetweenKeyIdx, boolean mergetoright){
-        System.out.printf("\n++++++++++++"+ inBetweenKeyIdx);
         int removedKey = 0;
         int moveKeyCount = current.getKeySize();
         for (int i = 0; i < moveKeyCount; i++) {
@@ -490,19 +492,15 @@ public class testBplusTree {
             
         }
 
-        System.out.print("\nParent keys: " + parent.getKeys()); 
-        
         parent.removeChild(current); //To remove the empty leaf node
-    
-        // parent.removeKeyAt(0);
-        System.out.print("\nNew Parent key:"+ parent.getKeys());
-
         if ((parent.getChildren().size()) == (parent.getKeySize())){ 
             System.out.print("\nNo need to update parent\n");
         }
         else{
+            
             parent.removeKeyAt(inBetweenKeyIdx);
         }
+        
         
         if (mergetoright == true){
             // update the prev pointer of right next node (if any)
@@ -538,23 +536,14 @@ public class testBplusTree {
                 nodeToMergeTo.setNext(current.getNext());
                 current.getNext().setPrevious(nodeToMergeTo);
             }
-            // if(current.getKeySize()==0 && (current.getNext()!=null)){
             if(current.getKeySize()==0 && (current.getPrevious()!=null)){
                 
                 NonLeafNode currParent = current.getParent();
-                
-                System.out.println("removing get prev: "+ currParent.getLastKey());
                 if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
                     if(inBetweenKeyIdx>=0){
-                        
                         currParent.removeKeyAt(inBetweenKeyIdx);
                     }
-                    
-                    // currParent.removeKeyAtLast();
-
                 }
-
-                
             }
             else{
 
@@ -562,37 +551,31 @@ public class testBplusTree {
                 currParent.removeChild(current);
                 //Check if parent key satisfy min node size
                 if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
-                    
-                    System.out.print("&&&>>>>>>>>>"+currParent.getKey(0));
                     currParent.removeKeyAt(0);
 
                 }
             }
-
-
         }
-
         
         int lowerbound = checkForLowerbound(removedKey);
-        System.out.print("\n\nUPDating key for merge nodes>>>"+ lowerbound);
+        System.out.print("\n\nUpdating key for merge nodes>>>"+ lowerbound);
 
-        // return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
-        current.getParent().updateKey( inBetweenKeyIdx - 1, parent.getKey(0), true, lowerbound);
+        int ptrIdx = nodeToMergeTo.searchKey(removedKey, true); 
+        int keyIdx = ptrIdx - 1;
         
-        // nonLeafNode.updateKey( inBetweenKeyIdx - 1, 0, true, lowerbound);
+        LeafNode LeafNode = (LeafNode) nodeToMergeTo;
+        int newLowerBound = 0;
 
-        
-
-        /*
-         * // traverse to leaf node to find records to delete
+        // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
+        if (LeafNode.getKeySize() >= (keyIdx+1)) {
+            newLowerBound = lowerbound;
+        }
+        else{
+            newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
             
-
-            // update keys in non-leaf node
-            List<Integer> keys = next.getKeys();
-            if (!keys.isEmpty()) {
-                nonLeafNode.updateKey(ptrIdx - 1, keys.get(0), true, lowerbound);
-            }
-         */
+            current.getParent().updateKey( inBetweenKeyIdx - 1, parent.getKey(0), true, lowerbound);
+        
+        }   
         
     }
 
