@@ -46,6 +46,9 @@ public class Parser {
             testBplusTree.experimentThree(db, tree);
             testBplusTree.experimentFour(db, tree);
             testBplusTree.experimentFive(db, tree);
+
+            // tree.printBPlusTree(testBplusTree.getRoot());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

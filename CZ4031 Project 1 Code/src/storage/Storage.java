@@ -111,8 +111,8 @@ public class Storage {
                 }
             }
         }
-        for (Record record: finalRes)
-            System.out.printf("Found Records %s\n", record);
+        // for (Record record: finalRes)
+        //     System.out.printf("Found Records %s\n", record);
         return countBlockAccess;
     }
 

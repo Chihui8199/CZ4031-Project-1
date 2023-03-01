@@ -152,7 +152,7 @@ public class testBplusTree {
 
     private int checkForLowerbound(int key){
 
-        System.out.print("\nChecking Lowerbound of Key -> "+key);
+        // System.out.print("\nChecking Lowerbound of Key -> "+key);
 
         NonLeafNode node = (NonLeafNode)rootNode;
         boolean found = false;
@@ -167,7 +167,7 @@ public class testBplusTree {
             }
         }
         if (found == false && key < node.getKeyAt(0)) {node = (NonLeafNode)node.getChild(0);}
-        System.out.println(node.getKeys());
+        // System.out.println(node.getKeys());
 
         // loop till get leftmost key
         while (!node.getChild(0).isLeaf()){
@@ -175,7 +175,7 @@ public class testBplusTree {
             }
 
         lowerbound = node.getChild(0).getKeyAt(0);
-        System.out.print("\nReturning LowerBound -> "+ lowerbound);
+        // System.out.print("\nReturning LowerBound -> "+ lowerbound);
         return(lowerbound);
 
     }
@@ -191,9 +191,9 @@ public class testBplusTree {
         int index = 0;
         //Get child from lower bound of subtree
         
-        System.out.println("\n\n -----------------------------Deleting Key: "+ key + "--------------------------------");
+        // System.out.println("\n\n -----------------------------Deleting Key: "+ key + "--------------------------------");
         lowerbound = checkForLowerbound(key);
-        System.out.print("\nLowerbound is: "+ lowerbound);
+        // System.out.print("\nLowerbound is: "+ lowerbound);
         return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
     }
 
@@ -224,7 +224,7 @@ public class testBplusTree {
 
             // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
             if (LeafNode.getKeySize() >= (keyIdx+1)) {
-                System.out.print("DELETING HERE");
+                // System.out.print("DELETING HERE");
                 newLowerBound = lowerbound;
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), false, newLowerBound);
@@ -232,7 +232,7 @@ public class testBplusTree {
             }
             else{
                 
-                System.out.print("DELETING OVERHERE");
+                // System.out.print("DELETING OVERHERE");
                 newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), true, newLowerBound);
@@ -252,7 +252,7 @@ public class testBplusTree {
 
         // carry out re-balancing tree magic if needed
         if (node.isUnderUtilized(NODE_SIZE)) {
-            System.out.print("\n\n------------------------Rebalancing tree now ---------------------------\n\n");
+            // System.out.print("\n\n------------------------Rebalancing tree now ---------------------------\n\n");
             handleInvalidTree(node, parent, parentPointerIndex, parentKeyIndex);
         }
 
@@ -280,7 +280,7 @@ public class testBplusTree {
         // handleInvalidNonLeaf(underUtilizedNode);
         if (underUtilizedNode.isLeaf()) { // Only node in B+ Tree - Root
             ((LeafNode) underUtilizedNode).clear();
-            System.out.print("There exist no B+ Tree now.\n");
+            // System.out.print("There exist no B+ Tree now.\n");
         } else {
             NonLeafNode nonLeafRoot = (NonLeafNode) underUtilizedNode;
             Node newRoot = nonLeafRoot.getChild(0);
@@ -951,7 +951,7 @@ public class testBplusTree {
     }
 
     public static void experimentThree(Storage db, testBplusTree tree) {
-        System.out.println("\n----------------------EXPERIMENT 3-----------------------");
+        System.out.println("\n\n----------------------EXPERIMENT 3-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Movies with the 'numVotes' equal to 500: ");
 
@@ -970,17 +970,17 @@ public class testBplusTree {
                 totalCount++;
             }
         }
-        System.out.printf("\nNo. of Index Nodes the process accesses: %d\n", performance.getNodeReads());
-        System.out.printf("\nNo. of Data Blocks the process accesses: %d\n ", db.getBlockAccesses());
+        System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", performance.getNodeReads());
+        System.out.printf("No. of Data Blocks the process accesses: %d\n", db.getBlockAccesses());
         System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes = 500):");
-        System.out.println(db.getBlocksAccessedByForce(500, 500));
+        System.out.print("Number of Data Blocks Accessed by Brute Force (numVotes = 500): ");
+        System.out.print(db.getBlocksAccessedByForce(500, 500));
     }
 
     public static void experimentFour(Storage db, testBplusTree tree) {
-        System.out.println("\n----------------------EXPERIMENT 4-----------------------");
+        System.out.println("\n\n----------------------EXPERIMENT 4-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Movies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
         long startTime = System.nanoTime();
@@ -998,18 +998,19 @@ public class testBplusTree {
                 totalCount++;
             }
         }
-        System.out.printf("\nNo. of Index Nodes the process accesses: %d\n", performance.getRangeNodeReads());
+        System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", performance.getRangeNodeReads());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", db.getBlockAccesses());
-        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double) totalAverageRating / totalCount);
+        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d");
-        System.out.println(db.getBlocksAccessedByForce(30000, 40000));
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds", duration);
+        System.out.print("\nNumber of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): ");
+        System.out.print(db.getBlocksAccessedByForce(30000, 40000));
     }
 
     public static void experimentFive(Storage db, testBplusTree tree) {
-        System.out.println("\n----------------------EXPERIMENT 5-----------------------");
+        System.out.println("\n\n----------------------EXPERIMENT 5-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
+        System.out.println("-- Deleting all records with 'numVotes' of 1000 -- ");
         long startTime = System.nanoTime();
         tree.deleteKey(1000);
         long endTime = System.nanoTime();
@@ -1018,8 +1019,8 @@ public class testBplusTree {
         System.out.printf("Content of the root node in updated B+ tree: %s\n", testBplusTree.getRoot().keys);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=10000): %d");
-        System.out.println(db.getBlocksAccessedByForce(1000, 1000));
+        System.out.print("Number of Data Blocks Accessed by Brute Force (numVotes=10000): ");
+        System.out.print(db.getBlocksAccessedByForce(1000, 1000));
     }
 
 }
