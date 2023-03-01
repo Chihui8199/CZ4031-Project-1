@@ -14,7 +14,7 @@
         3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
             a. first try merge with left node
             b. second try merge with right node
-    2. Check if non-leaf node is balance
+
     
     -----------
     Borrow from left
@@ -55,3 +55,33 @@
 
 
 
+
+    2. Check if non-leaf node is balance
+        1. Check if we can redistribute with next non-leaf node (Borrow from left: move one key from left to right)
+        2. Check if we can redistribute with prev non-leaf node (Borrow from right: move one key from right to left)
+        3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
+            a. first try merge with left node
+            b. second try merge with right node
+
+
+    ----------
+    Borrow one key from non leaf node
+    1. (Redistribute) get last key from giver non leaf node to the receiver non leaf node
+    2. Remove child from the giver node
+    3. Add child to the non leaf node
+    4. Remove giver key from the giver node's map
+    5. UpdateKey parent key
+    6. Update higher levels with the correct lowerbound
+
+    -----------
+    Merge non-leaf node with sibling
+    -Check if sibling node exists
+    -add the keys from the current node to the keys of the previous sibling node
+    -Remove children from current node
+    -Add the children of the current node to the previous sibling node
+    -Check if parent key satisfy min node size then remove current node from parent if it is empty
+    -After merging, UpdateKey at higher levels with the correct lowerbound
+
+    
+
+    
