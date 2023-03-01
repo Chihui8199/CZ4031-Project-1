@@ -3,53 +3,48 @@ import java.io.FileNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
+
 import utils.Parser;
 
 public class Main {
-    private static final int DEFAULT_MAX_DISK_CAPACITY = 500 * (int)(Math.pow(10,6));
+    private static final int DEFAULT_MAX_DISK_CAPACITY = 500 * (int) (Math.pow(10, 6));
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         int diskSize = getDiskInput();
-        // Path filePath = Path.of("data.tsv");
-        // Path path = FileSystems.getDefault().getPath("data.tsv");
-        // String filePath = "/Users/chihui/Desktop/CZ4031 Project/CZ4031 Project 1 Code/src/data.tsv";
-
         String separator = System.getProperty("file.separator");
         String filePath = new File("").getAbsolutePath();
-        filePath = filePath.concat(separator + "CZ4031 Project 1 Code" + separator + "src" + separator + "data.tsv");
+        filePath = filePath.concat(separator + "data.tsv");
         System.out.print(filePath + "\n");
-
         File file = new File(String.valueOf(filePath));
         if (file.exists()) {
             System.out.print("Yes File Exist\nStarting to read data...\n");
             Parser.readTSVFile(String.valueOf(filePath), diskSize);
         } else {
-				throw new FileNotFoundException("File does not exist!");
+            throw new FileNotFoundException("File does not exist!");
         }
     }
 
-    private static int getDiskInput(){
+    private static int getDiskInput() {
         int n = 0;
+        Scanner sc = new Scanner(System.in);
         while (n < 3) {
             try {
-                Scanner sc = new Scanner(System.in);
-                System.out.print("Enter disk size between 200-500MB: ");
+                System.out.print("Disk Size must be between 200-500MB: ");
                 int diskSize = sc.nextInt();
-                if (diskSize < 200 || diskSize > 500){
-                    System.out.print("Disk Size must be between 200-500MB: ");
+                if (diskSize < 200 || diskSize > 500) {
                     n++;
                 } else {
-                    return diskSize * (int)(Math.pow(10,6));
+                    return diskSize * (int) (Math.pow(10, 6));
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("No argument detected, falling back to default disk size: " + DEFAULT_MAX_DISK_CAPACITY);
+                System.out.printf("No argument detected, falling back to default disk size: %d " + DEFAULT_MAX_DISK_CAPACITY);
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Invalid disk size input detected, falling back to default disk size: " + DEFAULT_MAX_DISK_CAPACITY);
+                System.out.printf("Invalid disk size input detected, falling back to default disk size: %d " + DEFAULT_MAX_DISK_CAPACITY);
                 break;
-            } catch (Exception e){
-                System.out.println("Something went wrong, falling back to default disk size!" + DEFAULT_MAX_DISK_CAPACITY);
+            } catch (Exception e) {
+                System.out.printf("Something went wrong, falling back to default disk size: %d" + DEFAULT_MAX_DISK_CAPACITY);
                 break;
             }
         }

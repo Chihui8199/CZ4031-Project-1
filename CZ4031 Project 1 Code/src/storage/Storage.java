@@ -1,4 +1,5 @@
 package storage;
+import index.testBplusTree;
 import storage.Block;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,10 +43,16 @@ public class Storage {
     }
 
     public Address writeRecordToStorage(Record rec){
+        numOfRecords++;
         int blockPtr = getFirstAvailableBlockId();
         Address addressofRecordStored = this.insertRecordIntoBlock(blockPtr, rec);
         return addressofRecordStored;
     }
+
+    public int getNumberOfRecords(){
+        return numOfRecords;
+    }
+
 
 
 
@@ -77,6 +84,9 @@ public class Storage {
         return filledBlocks.size();
     }
 
+    public int getBlockAccesses(){
+        return blockAccesses;
+    }
     private Block getBlock(int blockNumber) {
         Block block = null;
         if (blockNumber >= 0) {
@@ -92,14 +102,11 @@ public class Storage {
         return block.getRecord(add.getOffset());
     }
 
-
-    public void printDatabaseInfo(){
-        System.out.println(String.format("Total Memory Size: %f MB", (float) memdiskSize/Math.pow(10, 6)));
-        System.out.println(String.format("Size of Each Block: %d B", 200));
-        System.out.println(String.format("Size of Each Record %d B", Record.getRecordSize()));
-        System.out.println(String.format("Number of Blocks Allocated %d", numOfBlocksAssigned));
-        System.out.println(String.format("Number of Blocks Remaining %d", numOfBlocksAvailable));
-        System.out.printf("Total Number of Records Stored");
-        System.out.println();
+    public void experimentOne(){
+        System.out.println("\n----------------------EXPERIMENT 1-----------------------");
+        System.out.printf("Total Number of Records Stored: %d\n", this.getNumberOfRecords());
+        System.out.println(String.format("Size of Each Record: %d Bytes", Record.getRecordSize()));
+        System.out.printf("Number of Records Stored in a Block: %d\n", Block.getTotalRecords());
+        System.out.println(String.format("Number of Blocks Allocated: %d\n", this.getNumberBlockUsed()));
     }
 }

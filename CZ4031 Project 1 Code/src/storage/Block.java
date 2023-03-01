@@ -10,16 +10,20 @@ import java.util.List;
  */
 public class Block {
     private int curRecords;
-    private int totalRecords; // the total number of records in a single block
+    private static int totalRecords; // the total number of records in a single block
     private Record[] recordsList;
-    //TODO: maybe move block size to some kind of constants file?
-    public Block( int BLOCK_SIZE){
+
+    public Block(int BLOCK_SIZE) {
         this.curRecords = 0;
         this.totalRecords = BLOCK_SIZE / Record.getRecordSize(); // total number of records that can fit into a block
         this.recordsList = new Record[this.totalRecords];
     }
 
-    public boolean isBlockAvailable(){
+    public static int getTotalRecords() {
+        return totalRecords;
+    }
+
+    public boolean isBlockAvailable() {
         return curRecords < totalRecords;
     }
 
@@ -36,21 +40,18 @@ public class Block {
         return -1;
     }
 
-
-    public boolean isFull() {
-        return curRecords >= recordsList.length;
-    }
     // getRecord accepts an offset, and returns the physical_storage.Record at the offset in this block
     public Record getRecord(int offset) {
         return recordsList[offset];
     }
 
     // deleteRecord accepts an offset, deletes the physical_storage.Record at that offset in this block
+
+    // TODO: Implement this after merge with delete node
     public void deleteRecord(int offset) {
         recordsList[offset] = null;
         curRecords--;
     }
-
 
 
 }

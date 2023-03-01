@@ -31,7 +31,7 @@ public class Parser {
             
             while ((line = reader.readLine()) != null) {
                 counter++;
-                if(counter%50000==0)
+                if(counter%100000==0)
                     System.out.println(counter + " data rows read");
                 String[] fields = line.split("\t");
                 String tconst = fields[0];
@@ -42,19 +42,14 @@ public class Parser {
                 int key = rec.getNumVotes();
                 tree.insertKey(key, add);
             }
-            db.printDatabaseInfo();
 
-            tree.printBPlusTree(testBplusTree.getRoot());
-
-            System.out.println("All data has been stored in database successfully!");
-            System.out.println("\n---------------Experiment 1------------------");
-            System.out.printf("Number of blocks used: %s\n", db.getNumberBlockUsed());
-            System.out.printf("Size of database: %sMB\n", (float) db.getNumberBlockUsed() * BLOCK_SIZE/1000000);
             reader.close();
+            db.experimentOne();
             testBplusTree.experimentTwo(tree); 
             testBplusTree.experimentThree(db, tree);
             // testBplusTree.experimentFour(db, tree); 
-            testBplusTree.experimentFive(tree); 
+            testBplusTree.experimentFive(tree);
+            //tree.printBPlusTree(testBplusTree.getRoot());
 
         } catch (IOException e) {
             e.printStackTrace();
