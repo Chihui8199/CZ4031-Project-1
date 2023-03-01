@@ -19,6 +19,15 @@ public class Block {
         this.recordsList = new Record[this.totalRecords];
     }
 
+    public Record getRecordFromBlock(int recordPos){
+        return recordsList[recordPos];
+    }
+
+    public int getCurSize(){
+        return curRecords;
+    }
+
+
     public static int getTotalRecords() {
         return totalRecords;
     }

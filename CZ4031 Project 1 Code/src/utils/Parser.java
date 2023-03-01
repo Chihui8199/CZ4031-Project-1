@@ -3,36 +3,32 @@ package utils;
 import java.io.IOException;
 
 import java.io.*;
+
 import storage.Address;
 import storage.Record;
 import storage.Storage;
 
 import index.*;
 
-public class Parser {
 
+public class Parser {
     private static final int BLOCK_SIZE = 200;
-    /**
-     * Loads in the data and stores it in the database
-     * 
-     * @param filePath takes in the file path of data.tsv
-     */
     private static int counter = 0;
+
     public static void readTSVFile(String filePath, int diskCapacity) {
         try {
+            String line;
             // initialise database
             Storage db = new Storage(diskCapacity, BLOCK_SIZE);
             // start loading data
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); // skip the first line (the column line)
-            String line;
+            // initialise a new B+ tree
+            testBplusTree tree = new testBplusTree();
 
-            testBplusTree tree = new testBplusTree(); // create a BP+ indexing as we read the file
-            
             while ((line = reader.readLine()) != null) {
                 counter++;
-                if(counter%100000==0)
-                    System.out.println(counter + " data rows read");
+                if (counter % 100000 == 0) System.out.println(counter + " data rows read");
                 String[] fields = line.split("\t");
                 String tconst = fields[0];
                 float averageRating = Float.parseFloat(fields[1]);
@@ -42,25 +38,23 @@ public class Parser {
                 int key = rec.getNumVotes();
                 tree.insertKey(key, add);
             }
-
             reader.close();
-            db.experimentOne();
-            testBplusTree.experimentTwo(tree); 
-            testBplusTree.experimentThree(db, tree);
-            // testBplusTree.experimentFour(db, tree); 
-            testBplusTree.experimentFive(tree);
-            //tree.printBPlusTree(testBplusTree.getRoot());
 
+            // run experiments
+            db.experimentOne();
+            testBplusTree.experimentTwo(tree);
+            testBplusTree.experimentThree(db, tree);
+            testBplusTree.experimentFour(db, tree);
+            testBplusTree.experimentFive(db, tree);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     /**
      * for each line of data read in create a record object and stores it into the
      * database
-     * 
+     *
      * @param tconst        alphanumeric unique identifier of the title
      * @param averageRating weighted average of all the individual user ratings
      * @param numVotes      number of votes the title has received

@@ -38,17 +38,16 @@ public class Main {
                     return diskSize * (int) (Math.pow(10, 6));
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.printf("No argument detected, falling back to default disk size: %d " + DEFAULT_MAX_DISK_CAPACITY);
+                System.out.printf("No argument detected, falling back to default disk size: %d\n", DEFAULT_MAX_DISK_CAPACITY);
                 break;
             } catch (NumberFormatException e) {
-                System.out.printf("Invalid disk size input detected, falling back to default disk size: %d " + DEFAULT_MAX_DISK_CAPACITY);
+                System.out.printf("Invalid disk size input detected, falling back to default disk size: %d\n", DEFAULT_MAX_DISK_CAPACITY);
                 break;
             } catch (Exception e) {
-                System.out.printf("Something went wrong, falling back to default disk size: %d" + DEFAULT_MAX_DISK_CAPACITY);
+                System.out.printf("Something went wrong, falling back to default disk size: %d\n", DEFAULT_MAX_DISK_CAPACITY);
                 break;
             }
         }
-        System.out.println("Invalid disk size input detected, falling back to default disk size: " + DEFAULT_MAX_DISK_CAPACITY);
         return DEFAULT_MAX_DISK_CAPACITY;
     }
 }

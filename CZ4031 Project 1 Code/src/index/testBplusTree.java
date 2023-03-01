@@ -362,7 +362,6 @@ public class testBplusTree {
         // results
         else {
             int ptrIdx = node.searchKey(key, false); // looks for the upper bound of the key in the node
-
             NonLeafNode nonLeafNode = (NonLeafNode) node; // descends into childnode at the corresponding ptr
             Node childNode = ((NonLeafNode) node).getChild(ptrIdx);
             return (searchValue(childNode, key));
@@ -431,7 +430,6 @@ public class testBplusTree {
      * @param indent the current indentation level
      */
     private void printBPlusTreeHelper(Node node, String indent) {
-
         if (node == null) {
             return;
         }
@@ -443,7 +441,6 @@ public class testBplusTree {
             }
             System.out.println();
         } else {
-
             NonLeafNode nonLeaf = (NonLeafNode) node;
             System.out.print(indent + "NonLeafNode: ");
             for (int key : nonLeaf.getKeys()) {
@@ -474,7 +471,7 @@ public class testBplusTree {
         System.out.printf("No. of Nodes in B+ tree: %d\n", performance.getTotalNodes());
         tree.countLevel(tree.getRoot());
         System.out.printf("No. of Levels in B+ tree: %d\n", performance.getTreeDegree());
-        System.out.println("Content of the root node: "+ testBplusTree.getRoot().keys);
+        System.out.println("Content of the root node: " + testBplusTree.getRoot().keys);
     }
 
     public static void experimentThree(Storage db, testBplusTree tree) {
@@ -497,18 +494,17 @@ public class testBplusTree {
                 totalCount++;
             }
         }
-        System.out.printf("No. of Index Nodes the process accesses: %d\n", performance.getNodeReads());
+        System.out.printf("\nNo. of Index Nodes the process accesses: %d\n", performance.getNodeReads());
         System.out.printf("\nNo. of Data Blocks the process accesses: %d\n ", db.getBlockAccesses());
         System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        //TODO
-        //System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 500): %d");
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes = 500):");
+        System.out.println(db.getBlocksAccessedByForce(500, 500));
     }
 
     public static void experimentFour(Storage db, testBplusTree tree) {
         System.out.println("\n----------------------EXPERIMENT 4-----------------------");
-
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Movies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
         long startTime = System.nanoTime();
@@ -526,30 +522,28 @@ public class testBplusTree {
                 totalCount++;
             }
         }
-
-        System.out.printf("No. of Index Nodes the process accesses: %d\n", performance.getRangeNodeReads());
+        System.out.printf("\nNo. of Index Nodes the process accesses: %d\n", performance.getRangeNodeReads());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", db.getBlockAccesses());
         System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
-        //TODO:
-        // System.out.printf("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d");
+        System.out.println("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d");
+        System.out.println(db.getBlocksAccessedByForce(30000, 40000));
     }
 
-    public static void experimentFive(testBplusTree tree) {
+    public static void experimentFive(Storage db, testBplusTree tree) {
         System.out.println("\n----------------------EXPERIMENT 5-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         long startTime = System.nanoTime();
         //TODO: carry out deletion here
         long endTime = System.nanoTime();
-
         System.out.printf("No. of Nodes in updated B+ tree: %d\n", performance.getTotalNodes());
         System.out.printf("No. of Levels in updated B+ tree: %d\n", performance.getTreeDegree());
         System.out.printf("Content of the root node in updated B+ tree: %s\n", testBplusTree.getRoot().keys);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        //TODO:
-        //System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes=10000): %d");
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=10000): %d");
+        System.out.println(db.getBlocksAccessedByForce(1000, 1000));
     }
 
 }

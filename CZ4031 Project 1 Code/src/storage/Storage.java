@@ -1,6 +1,5 @@
 package storage;
-import index.testBplusTree;
-import storage.Block;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,22 +13,11 @@ public class Storage {
     private Set<Integer> availableBlocks;
     private static int blockAccesses = 0;
     private Set<Integer> filledBlocks;
-
-    // max size of disk
     int memdiskSize;
-    // size of block
     int blkSize;
-    //max amount of block in disk
-    int numOfBlocksAvailable;
-    // number of blocks assigned
-    int numOfBlocksAssigned = 0;
-    // blocks in a disk implemented with arraylist
-    private ArrayList<Block> blockList;
-    // size of each record
-    private static final int RECORD_SIZE = (Float.SIZE / 8) + (Integer.SIZE / 8) + 9;
     private int numOfRecords = 0;
 
-    public Storage(int diskSize, int blkSize){
+    public Storage(int diskSize, int blkSize) {
         this.memdiskSize = diskSize;
         this.blkSize = blkSize;
         this.blocks = new Block[diskSize / blkSize];
@@ -42,21 +30,19 @@ public class Storage {
 
     }
 
-    public Address writeRecordToStorage(Record rec){
+    public Address writeRecordToStorage(Record rec) {
         numOfRecords++;
         int blockPtr = getFirstAvailableBlockId();
         Address addressofRecordStored = this.insertRecordIntoBlock(blockPtr, rec);
         return addressofRecordStored;
     }
 
-    public int getNumberOfRecords(){
+    public int getNumberOfRecords() {
         return numOfRecords;
     }
 
 
-
-
-    private int getFirstAvailableBlockId(){
+    private int getFirstAvailableBlockId() {
         if (availableBlocks.isEmpty()) {
             return -1;
         }
@@ -68,7 +54,7 @@ public class Storage {
      * @param blockPtr
      * @param rec
      */
-    private Address insertRecordIntoBlock(int blockPtr, Record rec){
+    private Address insertRecordIntoBlock(int blockPtr, Record rec) {
         if (blockPtr == -1) {
             return null;
         }
@@ -80,13 +66,14 @@ public class Storage {
         return new Address(blockPtr, offset);
     }
 
-    public int getNumberBlockUsed(){
+    public int getNumberBlockUsed() {
         return filledBlocks.size();
     }
 
-    public int getBlockAccesses(){
+    public int getBlockAccesses() {
         return blockAccesses;
     }
+
     private Block getBlock(int blockNumber) {
         Block block = null;
         if (blockNumber >= 0) {
@@ -102,7 +89,35 @@ public class Storage {
         return block.getRecord(add.getOffset());
     }
 
-    public void experimentOne(){
+    public int getBlocksAccessedByForce(int numVotesValue, int numVotesValueUpperRange){
+        return runBruteForceSearch(numVotesValue, numVotesValueUpperRange);
+    }
+
+    public int runBruteForceSearch(int numVotesValue, int numVotesValueUpperRange) {
+        Record rec;
+        int curNumVotes;
+        int countBlockAccess = 0;
+        ArrayList<Record> finalRes = new ArrayList<>();
+        for(int blockPtr: filledBlocks) {
+            countBlockAccess++;
+            Block block = blocks[blockPtr];
+            int numberOfRecordsInBlock = block.getCurSize();
+            for (int i = 0; i < numberOfRecordsInBlock; i++) {
+                // retrieve the record
+                rec = block.getRecordFromBlock(i);
+                curNumVotes = rec.getNumVotes();
+                if (numVotesValue <= curNumVotes && curNumVotes <= numVotesValueUpperRange) {
+                    finalRes.add(rec);
+                }
+            }
+        }
+        for (Record record: finalRes)
+            System.out.printf("Found Records %s\n", record);
+        return countBlockAccess;
+    }
+
+
+    public void experimentOne() {
         System.out.println("\n----------------------EXPERIMENT 1-----------------------");
         System.out.printf("Total Number of Records Stored: %d\n", this.getNumberOfRecords());
         System.out.println(String.format("Size of Each Record: %d Bytes", Record.getRecordSize()));
