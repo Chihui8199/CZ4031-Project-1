@@ -16,6 +16,8 @@ public class Storage {
     int memdiskSize;
     int blkSize;
     private int numOfRecords = 0;
+    private int blockAccessReduced = 0;
+    private LRUCache lruCache;
 
     public Storage(int diskSize, int blkSize) {
         this.memdiskSize = diskSize;
@@ -27,7 +29,8 @@ public class Storage {
             blocks[i] = new Block(blkSize);
             availableBlocks.add(i);
         }
-
+        int lruCacheSize = (int) (256.0 / 500000.0 * diskSize / blkSize);
+        this.lruCache = new LRUCache(lruCacheSize);
     }
 
     public Address writeRecordToStorage(Record rec) {
@@ -75,13 +78,21 @@ public class Storage {
     }
 
     private Block getBlock(int blockNumber) {
-        Block block = null;
-        if (blockNumber >= 0) {
+        Block block = lruCache.get(blockNumber);
+        if (block != null) {
+            blockAccessReduced++;
+        }
+        if (block == null && blockNumber >= 0) {
             // 1 I/O
             block = blocks[blockNumber];
             blockAccesses++;
+            lruCache.put(blockNumber, block);
         }
         return block;
+    }
+
+    public int getBlockAccessReduced() {
+        return blockAccessReduced;
     }
 
     public Record getRecord(Address add) {
@@ -89,7 +100,7 @@ public class Storage {
         return block.getRecord(add.getOffset());
     }
 
-    public int getBlocksAccessedByForce(int numVotesValue, int numVotesValueUpperRange){
+    public int getBlocksAccessedByForce(int numVotesValue, int numVotesValueUpperRange) {
         return runBruteForceSearch(numVotesValue, numVotesValueUpperRange);
     }
 
@@ -98,7 +109,7 @@ public class Storage {
         int curNumVotes;
         int countBlockAccess = 0;
         ArrayList<Record> finalRes = new ArrayList<>();
-        for(int blockPtr: filledBlocks) {
+        for (int blockPtr : filledBlocks) {
             countBlockAccess++;
             Block block = blocks[blockPtr];
             int numberOfRecordsInBlock = block.getCurSize();
@@ -111,8 +122,8 @@ public class Storage {
                 }
             }
         }
-        // for (Record record: finalRes)
-        //     System.out.printf("Found Records %s\n", record);
+        for (Record record : finalRes)
+            System.out.printf("Found Records %s\n", record);
         return countBlockAccess;
     }
 

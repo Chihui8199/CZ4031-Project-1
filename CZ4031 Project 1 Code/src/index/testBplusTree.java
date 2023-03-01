@@ -975,8 +975,9 @@ public class testBplusTree {
         System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.print("Number of Data Blocks Accessed by Brute Force (numVotes = 500): ");
-        System.out.print(db.getBlocksAccessedByForce(500, 500));
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes = 500):");
+        System.out.println(db.getBlocksAccessedByForce(500, 500));
+        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
     public static void experimentFour(Storage db, testBplusTree tree) {
@@ -1002,9 +1003,10 @@ public class testBplusTree {
         System.out.printf("No. of Data Blocks the process accesses: %d\n", db.getBlockAccesses());
         System.out.printf("Average of 'averageRating's' of the records accessed: %.2f", (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-        System.out.printf("\nRunning time of retrieval process: %d nanoseconds", duration);
-        System.out.print("\nNumber of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): ");
-        System.out.print(db.getBlocksAccessedByForce(30000, 40000));
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
+        System.out.println("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d");
+        System.out.println(db.getBlocksAccessedByForce(30000, 40000));
+        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
     public static void experimentFive(Storage db, testBplusTree tree) {
@@ -1019,8 +1021,9 @@ public class testBplusTree {
         System.out.printf("Content of the root node in updated B+ tree: %s\n", testBplusTree.getRoot().keys);
         long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.print("Number of Data Blocks Accessed by Brute Force (numVotes=10000): ");
-        System.out.print(db.getBlocksAccessedByForce(1000, 1000));
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=10000): %d");
+        System.out.println(db.getBlocksAccessedByForce(1000, 1000));
+        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
 }
