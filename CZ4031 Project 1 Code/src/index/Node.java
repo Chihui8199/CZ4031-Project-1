@@ -1,35 +1,38 @@
- 
 package index;
 
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-
 import storage.Address;
-
 import java.lang.Math;
 
+/*
+ * Class representing a node in a B+ tree
+ */
 public class Node {
 
-    // Max number of keys in each node (node size)
     private int nodeSize;
     private int minLeafNodeSize;
     private int minNonLeafNodeSize;
-
-    // We set the node size to 3 first as its easier to check if its correct
     static final int NODE_SIZE = testBplusTree.NODE_SIZE;
     private boolean isLeaf;
     private boolean isRoot;
     private NonLeafNode parent;
     protected ArrayList<Integer> keys;
     Node rootNode;
-    private int nodeIndex;
-    
 
+    /**
+     * Constructs a Node object with the rootNode,
+     *
+     * @param rootNode           The rootNode of the B+ tree.
+     * @param isLeaf             Boolean to check whether node is a leaf node.
+     * @param isRoot             Boolean to check whether node is a root node.
+     * @param nodeSize           The node size of the B+ tree.
+     * @param minLeafNodeSize    The minimum size of a leaf node.
+     * @param minNonLeafNodeSize The minimum size of a non leaf node.
+     */
     public Node() {
         this.rootNode = testBplusTree.getRoot();
         this.isLeaf = false;
@@ -39,96 +42,191 @@ public class Node {
         this.minNonLeafNodeSize = (int) (Math.floor(nodeSize / 2));
     }
 
-    public int getminLeafNodeSize(){
+    /**
+     * Returns minimum Leaf Node Size of current node.
+     *
+     * @return minimum Leaf Node Size of current node.
+     */
+    public int getminLeafNodeSize() {
         return this.minLeafNodeSize;
     }
-    public int getMinNonLeafNodeSize(){
+
+    /**
+     * Returns minimum Non Leaf Node Size of current node.
+     *
+     * @return minimum Non Leaf Node Size of current node.
+     */
+    public int getMinNonLeafNodeSize() {
         return this.minNonLeafNodeSize;
     }
 
-    // check whether node is a leaf
+    /**
+     * Returns true/false boolean to check if node is a Leaf Node.
+     *
+     * @return boolean value of isLeaf.
+     */
     public boolean isLeaf() {
         return isLeaf;
     }
 
+    /**
+     * Returns true/false boolean.
+     *
+     * @return opposite boolean value of isLeaf.
+     */
     public boolean isNonLeaf() {
         return !isLeaf;
     }
 
-
-    // set node as leaf
+    /**
+     * Update whether current node is a leaf node from boolean argument isALeaf.
+     *
+     * @param isALeaf set boolean value of node to isALeaf.
+     */
     public void setIsLeaf(boolean isALeaf) {
         isLeaf = isALeaf;
     }
 
-    // check whether node is as root
+    /**
+     * Returns true/false boolean to check if node is a Root Node.
+     *
+     * @return boolean value of isRoot.
+     */
     public boolean isRoot() {
         return isRoot;
     }
 
-    // set node as root
+    /**
+     * Update whether current node is a root node from boolean argument isARoot.
+     *
+     * @param isARoot set boolean value of isRoot
+     */
     public void setIsRoot(boolean isARoot) {
         isRoot = isARoot;
     }
 
-    public void setParent(NonLeafNode setparent) {
-        // If the current node was a root, have to make sure its parent will also be a
-        // root, and also have to setIsRoot to false for the current node
-        if (this.isRoot()) {
-            this.setIsRoot(false);
-            setparent.setIsRoot(true);
-            setparent.setIsLeaf(false);
-            testBplusTree.setRoot(setparent);
-        } else {
-            setparent.setIsLeaf(false);
-        }
-        this.parent = setparent;
-    }
-
+    /**
+     * Returns the parent of the current node.
+     *
+     * @return the parent of the current node.
+     */
     public NonLeafNode getParent() {
         return this.parent;
     }
 
-    public void removeKeyAtLast(){
-        this.keys.remove(keys.size()-1);
+    /**
+     * Update current node's parent with a new parent.
+     * If the current node was a root, have to make sure the new parent is set as
+     * root and also have to setIsRoot to false for the current node.
+     *
+     * @param setParent the Non-Leaf Node the function will use to set current
+     *                  node's parent.
+     */
+    public void setParent(NonLeafNode setParent) {
+        if (this.isRoot()) {
+            this.setIsRoot(false);
+            setParent.setIsRoot(true);
+            setParent.setIsLeaf(false);
+            testBplusTree.setRoot(setParent);
+        } else {
+            setParent.setIsLeaf(false);
+        }
+        this.parent = setParent;
     }
 
-    private void removeParent(NonLeafNode parent) {
-        this.parent = null;
+    /**
+     * Removes the last key in the current node's ArrayList<Integer> keys.
+     *
+     */
+    public void removeKeyAtLast() {
+        this.keys.remove(keys.size() - 1);
     }
 
+    /**
+     * Replaces the key at the index given in in ArrayList<Integer> keys, with the
+     * given key
+     *
+     * @param index the index to replace the key at in ArrayList<Integer> keys.
+     * @param key   the key to replace the key at the index given in in
+     *              ArrayList<Integer> keys.
+     */
     void replaceKeyAt(int index, int key) {
-       
+
         keys.set(index, key);
     }
 
-    // get arraylist of all keys
+    /**
+     * Returns all keys of current node as an ArrayList<Integer>.
+     *
+     * @return all keys of current node.
+     */
     public ArrayList<Integer> getKeys() {
         return this.keys;
     }
 
-    // get key at index within node
+    /**
+     * Prints the keys in ArrayList<Integer> keys.
+     * 
+     */
+    public void printNode() {
+        Set<Integer> keys = ((LeafNode) this).map.keySet();
+        System.out.println(keys);
+    }
+    
+    /**
+     * Returns curent key of the current node at the index.
+     *
+     * @param index the index used to find the key in the current node.
+     * @return current key at index of current node.
+     */
     public int getKey(int index) {
         return this.keys.get(index);
     }
 
+    /**
+     * Returns the total number of keys in the currrent node.
+     *
+     * @return current node's keysize.
+     */
     public int getKeySize() {
         return keys.size();
     }
 
-    public int getLastKey(){
+    /**
+     * Returns the last key of the current node.
+     *
+     * @return current node's last key.
+     */
+    public int getLastKey() {
         return this.keys.get(keys.size() - 1);
     }
-    public int getFirstKey(){
+
+    /**
+     * Returns the first key of the current node.
+     *
+     * @return current node's first key.
+     */
+    public int getFirstKey() {
         return this.keys.get(0);
     }
+
     /**
-     * Binary search stored keys. (wrapper of the recursive function)
+     * Returns integer value of the key that was removed.
      *
-     * @param key        key to search
-     * @param upperBound if set true, search for upperBound
-     *                   if set false, search for exactKey
-     * @return if key exists & upperBound false, the index of the key
+     * @param index the index to remove the key in ArrayList<Integer> keys.
+     * @return the integer value of the key that was removed.
+     */
+    int removeKeyAt(int index) {
+        return keys.remove(index);
+    }
+
+    /**
+     * Binary search stored keys. (wrapper of the recursive function).
+     *
+     * @param key        key to search.
+     * @param upperBound if set true, search for upperBound.
+     *                   if set false, search for exactKey.
+     * @return if key exists & upperBound false, the index of the key.
      *         else, the index of upper bound of the key.
      */
     int searchKey(int key, boolean upperBound) {
@@ -136,12 +234,19 @@ public class Node {
         return searchKey(0, keyCount - 1, key, upperBound);
     }
 
-    int removeKeyAt(int index) {
-        return keys.remove(index);
-    }
-
-
-        private int searchKey(int left, int right, int key, boolean upperBound) {
+    /**
+     * Binary search stored keys.
+     *
+     * @param left the leftmost index.
+     * @param right the rightmost index.
+     * @param key the value the function is searching for.
+     * @param upperbound if set true, search for upperBound.
+     *                   if set false, search for exactKey.
+     * @return if middle key is lesser than key, recursively enter searchKey and update leftmost node with middle + 1.
+     *         if middle key is more than key, recursively enter searchKey and update rightmost node with middle -1.
+     *         else, returns the middle value after getting the exact key
+     */
+    private int searchKey(int left, int right, int key, boolean upperBound) {
         if (left > right)
             return left;
 
@@ -161,24 +266,38 @@ public class Node {
         }
     }
 
+    /**
+     * Returns integer value of the key at the given index.
+     *
+     * @param index the index to get the key in ArrayList<Integer> keys.
+     * @return the integer value of the key at the given index.
+     */
     int getKeyAt(int index) {
         return keys.get(index);
     }
 
-    public int getLastIdx(){
-        int lastIdx = keys.size()-1;
+    /**
+     * Returns integer value of the last index in ArrayList<Integer> keys.
+     *
+     * @return integer value of the last index in ArrayList<Integer> keys.
+     */
+    public int getLastIdx() {
+        int lastIdx = keys.size() - 1;
         return lastIdx;
     }
 
-
+    /**
+     * Inserts the given key at the given index.
+     *
+     * @param index the index to insert the given key in ArrayList<Integer> keys.
+     * @param key the key to be inserted into ArrayList<Integer> keys at the given index.
+     */
     void insertKeyAt(int index, int key) {
         keys.add(index, key);
-
     }
 
-
     /**
-     * Check if there a need to re-balance the tree
+     * Check if there a need to re-balance the tree.
      *
      * @param maxKeyCount
      * @return
@@ -193,18 +312,28 @@ public class Node {
         }
     }
 
-
-    public static void insertInOrder(ArrayList<Integer> list, int num) {
+     /**
+     * Inserts the given key into the given ArrayList<Integer> keys in correct ascending order.
+     *
+     * @param keys the ArrayList<Integer> keys where the given key is inserted into.
+     * @param key the key to be inserted into the given ArrayList<Integer> keys in correct ascending order.
+     */
+    public static void insertInOrder(ArrayList<Integer> keys, int key) {
         int i = 0;
 
-        while (i < list.size() && list.get(i) < num) {
+        while (i < keys.size() && keys.get(i) < key) {
             i++;
         }
-        list.add(i, num);
+        keys.add(i, key);
     }
 
-
-
+    
+     /**
+     * Inserts the given child node into the given NonLeafNode parent in correct ascending order.
+     *
+     * @param parent the parent where the given child is inserted into.
+     * @param child the child to be inserted into the given parent in correct ascending order.
+     */
     public void insertChildInOrder(NonLeafNode parent, NonLeafNode child) {
         int i = 0;
         int childToSort = child.getKeyAt(0);
@@ -215,53 +344,69 @@ public class Node {
     }
 
 
-
-    public void printNode() {
-        Set<Integer> keys = ((LeafNode) this).map.keySet();
-        System.out.println(keys);
-    }
-
-
+    /** 
+     * Updates the key at the given keyIndex with newKey.
+     * 
+     * @param keyIndex the index in ArrayList<Integer> keys.
+     * @param newKey the new key to be updated at keyIndex in ArrayList<Integer> keys.
+     */
     public void updateOneKeyOnly(int keyIndex, int newKey) {
-        if (keyIndex >= 0 && keyIndex < keys.size()) { 
+        if (keyIndex >= 0 && keyIndex < keys.size()) {
             keys.set(keyIndex, newKey);
         }
     }
 
-
+    
+    /** 
+     * Update key of entire tree recursively after deletion.
+     *
+     * @param keyIndex the index of the key that is removed.
+     * @param newKey the new key that is being updated into the tree.
+     * @param leafNotUpdated checking if the leaf node is already updated. 
+     * @param lowerbound check for lowerbound of current tree degree.
+     */
     public void updateKey(int keyIndex, int newKey, boolean leafNotUpdated, int lowerbound) {
-        //run only once to make leaf updated
-        if (keyIndex >= 0 && keyIndex < keys.size() && !leafNotUpdated) { 
+        // run only once to make leaf updated
+        if (keyIndex >= 0 && keyIndex < keys.size() && !leafNotUpdated) {
             keys.set(keyIndex, newKey);
         }
-        if (parent!=null && parent.isNonLeaf()){
+        if (parent != null && parent.isNonLeaf()) {
             int childIndex = parent.getChildren().indexOf(this);
 
-            if (childIndex>= 0){
-                if (childIndex>0){
-                    parent.replaceKeyAt(childIndex-1, keys.get(0));
+            if (childIndex >= 0) {
+                if (childIndex > 0) {
+                    parent.replaceKeyAt(childIndex - 1, keys.get(0));
 
                 }
-                parent.updateKey(childIndex-1, newKey, false, lowerbound);
+                parent.updateKey(childIndex - 1, newKey, false, lowerbound);
             }
-        }
-        else if (parent!=null && parent.isLeaf()){
-            
+        } else if (parent != null && parent.isLeaf()) {
+
             parent.updateKey(keyIndex, newKey, false, lowerbound);
         }
-        
 
-    }   
+    }
 
-    public boolean isAbleToGiveOneKey(int maxKeyCount){
+    
+    /** 
+     * Returns the boolean indicating whether the node is able to give one key.
+     * 
+     * @param maxKeyCount the size of the node.
+     * @return boolean indicating whether the node is able to give one key.
+     */
+    public boolean isAbleToGiveOneKey(int maxKeyCount) {
         if (isNonLeaf())
             return getKeySize() - 1 >= maxKeyCount / 2;
         return getKeySize() - 1 >= (maxKeyCount + 1) / 2;
 
     }
 
-
     
+    /** 
+     * Inserts new node to parent node in ascending order based on key values.
+     * 
+     * @param newNode is the leaf node to be inserted to the parent node.
+     */
     public void insertNewNodeToParent(LeafNode newNode) {
         int index = 0;
         boolean insertedNode = false;
@@ -285,7 +430,6 @@ public class Node {
             }
 
         } catch (Exception e) {
-            // e.printStackTrace();
             this.getParent().getChildren().add(newNode);
             this.getParent().keys.add(newNode.getKey(0));
         }
@@ -298,9 +442,12 @@ public class Node {
 
     }
 
-
-
-
+    
+    /** 
+     * Creates the first parent node in the B+ tree.
+     * 
+     * @param newNode is the leaf node which the parent node is added to.
+     */
     public void createFirstParentNode(LeafNode newNode) {
         NonLeafNode newParent = new NonLeafNode();
         PerformanceRecorder.addOneNode();
@@ -312,9 +459,12 @@ public class Node {
         newNode.setParent(newParent);
     }
 
-
-
-
+    
+    /** 
+     * Creates the a root node.
+     * 
+     * @param newNode is the non leaf node which the root node is added to.
+     */
     public void createRootNode(NonLeafNode newNode) {
         NonLeafNode newParent = new NonLeafNode();
         PerformanceRecorder.addOneNode();
@@ -325,13 +475,16 @@ public class Node {
         this.setParent(newParent);
         newNode.setParent(newParent);
 
-        // System.out.printf("\nKeys in new ParentNode's ArrayList:");
-        // System.out.print(newParent.keys);
     }
 
-
-
-
+    
+    /** 
+     * Called when leaf node is full. Split current leaf node into 2 and returns the new node.
+     *
+     * @param key the newly inserted key.
+     * @param addr the address of the key.
+     * @return a new node that is created from the splited leaf node.
+     */
     public LeafNode leafSplitAndDistribute(int key, Address addr) {
         LeafNode newNode = new LeafNode();
         PerformanceRecorder.addOneNode();
@@ -377,18 +530,15 @@ public class Node {
         return newNode;
     }
 
-
-
-
+    
+    /** 
+     * Called when non-leaf node is full. Split current non-leaf node into 2 and returns the new parent node.
+     *
+     * @return the new Parent node that is now connected to the 2 new non-leaf node.
+     */
     public NonLeafNode nonLeafSplitAndDistribute() {
-        // System.out.printf("\nProblematic split");
 
         NonLeafNode currentParent = (NonLeafNode) (this);
-        /****** Removing rightmost children as well as the rightmost keys ******/
-
-        // System.out.printf("\nCurrent Parent's keys BEFORE removing: ");
-        // System.out.println(currentParent.keys);
-
         NonLeafNode newParent = new NonLeafNode();
         PerformanceRecorder.addOneNode();
         newParent.keys = new ArrayList<Integer>();
@@ -412,24 +562,19 @@ public class Node {
 
         }
 
-        // System.out.printf("Current Parent's keys AFTER removing: ");
-        // System.out.println(currentParent.keys);
-        // System.out.printf("New Parent's keys AFTER adding: ");
-        // System.out.println(newParent.keys);
-
         return newParent;
     }
 
-
-
-
-
+    
+    /** 
+     * If the current node has a parent, adds the new node returned from leafSplitAndDistribute to the current node's parents. If the parent node size is greater than the node size, call splitNonLeafNode. If the current node does not have a parent, call createFirstParentNode.
+     * 
+     * @param key the key to be added to current leaf node
+     * @param addr the address to be added to current leaf node
+     */
     public void splitLeafNode(int key, Address addr) {
-        // Step 1 split and distribute
 
         LeafNode newNode = this.leafSplitAndDistribute(key, addr);
-
-        // Step 2
 
         // If the leaf node has parent, add the new node to parent
         if (this.getParent() != null) {
@@ -448,9 +593,10 @@ public class Node {
 
     }
 
-
-
-
+    /** 
+     * * If the current node has a parent, adds the new node returned from nonLeafSplitAndDistribute to the current node's parents. If the parent node size is greater than the node size, call splitNonLeafNode. If the current node does not have a parent, call createFirstParentNode.
+     * 
+     */
     public void splitNonLeafNode() {
         NonLeafNode newParent = this.nonLeafSplitAndDistribute();
 
@@ -471,7 +617,6 @@ public class Node {
 
         } else {
             // it is the root
-            // System.out.println("NO PARENT");
             NonLeafNode newRoot = new NonLeafNode();
             PerformanceRecorder.addOneNode();
             newRoot.keys = new ArrayList<Integer>();
@@ -488,6 +633,5 @@ public class Node {
             testBplusTree.setRoot(newRoot);
         }
     }
-
 
 }
