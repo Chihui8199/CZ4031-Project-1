@@ -24,7 +24,7 @@ public class Main {
             Parser.readTSVFile(String.valueOf(filePath), diskSize);
         } else if (!file.exists()) {
             Scanner sc = new Scanner(System.in);
-            System.out.print("Please input the absolute file path of data.tsv: ");
+            System.out.print("Default file path failed! Please input the absolute file path of data.tsv: ");
             filePath = sc.nextLine();
             File newFileCheck = new File(String.valueOf(filePath));
             if (newFileCheck.exists()) {
