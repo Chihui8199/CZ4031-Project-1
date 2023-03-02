@@ -1,11 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 import utils.Parser;
 
+/**
+ * Main entry into the program
+ */
 public class Main {
     private static final int DEFAULT_MAX_DISK_CAPACITY = 500 * (int) (Math.pow(10, 6));
 
@@ -26,6 +27,12 @@ public class Main {
         }
     }
 
+    /**
+     * The getDiskInput method prompts the user to input a disk size between 200 and 500 MB, and returns the disk size in bytes.
+     * If the user does not enter a valid disk size within three attempts, the method returns the default disk size.
+     *
+     * @return the disk size
+     */
     private static int getDiskInput() {
         int n = 0;
         Scanner sc = new Scanner(System.in);

@@ -7,7 +7,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import storage.Address;
 import storage.Record;
-import storage.Storage;
+import storage.Disk;
 
 public class testBplusTree {
 
@@ -950,8 +950,13 @@ public class testBplusTree {
         System.out.println("Content of the root node: " + testBplusTree.getRoot().keys);
     }
 
+<<<<<<< HEAD
     public static void experimentThree(Storage db, testBplusTree tree) {
         System.out.println("\n\n----------------------EXPERIMENT 3-----------------------");
+=======
+    public static void experimentThree(Disk db, testBplusTree tree) {
+        System.out.println("\n----------------------EXPERIMENT 3-----------------------");
+>>>>>>> clean up code and write javadocs
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Movies with the 'numVotes' equal to 500: ");
 
