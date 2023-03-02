@@ -6,7 +6,7 @@ import java.io.*;
 
 import storage.Address;
 import storage.Record;
-import storage.Storage;
+import storage.Disk;
 
 import index.*;
 
@@ -19,7 +19,7 @@ public class Parser {
         try {
             String line;
             // initialise database
-            Storage db = new Storage(diskCapacity, BLOCK_SIZE);
+            Disk db = new Disk(diskCapacity, BLOCK_SIZE);
             // start loading data
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); // skip the first line (the column line)
@@ -40,19 +40,17 @@ public class Parser {
             }
             reader.close();
 
-            // run experiments
+            // TODO: to run the experiments independently of one another
             db.experimentOne();
-            testBplusTree.experimentTwo(tree);
-            testBplusTree.experimentThree(db, tree);
-            testBplusTree.experimentFour(db, tree);
-            testBplusTree.experimentFive(db, tree);
-
-            // tree.printBPlusTree(testBplusTree.getRoot());
-
+//            testBplusTree.experimentTwo(tree);
+//            testBplusTree.experimentThree(db, tree);
+//            testBplusTree.experimentFour(db, tree);
+//            testBplusTree.experimentFive(db, tree);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * for each line of data read in create a record object and stores it into the

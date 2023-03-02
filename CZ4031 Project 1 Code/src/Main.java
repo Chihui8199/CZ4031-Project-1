@@ -1,11 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 import utils.Parser;
 
+/**
+ * Main entry into the program
+ */
 public class Main {
     private static final int DEFAULT_MAX_DISK_CAPACITY = 500 * (int) (Math.pow(10, 6));
 
@@ -21,11 +22,27 @@ public class Main {
             System.out.print("Yes File Exist\nStarting to read data...\n");
             int diskSize = getDiskInput();
             Parser.readTSVFile(String.valueOf(filePath), diskSize);
+        } else if (!file.exists()) {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Default file path failed! Please input the absolute file path of data.tsv: ");
+            filePath = sc.nextLine();
+            File newFileCheck = new File(String.valueOf(filePath));
+            if (newFileCheck.exists()) {
+                System.out.print("Yes File Exist\nStarting to read data...\n");
+                int diskSize = getDiskInput();
+                Parser.readTSVFile(String.valueOf(filePath), diskSize);
+            }
         } else {
             throw new FileNotFoundException("File does not exist!");
         }
     }
 
+    /**
+     * The getDiskInput method prompts the user to input a disk size between 200 and 500 MB, and returns the disk size in bytes.
+     * If the user does not enter a valid disk size within three attempts, the method returns the default disk size.
+     *
+     * @return the disk size
+     */
     private static int getDiskInput() {
         int n = 0;
         Scanner sc = new Scanner(System.in);
