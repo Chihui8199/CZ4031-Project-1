@@ -980,7 +980,7 @@ public class testBplusTree {
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
-    public static void experimentFour(Storage db, testBplusTree tree) {
+    public static void experimentFour(Disk db, testBplusTree tree) {
         System.out.println("\n\n----------------------EXPERIMENT 4-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("Movies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
@@ -1009,7 +1009,7 @@ public class testBplusTree {
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
-    public static void experimentFive(Storage db, testBplusTree tree) {
+    public static void experimentFive(Disk db, testBplusTree tree) {
         System.out.println("\n\n----------------------EXPERIMENT 5-----------------------");
         PerformanceRecorder performance = new PerformanceRecorder();
         System.out.println("-- Deleting all records with 'numVotes' of 1000 -- ");
