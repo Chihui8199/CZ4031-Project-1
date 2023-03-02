@@ -96,10 +96,18 @@ public class Disk {
         return new Address(blockPtr, offset);
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getNumberBlockUsed() {
         return filledBlocks.size();
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getBlockAccesses() {
         return blockAccesses;
     }
