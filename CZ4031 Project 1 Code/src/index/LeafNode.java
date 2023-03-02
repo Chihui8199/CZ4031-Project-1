@@ -2,6 +2,7 @@ package index;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
+
 import storage.Address;
 import index.Node;
 
@@ -19,15 +20,13 @@ public class LeafNode extends Node {
         setPrevious(null);
     }
 
-    public void insertByRedistribution(int key, ArrayList<Address> add){
+    public void insertByRedistribution(int key, ArrayList<Address> add) {
         map.put(key, add);
     }
 
     public void removeKeyInMap(int key) {
         map.remove(key);
     }
-
-
 
 
     // TODO: Have to create function for findRecord
@@ -63,9 +62,7 @@ public class LeafNode extends Node {
             this.keys = new ArrayList<Integer>();
             insertInOrder(this.keys, key);
             return;
-        }
-
-        else if (this.map.containsKey(key) || this.keys.contains(key)) {
+        } else if (this.map.containsKey(key) || this.keys.contains(key)) {
 
             // Get the existing list of records associated with the key
             ArrayList<Address> existingRecords = map.get(key);
@@ -154,5 +151,5 @@ public class LeafNode extends Node {
         keys.clear();
         records.clear();
     }
-    
+
 }

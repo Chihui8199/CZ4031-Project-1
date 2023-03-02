@@ -48,7 +48,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         while (n < 3) {
             try {
-                System.out.print("Disk Size must be between 200-500MB: ");
+                System.out.print("Enter Disk Size (size must be between 200-500MB): ");
                 int diskSize = sc.nextInt();
                 if (diskSize < 200 || diskSize > 500) {
                     n++;

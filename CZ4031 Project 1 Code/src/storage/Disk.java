@@ -186,9 +186,30 @@ public class Disk {
                 }
             }
         }
+        if (finalRes.size() == 0) {
+            System.out.printf("Value in range [%d, %d] not found int database!\n",numVotesValue, numVotesValueUpperRange);
+        }
         for (Record record : finalRes)
-            System.out.printf("Found Records %s\n", record);
+            System.out.printf("Found Records (Brute Force) %s\n", record);
         return countBlockAccess;
+    }
+
+    /**
+     * Deletes the record at the specified address  on Disk.
+     *
+     * @param ArrayList of records to be deleted
+     */
+    public void deleteRecord(ArrayList<Address> addList) {
+        for (Address add : addList) {
+            int blockId = add.getBlockId();
+            int offset = add.getOffset();
+            Block block = getBlock(blockId);
+            block.deleteRecord(offset);
+            if (filledBlocks.contains(blockId)) {
+                filledBlocks.remove(blockId);
+            }
+            availableBlocks.add(blockId);
+        }
     }
 
 

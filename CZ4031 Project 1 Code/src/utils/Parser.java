@@ -24,7 +24,7 @@ public class Parser {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); // skip the first line (the column line)
             // initialise a new B+ tree
-            testBplusTree tree = new testBplusTree();
+            BplusTree tree = new BplusTree();
 
             while ((line = reader.readLine()) != null) {
                 counter++;
@@ -42,10 +42,10 @@ public class Parser {
 
             // TODO: to run the experiments independently of one another
             db.experimentOne();
-//            testBplusTree.experimentTwo(tree);
-//            testBplusTree.experimentThree(db, tree);
-//            testBplusTree.experimentFour(db, tree);
-//            testBplusTree.experimentFive(db, tree);
+            BplusTree.experimentTwo(tree);
+            BplusTree.experimentThree(db, tree);
+            BplusTree.experimentFour(db, tree);
+            BplusTree.experimentFive(db, tree);
         } catch (IOException e) {
             e.printStackTrace();
         }
