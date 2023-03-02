@@ -182,10 +182,10 @@ public class testBplusTree {
 
     /**
      * Wrapper function for deleting node
-     *
-     * @param key key to be deleted
+     * Also finds the lower bound of the subtree containing the node with the specified key value.
+     * @param key the key to be deleted
      * @return AraryList of address to be removed from database
-     */
+    */
     public ArrayList<Address> deleteKey(int key) {
         int lowerbound = 0;
         int index = 0;
@@ -193,11 +193,19 @@ public class testBplusTree {
         
         // System.out.println("\n\n -----------------------------Deleting Key: "+ key + "--------------------------------");
         lowerbound = checkForLowerbound(key);
-        // System.out.print("\nLowerbound is: "+ lowerbound);
         return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
     }
 
-    //recursive
+    /**
+     * Recursive function that deletes a node from the b plus tree with the specified key value, starting from the given node.
+     * @param node the node from which to begin the search for the node to be deleted
+     * @param parent the parent node of the current node
+     * @param parentPointerIndex an integer representing the index of the pointer to the current node in the parent node
+     * @param parentKeyIndex an integer representing the index of the key in the parent node that points to the current node
+     * @param key the key value of the node to be deleted
+     * @param lowerbound the lower bound of the subtree containing the node to be deleted
+     * @return an ArrayList of Address objects representing the deleted node(s), or an empty list if no nodes were deleted.
+    */
     public ArrayList<Address> deleteNode(Node node, NonLeafNode parent, int parentPointerIndex, int parentKeyIndex,
             int key, int lowerbound) {
         ArrayList<Address> addOfRecToDelete = new ArrayList<>();
@@ -259,6 +267,17 @@ public class testBplusTree {
         return addOfRecToDelete;
     }
 
+    /**
+     * Handles the case when a node in the b plus tree is underutilized and needs to be rebalanced.
+     * If the underutilized node is the root node, the {@link #handleInvalidRoot(Node)} method is called.
+     * If the underutilized node is a leaf node, the {@link #handleInvalidLeaf(Node, NonLeafNode, int, int)} method is called.
+     * If the underutilized node is a non-leaf node, the {@link #handleInvalidInternal(Node, NonLeafNode, int, int)} method is called.
+     * @param underUtilizedNode the node that is underutilized and needs to be rebalanced
+     * @param parent the parent node of the underutilized node
+     * @param parentPointerIndex the index of the pointer to the underutilized node in the parent node
+     * @param parentKeyIndex the index of the key in the parent node that points to the underutilized node
+     * @throws IllegalStateException if the state of the tree is incorrect
+    */
     private void handleInvalidTree(Node underUtilizedNode, NonLeafNode parent, int parentPointerIndex,
             int parentKeyIndex) throws IllegalStateException {
         if (parent == null) {
@@ -276,6 +295,12 @@ public class testBplusTree {
         }
     }
 
+    /**
+     * Handles the case when the root node of the b plus search tree is underutilized and needs to be rebalanced.
+     * If the root node is a leaf node, all keys are removed from the leaf node. -> Empty Tree
+     * If the root node is a non-leaf node, the first child of the root node becomes the new root node.
+     * @param underUtilizedNode the root node that is underutilized and needs to be rebalanced
+    */
     public void handleInvalidRoot(Node underUtilizedNode){
         // handleInvalidNonLeaf(underUtilizedNode);
         if (underUtilizedNode.isLeaf()) { // Only node in B+ Tree - Root
@@ -288,6 +313,18 @@ public class testBplusTree {
             rootNode = newRoot;
         }
     }
+
+
+    /**
+     * Handles the case when a leaf node in the b plus tree is underutilized and needs to be rebalanced.
+     * Checks if it can redistribute with the next sibling node, then with the previous sibling node, and if neither are possible, merges the two nodes.
+     * If the merging results in the parent node being underutilized, the {@link #handleInvalidTree(Node, NonLeafNode, int, int)} method is called recursively.
+     * @param underUtilizedNode the leaf node that is underutilized and needs to be rebalanced
+     * @param parent the parent node of the underutilized node
+     * @param parentPointerIndex the index of the pointer to the underutilized node in the parent node
+     * @param parentKeyIndex the index of the key in the parent node that points to the underutilized node
+     * @throws IllegalStateException if both previous and next sibling nodes are null, or if the state of the tree is incorrect
+    */
     private void handleInvalidLeaf(Node underUtilizedNode,
                                    NonLeafNode parent,
                                    int parentPointerIndex,
@@ -312,8 +349,6 @@ public class testBplusTree {
             numChildrenOfNodeParent = underUtilizedNode.getParent().getChildren().size();
         }
         
-        
-
         if(nextNode == null && prevNode == null)
             throw new IllegalStateException("Both prevNode and nextNode is null for " + underUtilizedNode + "This is wrong!");
             // 1. Check if we can redistribute with next
@@ -410,6 +445,17 @@ public class testBplusTree {
         }
     }
 
+
+    /**
+     * Handles the case when a non-leaf node in the b plus tree is underutilized and needs to be rebalanced.
+     * Checks if it can redistribute with the next sibling node, then with the previous sibling node, and if neither are possible, merges the two nodes.
+     * If the merging results in the parent node being underutilized, the {@link #handleInvalidTree(Node, NonLeafNode, int, int)} method is called recursively.
+     * @param underUtilizedNode the non-leaf node that is underutilized and needs to be rebalanced
+     * @param parent the parent node of the underutilized node
+     * @param parentPointerIndex the index of the pointer to the underutilized node in the parent node
+     * @param parentKeyIndex the index of the key in the parent node that points to the underutilized node
+     * @throws IllegalStateException if both previous and next sibling nodes are null, or if the state of the tree is incorrect
+    */
     private void moveOneKeyNonLeafNode(NonLeafNode giver, NonLeafNode receiver,
                                    boolean giverOnLeft, NonLeafNode parent,
                                    int inBetweenKeyIdx){
@@ -483,7 +529,20 @@ public class testBplusTree {
 
     }
 
-
+    /**
+     * Merge the node with the adjacent sibling (either left or right)
+     * if neither of the adjacent sibling can be used to merge or redistribute, 
+     * the function will throw an exception. Otherwise, it will call the
+     * appropriate method to redistribute the keys.
+     * 
+     * @param nodeToMergeTo the node to merge to (either left or right)
+     * @param current the underutilized node
+     * @param parent the parent node of the underutilized node
+     * @param rightPointerIdx the index of the pointer pointing to the right sibling
+     * @param inBetweenKeyIdx the index of the key between two siblings
+     * @param mergeWithLeft a boolean value indicating whether to merge with the left sibling or not
+     * @throws IllegalStateException if neither of the adjacent sibling can be used to merge or redistribute
+     */
     private void mergeNonLeafNodes(NonLeafNode nodeToMergeTo, NonLeafNode current, NonLeafNode parent,
                                 int rightPointerIdx,
                                 int inBetweenKeyIdx, boolean mergeWithLeft){
@@ -725,7 +784,17 @@ public class testBplusTree {
     }
 
 
-
+    /**
+     * Merges two leaf nodes by moving keys and records from the current node to the nodeToMergeTo.
+     * Updates the parent node and the next and previous pointers of the nodes involved in the merge.
+     * Also updates the lower bound key for the merged nodes.
+     * @param nodeToMergeTo The leaf node that will receive the keys and records from the current node.
+     * @param current The leaf node that will be merged into nodeToMergeTo. 
+     * @param parent The parent node of the leaf nodes.
+     * @param rightPointerIdx The index of the right pointer in the parent node. 
+     * @param inBetweenKeyIdx The index of the key in the parent node that is between the current and nodeToMergeTo nodes.
+     * @param mergetoright A boolean value indicating whether the current node will be merged to the right (true) or to the left (false) of the nodeToMergeTo.
+    */
     private void moveOneKey(LeafNode giver, LeafNode receiver,
                             boolean giverOnLeft, NonLeafNode parent,
                             int inBetweenKeyIdx){
