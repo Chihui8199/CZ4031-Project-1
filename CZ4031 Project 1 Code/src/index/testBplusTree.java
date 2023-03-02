@@ -65,15 +65,8 @@ public class testBplusTree {
     // TODO: remove this --> we can do this recusively. Look at searchKey function
     public ArrayList<Address> searchKey2(int key) {
         System.out.printf("\n\nSearching Key %d --------------------------------------------------------------------------------------------------------------------\n", key);
-        // System.out.printf("Current Root:");
-        // System.out.println(testBplusTree.getRoot().getKeys());
-
         // nodeToInsertTo is the leafnode
         nodeToInsertTo = searchNode(key);
-
-        // System.out.printf("Keys of node to search: ");
-        // System.out.println(nodeToInsertTo.getKeys());
-
         return ((LeafNode) nodeToInsertTo).findRecord(key);
     }
 
@@ -130,9 +123,6 @@ public class testBplusTree {
 
             keys = nodeToInsertTo.getKeys();
 
-            // System.out.print("Keys of found parent: ");
-            // System.out.println(keys);
-
             // Looping through the current node's indexes to find which of its leaf/child
             // node to insert the key into, similar to above but this is to obtain the leaf
             // node
@@ -150,9 +140,13 @@ public class testBplusTree {
 
     }
 
-    private int checkForLowerbound(int key){
+    /**
+     * Finds the lower bound of the specified key in the B+ tree.
+     * @param key the key to find the lower bound of
+     * @return the lower bound of the specified key
+     */
 
-        // System.out.print("\nChecking Lowerbound of Key -> "+key);
+    private int checkForLowerbound(int key){
 
         NonLeafNode node = (NonLeafNode)rootNode;
         boolean found = false;
@@ -166,8 +160,8 @@ public class testBplusTree {
                 break;
             }
         }
-        if (found == false && key < node.getKeyAt(0)) {node = (NonLeafNode)node.getChild(0);}
-        // System.out.println(node.getKeys());
+        if (found == false && key < node.getKeyAt(0)) {
+            node = (NonLeafNode)node.getChild(0);}
 
         // loop till get leftmost key
         while (!node.getChild(0).isLeaf()){
@@ -175,7 +169,6 @@ public class testBplusTree {
             }
 
         lowerbound = node.getChild(0).getKeyAt(0);
-        // System.out.print("\nReturning LowerBound -> "+ lowerbound);
         return(lowerbound);
 
     }
@@ -189,15 +182,14 @@ public class testBplusTree {
     public ArrayList<Address> deleteKey(int key) {
         int lowerbound = 0;
         int index = 0;
-        //Get child from lower bound of subtree
-        
         // System.out.println("\n\n -----------------------------Deleting Key: "+ key + "--------------------------------");
         lowerbound = checkForLowerbound(key);
         return (deleteNode(rootNode, null, -1, -1, key, lowerbound));
     }
 
     /**
-     * Recursive function that deletes a node from the b plus tree with the specified key value, starting from the given node.
+     * Recursive function that deletes a key from the b plus tree with the specified key value, starting from the given node.
+     * Calls a check for invalid tree after deleting key
      * @param node the node from which to begin the search for the node to be deleted
      * @param parent the parent node of the current node
      * @param parentPointerIndex an integer representing the index of the pointer to the current node in the parent node
@@ -232,15 +224,13 @@ public class testBplusTree {
 
             // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
             if (LeafNode.getKeySize() >= (keyIdx+1)) {
-                // System.out.print("DELETING HERE");
                 newLowerBound = lowerbound;
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), false, newLowerBound);
-                // keys.set(ptrIdx-1, keys.get(0));
+        
             }
             else{
                 
-                // System.out.print("DELETING OVERHERE");
                 newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
                 List<Integer> keys = LeafNode.getKeys();
                 LeafNode.updateKey(ptrIdx - 1, keys.get(0), true, newLowerBound);
@@ -351,11 +341,6 @@ public class testBplusTree {
         
         if(nextNode == null && prevNode == null)
             throw new IllegalStateException("Both prevNode and nextNode is null for " + underUtilizedNode + "This is wrong!");
-            // 1. Check if we can redistribute with next
-            // 2. Check if we can redistribute with prev
-            // 3. If neither the adjacent sibling can be used -> merge the two nodes -> Adjust the parent -> if parent is not fill recusively apply deletion algorithm
-            // a. first try merge with right
-            // b. second try merge with left
         System.out.println("--> handle invalid leaf");
         if (nextNode != null && nextNode.isAbleToGiveOneKey(NODE_SIZE)){
             System.out.print("Move one key from right to left");
@@ -386,12 +371,20 @@ public class testBplusTree {
         }
     }
 
+    /**
+     * Handles an invalid internal node by either redistributing keys with adjacent nodes
+     *  or merging it with adjacent nodes.
+     * @param underUtilizedNode the internal node that is underutilized and needs to be handled
+     * @param parent the parent node of the underutilized node
+     * @param parentPointerIndex the index of the pointer to the underutilized node in the parent node's child list
+     * @param parentKeyIndex the index of the key in the parent node that points to the underutilized node
+     * @throws IllegalStateException if both prevInternal and nextInternal are null or if the underutilized node cannot be redistributed or merged with adjacent nodes
+    */
     private void handleInvalidInternal(Node underUtilizedNode,
                                        NonLeafNode parent,
                                        int parentPointerIndex,
                                        int parentKeyIndex) throws IllegalStateException {
 
-        // Node underUtilizedInternal = underUtilizedNode;
         Node underUtilizedInternal = underUtilizedNode;
 
         // load the adjacent nodes
@@ -408,8 +401,6 @@ public class testBplusTree {
         } catch(Exception e){
             System.out.print(e);
         }
-        
-
         System.out.print(nextInternal + "/n and /n "+ prevInternal +"/n!!!");
 
         if (nextInternal == null && prevInternal == null)
@@ -459,18 +450,14 @@ public class testBplusTree {
     private void moveOneKeyNonLeafNode(NonLeafNode giver, NonLeafNode receiver,
                                    boolean giverOnLeft, NonLeafNode parent,
                                    int inBetweenKeyIdx){
-        // new_key and old_key all refers to the ones in parent key arrayList
         int key;
-        // int newKey, oldKey = parent.getKeyAt(inBetweenKeyIdx);
 
         if(giverOnLeft) {
             System.out.print("Moving one key from Left non-leaf sibling");
             
             //Get last key from giver non leaf node to the receiver non leaf node
             //Remove last key from giver
-            // int giverKey = giver.getLastKey();
             giver.removeKeyAt(giver.getKeySize()-1);
-            // receiver.getKeys().add(0,giverKey);
             
             //Remove child from the giver node
             //Add child to the non leaf node
@@ -478,8 +465,6 @@ public class testBplusTree {
             giver.removeChild(nodeToMove); 
             receiver.addChild(nodeToMove);
             receiver.getKeys().add(receiver.getKeySize(), receiver.getChild(1).getFirstKey());
-            
-            System.out.print("\n\n######!!!!!!:"+ receiver.getKeys());
 
             key = receiver.getKeyAt(0);
         }
@@ -497,9 +482,7 @@ public class testBplusTree {
             receiver.addChild(nodeToMove);
             
             receiver.getKeys().add(receiver.getKeySize(), receiver.getChild(1).getFirstKey());
-            
-            System.out.print("\n\n######:"+ receiver.getKeys());
-
+        
             key = receiver.getKeyAt(0);
         }
         // in either case update the parent key
@@ -517,11 +500,9 @@ public class testBplusTree {
         // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
         if (LeafNode.getKeySize() >= (keyIdx+1)) {
             newLowerBound = lowerbound;
-            System.out.print("\nnew LB: "+ newLowerBound);
         }
         else{
-            newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
-            System.out.print("New lower bound ????: "+ newLowerBound);
+            newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1));
             parent.updateKey(inBetweenKeyIdx-1, key, false, checkForLowerbound(key));
         
         }   
@@ -546,25 +527,13 @@ public class testBplusTree {
     private void mergeNonLeafNodes(NonLeafNode nodeToMergeTo, NonLeafNode current, NonLeafNode parent,
                                 int rightPointerIdx,
                                 int inBetweenKeyIdx, boolean mergeWithLeft){
-        /*
-         * -Check if sibling node exists
-            -add the keys from the current node to the keys of the previous sibling node
-            -Remove children from current node
-            -Add the children of the current node to the previous sibling node
-            -Check if parent key satisfy min node size then remove current node from parent if it is empty
-            -After merging, UpdateKey at higher levels with the correct lowerbound
-
-         */
         int keyToRemove;
         
 
         // merge the right node to left
         if (mergeWithLeft){ 
-            System.out.print("MErging with left, testest");
+            
             int moveKeyCount = current.getKeySize();
-
-            // System.out.print(current.getKeys());
-            // keyToRemove = current.getFirstKey();
             keyToRemove = nodeToMergeTo.getChild(nodeToMergeTo.getKeySize()).getLastKey();
 
             // move every key from current node into nodeToMergeTo
@@ -575,11 +544,9 @@ public class testBplusTree {
             // move every child from current node into nodeToMergeTo
             for (int i= 0; i < current.getChildren().size(); i ++) {
                 nodeToMergeTo.getChildren().add(current.getChild(i));
-                System.out.print("\nCHildren : "+nodeToMergeTo.getChildren());
             }
 
             //Update parent after merging
-            System.out.print("\n nodetomergeto Node Keys: " + nodeToMergeTo.getKeys());
             nodeToMergeTo.getKeys().add(nodeToMergeTo.getKeySize(),nodeToMergeTo.getChild(nodeToMergeTo.getKeySize()+1).getFirstKey());
             current.getParent().removeChild(current);
             
@@ -588,8 +555,6 @@ public class testBplusTree {
         
         // merge the left node with right
         else { 
-            
-            System.out.print("MErging with right, testest");
             int moveKeyCount = current.getKeySize();
 
             keyToRemove = current.getFirstKey();
@@ -602,11 +567,7 @@ public class testBplusTree {
                 nodeToMergeTo.getChildren().add(current.getChild(i));
                 System.out.print("\nCHildren : "+nodeToMergeTo.getChildren());
             }
-
-            // current.getParent().getKeys().remove(keyToRemove);
-
             //Update parent after merging
-            System.out.print("\n nodetomergeto Node Keys: " + nodeToMergeTo.getKeys());
             nodeToMergeTo.getKeys().add(0,nodeToMergeTo.getChild(1).getFirstKey());
             current.getParent().removeChild(current);
 
@@ -623,17 +584,24 @@ public class testBplusTree {
         // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
         if (LeafNode.getKeySize() >= (keyIdx+1)) {
             newLowerBound = lowerbound;
-            System.out.print("New lowe bound : "+ newLowerBound);
         }
         else{
             newLowerBound = checkForLowerbound(LeafNode.getKey(keyIdx+1)); //Get new lowerbound
-            
-            System.out.print("New lowerrrrrr bound : "+ newLowerBound);
             parent.updateKey(inBetweenKeyIdx-1, keyToRemove, false, checkForLowerbound(keyToRemove));
         
         }   
     }
 
+    /**
+     * Merges the current leaf node with its adjacent leaf node, either to its left or right, depending on the value of the 'mergetoright' boolean flag.
+     * @param nodeToMergeTo the leaf node that will merge with the current node
+     * @param current the leaf node that will be merged with the adjacent node
+     * @param parent the parent node of the two leaf nodes being merged
+     * @param rightPointerIdx the index of the pointer to the right of the current node in the parent node's child list
+     * @param inBetweenKeyIdx the index of the key in the parent node that lies between the two leaf nodes being merged
+     * @param mergetoright a boolean flag indicating whether to merge with the right or left adjacent node
+     * @throws IllegalArgumentException if the parent node is null
+    */
 
     private void mergeLeafNodes(LeafNode nodeToMergeTo, LeafNode current, NonLeafNode parent,
                                 int rightPointerIdx, int inBetweenKeyIdx, boolean mergetoright){
@@ -671,20 +639,8 @@ public class testBplusTree {
             if(current.getKeySize()==0){
 
                 NonLeafNode currParent = current.getParent();
-                System.out.print("currParent's keys " + currParent.getKeys());
                 currParent.removeChild(current);
-                currParent.removeKeyAt(0);
-                System.out.print("currParent's keys after deletion" + currParent.getKeys());
-
-                System.out.print("\nTrying to set parent\n");
-                // current.setParent(current.getNext().getParent());
-                
-                //Check if parent key satisfy min node size
-                // if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
-                //     currParent.removeKeyAt(0);
-                // }
-                
-                
+                currParent.removeKeyAt(0);               
             }
         }
         else{
@@ -706,9 +662,7 @@ public class testBplusTree {
                 
                 //currParent.removeChild(current);
                 NonLeafNode currParent = current.getParent();
-                System.out.print("\ncurrParent's keys " + currParent.getKeys() +current);
                 currParent.removeChild(current);
-                System.out.print("indx: "+ inBetweenKeyIdx);
                 // if (currParent.getKeySize() > 0){
                 if (inBetweenKeyIdx < 0){
                     currParent.removeKeyAt(inBetweenKeyIdx+1);
@@ -722,14 +676,6 @@ public class testBplusTree {
                     currParent.removeKeyAt(0);
                 }
                 
-                System.out.print("\ncurrParent's keys after deletion>>" + currParent.getKeys());
-
-                System.out.print("\nTrying to set parent\n");
-                // if ((currParent.getKeySize()>currParent.getMinNonLeafNodeSize())&&(currParent.getChildren().size()>current.getMinNonLeafNodeSize())){
-                //     if(inBetweenKeyIdx>=0){
-                //         currParent.removeKeyAt(inBetweenKeyIdx);
-                //     }
-                // }
             }
             else{
 
@@ -744,41 +690,23 @@ public class testBplusTree {
         }
         
         int lowerbound = checkForLowerbound(removedKey);
-        System.out.print("\n\nUpdating key for merge nodes>>>"+ lowerbound);
-        System.out.print("\n\nptrIdex?>>>"+ nodeToMergeTo.searchKey(removedKey, true));
-        // int ptrIdx = nodeToMergeTo.searchKey(removedKey, true); 
-        // int keyIdx = ptrIdx - 1;
-        
-        LeafNode LeafNode = (LeafNode) current;
         int newLowerBound = 0;
-        System.out.print("\n\nUpdating  for merge nodes>>>"+ current.getParent().getKeySize());
-
-        // keyIndex = 
         // Get newLowerBound (possible for current key taken to be the lowerbound) if KeyIdx is not KeySize
         if (current.getParent().getKeySize() >= NoOfChildren) { //check if number of children == original # of children
             System.out.print("Entered here");
             newLowerBound = lowerbound;
         }
         else{
-            // System.out.print("\nentered else statement:" + current.getParent().getFirstKey());
-            // newLowerBound = checkForLowerbound(current.getParent().getFirstKey()); //Get new lowerbound
             newLowerBound=current.getParent().getChild(0).getFirstKey();
 
             System.out.print("\nNew lower bound is" +newLowerBound);
-            // current.getParent().updateKey( inBetweenKeyIdx , parent.getKey(0), true, lowerbound);
             if(inBetweenKeyIdx==0){
-                // if (mergetoright){
-                //     current.getNext().getParent().updateKey( inBetweenKeyIdx, removedKey, true, newLowerBound);
-                // }
-                // else{
-                //     // current.getPrevious().getParent().updateKey( inBetweenKeyIdx, removedKey, true, newLowerBound);
-                // }
-                
-            } else{
+                System.out.print("inBetweenKeyIdx is 0");
+
+            } 
+            else{
                 current.getParent().updateKey( inBetweenKeyIdx -1, newLowerBound, true, newLowerBound);
             }
-            
-        
         }   
         
     }
@@ -799,7 +727,6 @@ public class testBplusTree {
                             boolean giverOnLeft, NonLeafNode parent,
                             int inBetweenKeyIdx){
         int key;
-        //true --> giver on left
         if (giverOnLeft) {
             System.out.println("--> move the key from left node to right");
             // move the key from left node to right
@@ -815,7 +742,6 @@ public class testBplusTree {
             key = receiver.getKeyAt(0);
         } else {
             System.out.println("--> move key from right node to left node\n");
-            // move the key from right node to left
             // 1. Move and edit map records
             int giverKey = giver.getFirstKey();
             receiver.insertByRedistribution(giverKey, giver.getAddressesForKey(giverKey));
@@ -825,7 +751,6 @@ public class testBplusTree {
             giver.removeKeyAt(0);
             receiver.insertKeyAt(receiver.getKeySize(), giverKey);
             key = giver.getKeyAt(0);
-            // key = receiver.getKeyAt(0);
             
         }
        
@@ -876,9 +801,6 @@ public class testBplusTree {
             parent.updateKey(inBetweenKeyIdx-1, parent.getChild(inBetweenKeyIdx).getFirstKey(), false, checkForLowerbound(key));
         
         }   
-        
-        // parent.updateKey(inBetweenKeyIdx-1, parent.getChild(inBetweenKeyIdx).getFirstKey(), false, checkForLowerbound(key));
-        
     
     }
 
@@ -892,6 +814,14 @@ public class testBplusTree {
         return (searchValue(this.rootNode, key));
     }
 
+    
+    /**
+     * Searches for a value associated with a given key in a B+ tree.
+     * @param node The root node of the B+ tree.
+     * @param key The key to search for.
+     *  @return An ArrayList of Addresses that correspond to the given key, 
+     * or null if the key is not found.
+    */
     public ArrayList<Address> searchValue(Node node, int key) {
         PerformanceRecorder.addOneNodeReads();
 
@@ -923,6 +853,15 @@ public class testBplusTree {
         return searchValuesInRange(minKey, maxKey, this.rootNode);
     }
 
+    /**
+     * Searches for values in a given range of keys within a B+ tree.
+     * @param minKey The minimum key in the range.
+     * @param maxKey The maximum key in the range.
+     * @param node The root node of the B+ tree.
+     * @return An ArrayList of Addresses that correspond to the values in the given range of keys, 
+     * or null if no values are found.
+     * @throws IllegalStateException if a leaf node with zero keys is encountered during the search.
+    */
     public static ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node node) {
         int ptrIdx;
         ArrayList<Address> resultList = new ArrayList<>();
