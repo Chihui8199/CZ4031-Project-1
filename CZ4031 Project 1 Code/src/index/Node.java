@@ -1,9 +1,8 @@
- 
+
 package index;
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,17 +20,17 @@ public class Node {
     private int minNonLeafNodeSize;
 
     // We set the node size to 3 first as its easier to check if its correct
-    static final int NODE_SIZE = testBplusTree.NODE_SIZE;
+    static final int NODE_SIZE = BplusTree.NODE_SIZE;
     private boolean isLeaf;
     private boolean isRoot;
     private NonLeafNode parent;
     protected ArrayList<Integer> keys;
     Node rootNode;
     private int nodeIndex;
-    
+
 
     public Node() {
-        this.rootNode = testBplusTree.getRoot();
+        this.rootNode = BplusTree.getRoot();
         this.isLeaf = false;
         this.isRoot = false;
         this.nodeSize = NODE_SIZE;
@@ -39,10 +38,11 @@ public class Node {
         this.minNonLeafNodeSize = (int) (Math.floor(nodeSize / 2));
     }
 
-    public int getminLeafNodeSize(){
+    public int getminLeafNodeSize() {
         return this.minLeafNodeSize;
     }
-    public int getMinNonLeafNodeSize(){
+
+    public int getMinNonLeafNodeSize() {
         return this.minNonLeafNodeSize;
     }
 
@@ -78,7 +78,7 @@ public class Node {
             this.setIsRoot(false);
             setparent.setIsRoot(true);
             setparent.setIsLeaf(false);
-            testBplusTree.setRoot(setparent);
+            BplusTree.setRoot(setparent);
         } else {
             setparent.setIsLeaf(false);
         }
@@ -89,8 +89,8 @@ public class Node {
         return this.parent;
     }
 
-    public void removeKeyAtLast(){
-        this.keys.remove(keys.size()-1);
+    public void removeKeyAtLast() {
+        this.keys.remove(keys.size() - 1);
     }
 
     private void removeParent(NonLeafNode parent) {
@@ -98,7 +98,7 @@ public class Node {
     }
 
     void replaceKeyAt(int index, int key) {
-       
+
         keys.set(index, key);
     }
 
@@ -116,12 +116,14 @@ public class Node {
         return keys.size();
     }
 
-    public int getLastKey(){
+    public int getLastKey() {
         return this.keys.get(keys.size() - 1);
     }
-    public int getFirstKey(){
+
+    public int getFirstKey() {
         return this.keys.get(0);
     }
+
     /**
      * Binary search stored keys. (wrapper of the recursive function)
      *
@@ -129,7 +131,7 @@ public class Node {
      * @param upperBound if set true, search for upperBound
      *                   if set false, search for exactKey
      * @return if key exists & upperBound false, the index of the key
-     *         else, the index of upper bound of the key.
+     * else, the index of upper bound of the key.
      */
     int searchKey(int key, boolean upperBound) {
         int keyCount = keys.size();
@@ -141,7 +143,7 @@ public class Node {
     }
 
 
-        private int searchKey(int left, int right, int key, boolean upperBound) {
+    private int searchKey(int left, int right, int key, boolean upperBound) {
         if (left > right)
             return left;
 
@@ -165,8 +167,8 @@ public class Node {
         return keys.get(index);
     }
 
-    public int getLastIdx(){
-        int lastIdx = keys.size()-1;
+    public int getLastIdx() {
+        int lastIdx = keys.size() - 1;
         return lastIdx;
     }
 
@@ -204,7 +206,6 @@ public class Node {
     }
 
 
-
     public void insertChildInOrder(NonLeafNode parent, NonLeafNode child) {
         int i = 0;
         int childToSort = child.getKeyAt(0);
@@ -215,7 +216,6 @@ public class Node {
     }
 
 
-
     public void printNode() {
         Set<Integer> keys = ((LeafNode) this).map.keySet();
         System.out.println(keys);
@@ -223,7 +223,7 @@ public class Node {
 
 
     public void updateOneKeyOnly(int keyIndex, int newKey) {
-        if (keyIndex >= 0 && keyIndex < keys.size()) { 
+        if (keyIndex >= 0 && keyIndex < keys.size()) {
             keys.set(keyIndex, newKey);
         }
     }
@@ -231,29 +231,28 @@ public class Node {
 
     public void updateKey(int keyIndex, int newKey, boolean leafNotUpdated, int lowerbound) {
         //run only once to make leaf updated
-        if (keyIndex >= 0 && keyIndex < keys.size() && !leafNotUpdated) { 
+        if (keyIndex >= 0 && keyIndex < keys.size() && !leafNotUpdated) {
             keys.set(keyIndex, newKey);
         }
-        if (parent!=null && parent.isNonLeaf()){
+        if (parent != null && parent.isNonLeaf()) {
             int childIndex = parent.getChildren().indexOf(this);
 
-            if (childIndex>= 0){
-                if (childIndex>0){
-                    parent.replaceKeyAt(childIndex-1, keys.get(0));
+            if (childIndex >= 0) {
+                if (childIndex > 0) {
+                    parent.replaceKeyAt(childIndex - 1, keys.get(0));
 
                 }
-                parent.updateKey(childIndex-1, newKey, false, lowerbound);
+                parent.updateKey(childIndex - 1, newKey, false, lowerbound);
             }
-        }
-        else if (parent!=null && parent.isLeaf()){
-            
+        } else if (parent != null && parent.isLeaf()) {
+
             parent.updateKey(keyIndex, newKey, false, lowerbound);
         }
-        
 
-    }   
 
-    public boolean isAbleToGiveOneKey(int maxKeyCount){
+    }
+
+    public boolean isAbleToGiveOneKey(int maxKeyCount) {
         if (isNonLeaf())
             return getKeySize() - 1 >= maxKeyCount / 2;
         return getKeySize() - 1 >= (maxKeyCount + 1) / 2;
@@ -261,7 +260,6 @@ public class Node {
     }
 
 
-    
     public void insertNewNodeToParent(LeafNode newNode) {
         int index = 0;
         boolean insertedNode = false;
@@ -299,8 +297,6 @@ public class Node {
     }
 
 
-
-
     public void createFirstParentNode(LeafNode newNode) {
         NonLeafNode newParent = new NonLeafNode();
         PerformanceRecorder.addOneNode();
@@ -311,8 +307,6 @@ public class Node {
         this.setParent(newParent);
         newNode.setParent(newParent);
     }
-
-
 
 
     public void createRootNode(NonLeafNode newNode) {
@@ -328,8 +322,6 @@ public class Node {
         // System.out.printf("\nKeys in new ParentNode's ArrayList:");
         // System.out.print(newParent.keys);
     }
-
-
 
 
     public LeafNode leafSplitAndDistribute(int key, Address addr) {
@@ -378,8 +370,6 @@ public class Node {
     }
 
 
-
-
     public NonLeafNode nonLeafSplitAndDistribute() {
         // System.out.printf("\nProblematic split");
 
@@ -421,9 +411,6 @@ public class Node {
     }
 
 
-
-
-
     public void splitLeafNode(int key, Address addr) {
         // Step 1 split and distribute
 
@@ -447,8 +434,6 @@ public class Node {
         }
 
     }
-
-
 
 
     public void splitNonLeafNode() {
@@ -485,7 +470,7 @@ public class Node {
             this.setParent(newRoot);
             newParent.setParent(newRoot);
 
-            testBplusTree.setRoot(newRoot);
+            BplusTree.setRoot(newRoot);
         }
     }
 

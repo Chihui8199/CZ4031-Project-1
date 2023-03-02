@@ -4,17 +4,17 @@ import storage.Address;
 
 import java.util.ArrayList;
 
-public class NonLeafNode extends Node{
-    
+public class NonLeafNode extends Node {
+
     ArrayList<Node> children;
 
-    public NonLeafNode(){
+    public NonLeafNode() {
         super();
         children = new ArrayList<Node>();
         setIsLeaf(false);
     }
 
-    public ArrayList<Node> getChildren(){
+    public ArrayList<Node> getChildren() {
         return children;
     }
 
@@ -27,12 +27,12 @@ public class NonLeafNode extends Node{
     }
 
 
-	public void removeChild(Node child) {
+    public void removeChild(Node child) {
         this.children.remove(child);
-	}
+    }
 
-    public void sortChildren(Node parent){
-        
+    public void sortChildren(Node parent) {
+
     }
 
 }

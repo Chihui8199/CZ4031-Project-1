@@ -2,7 +2,6 @@ package storage;
 
 /**
  * Class representing the logical address of a record
- * <p>
  * It contains the ID of the block where the record is stored,
  * and the relative offset of the record within that block.
  */

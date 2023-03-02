@@ -4,10 +4,8 @@ import java.util.LinkedHashMap;
 
 /**
  * 1. The LRUCache class implements Least Recently Used cache, which stores a fixed number of Block objects.
- * <p>
  * 2. The cache is implemented using a LinkedHashMap, which ensures that the most recently accessed blocks are stored at the end of the map,
  * and the least recently accessed blocks are stored at the front of the map.
- * <p>
  * 3. When the cache is full, the least recently used block is evicted from the cache to make room for a new block.
  */
 public class LRUCache {
