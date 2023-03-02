@@ -13,7 +13,8 @@ public class Main {
 
         String separator = System.getProperty("file.separator");
         String filePath = new File("").getAbsolutePath();
-        filePath = filePath.concat(separator + "data.tsv");
+        // filePath = filePath.concat(separator + "data.tsv");
+        filePath = filePath.concat(separator + "CZ4031 Project 1 Code" + separator + "src" + separator + "data.tsv");
         System.out.print(filePath + "\n");
         File file = new File(String.valueOf(filePath));
         if (file.exists()) {
