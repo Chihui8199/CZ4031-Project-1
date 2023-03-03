@@ -5,17 +5,16 @@ import java.util.List;
 import storage.Address;
 import storage.Record;
 import storage.Disk;
+import utils.Parser;
 
 /*
  * Class representing the B+ tree
  */
 public class BplusTree {
 
-    private static final int BLOCK_SIZE = 200;
-    private static final int OVERHEAD = 8;
-    private static final int POINTER_SIZE = 8;
-    private static final int KEY_SIZE = 4;
-    static final int NODE_SIZE = (BLOCK_SIZE - OVERHEAD)/(POINTER_SIZE/KEY_SIZE);
+
+
+    static final int NODE_SIZE = (Parser.BLOCK_SIZE - Parser.OVERHEAD)/(Parser.POINTER_SIZE+Parser.KEY_SIZE);
     static Node rootNode;
     Node nodeToInsertTo;
 
