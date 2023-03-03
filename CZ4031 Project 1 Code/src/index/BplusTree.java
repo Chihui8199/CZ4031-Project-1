@@ -12,8 +12,6 @@ import utils.Parser;
  */
 public class BplusTree {
 
-
-
     static final int NODE_SIZE = (Parser.BLOCK_SIZE - Parser.OVERHEAD)/(Parser.POINTER_SIZE+Parser.KEY_SIZE);
     static Node rootNode;
     Node nodeToInsertTo;
@@ -1027,7 +1025,7 @@ public class BplusTree {
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.searchKey(500);
         long endTime = System.nanoTime();
-        int totalAverageRating = 0;
+        double totalAverageRating = 0;
         int totalCount = 0;
         ArrayList<Record> results = new ArrayList<>();
         if (resultAdd != null) {
@@ -1045,8 +1043,11 @@ public class BplusTree {
                 (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
+        startTime = System.nanoTime();
         int bruteForceAccessCount = db.getBlocksAccessedByForce(500, 500);
+        endTime = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 500): %d", bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (numVotes = 500): %d", endTime - startTime);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
@@ -1063,7 +1064,7 @@ public class BplusTree {
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.rangeSearch(30000, 40000);
         long endTime = System.nanoTime();
-        int totalAverageRating = 0;
+        double totalAverageRating = 0;
         int totalCount = 0;
         ArrayList<Record> results = new ArrayList<>();
         if (resultAdd != null) {
@@ -1081,9 +1082,12 @@ public class BplusTree {
                 (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
+        startTime = System.nanoTime();
         int bruteForceAccessCount = db.getBlocksAccessedByForce(30000, 40000);
+        endTime = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d",
                 bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (30000<=numVotes<=40000): %d", endTime - startTime);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
@@ -1109,8 +1113,11 @@ public class BplusTree {
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
         System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=1000):");
+        startTime = System.nanoTime();
         int bruteForceAccessCount = db.getBlocksAccessedByForce(1000, 1000);
+        endTime = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 1000): %d", bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (numVotes = 1000): %d", endTime - startTime);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
     }
 
