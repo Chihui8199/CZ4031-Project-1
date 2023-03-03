@@ -1,6 +1,4 @@
-# CZ4031-Project-1
-
-# CZ4031-DBMS-Group-3
+# CZ4031-DBMS-Group-37
 Project repository for CZ4031 Database System Design
 
 # Members
