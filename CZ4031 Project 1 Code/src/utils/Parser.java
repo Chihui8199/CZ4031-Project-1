@@ -12,7 +12,10 @@ import storage.Disk;
 import index.*;
 
 public class Parser {
-    private static final int BLOCK_SIZE = 200;
+    public static final int BLOCK_SIZE = 200;
+    public static final int OVERHEAD = 8;
+    public static final int POINTER_SIZE = 8; //for 64-bit systems
+    public static final int KEY_SIZE = 4; //Integer datatype
     private static int counter = 0;
 
     public static void readTSVFile(String filePath, int diskCapacity) {
