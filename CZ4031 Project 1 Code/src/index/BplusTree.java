@@ -11,7 +11,11 @@ import storage.Disk;
  */
 public class BplusTree {
 
-    static final int NODE_SIZE = 16;
+    private static final int BLOCK_SIZE = 200;
+    private static final int OVERHEAD = 8;
+    private static final int POINTER_SIZE = 8;
+    private static final int KEY_SIZE = 4;
+    static final int NODE_SIZE = (BLOCK_SIZE - OVERHEAD)/(POINTER_SIZE/KEY_SIZE);
     static Node rootNode;
     Node nodeToInsertTo;
 
