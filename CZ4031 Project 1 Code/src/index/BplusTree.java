@@ -5,13 +5,16 @@ import java.util.List;
 import storage.Address;
 import storage.Record;
 import storage.Disk;
+import utils.Parser;
 
 /*
  * Class representing the B+ tree
  */
 public class BplusTree {
 
-    static final int NODE_SIZE = 17;
+
+
+    static final int NODE_SIZE = (Parser.BLOCK_SIZE - Parser.OVERHEAD)/(Parser.POINTER_SIZE+Parser.KEY_SIZE);
     static Node rootNode;
     Node nodeToInsertTo;
 
@@ -1096,14 +1099,16 @@ public class BplusTree {
         System.out.println("-- Deleting all records with 'numVotes' of 1000 -- ");
         long startTime = System.nanoTime();
         ArrayList<Address> deletedAdd = tree.deleteKey(1000);
+
         db.deleteRecord(deletedAdd);
         long endTime = System.nanoTime();
         System.out.printf("No. of Nodes in updated B+ tree: %d\n", performance.getTotalNodes());
+        tree.countLevel(tree.getRoot());
         System.out.printf("No. of Levels in updated B+ tree: %d\n", performance.getTreeDegree());
-        System.out.printf("Content of the root node in updated B+ tree: %s\n", BplusTree.getRoot().keys);
+        System.out.printf("\nContent of the root node in updated B+ tree: %s\n", BplusTree.getRoot().keys);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=10000):");
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=1000):");
         int bruteForceAccessCount = db.getBlocksAccessedByForce(1000, 1000);
         System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 1000): %d", bruteForceAccessCount);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", db.getBlockAccessReduced());
