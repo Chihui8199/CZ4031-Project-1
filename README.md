@@ -6,11 +6,13 @@ Project repository for CZ4031 Database System Design
 # Members
 > Ng Chi Hui <br>
 > Goh Shan Ying <br>
+> Malcolm Tan Wei Zhang <br>
+> Shannen Lee Xuan Ning<br>
 
 
 # Running the code
 All experiments in the project requirements are pre-written in the main function
-1. To specify  the disk size to be used. The disk size should be between 200-500MB
+1. To specify the disk size to be used. The disk size should be between 200-500MB
 
 ## Prerequisites
 1. Any recent version of java, java8 and above. <br>
