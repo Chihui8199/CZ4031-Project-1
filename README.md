@@ -15,6 +15,7 @@ the indexing component is a B+ Tree and the entire system was developed using Ja
 # Running the code
 All experiments in the project requirements are pre-written in the main function
 1. To specify the disk size to be used. The disk size should be between 200-500MB
+2. To specify the experiment you will like to run
 
 ## Prerequisites
 1. Any recent version of java, Java8 and above. <br>
