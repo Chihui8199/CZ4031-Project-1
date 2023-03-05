@@ -1,6 +1,10 @@
 # CZ4031-DBMS-Group-37
 Project repository for CZ4031 Database System Design
 
+This project repository contians our design and implementation of a database management system,
+which includes the storage and indexing components. The underlying data structure of
+the indexing component is a B+ Tree and the entire system was developed using Java.
+
 # Members
 > Ng Chi Hui <br>
 > Goh Shan Ying <br>
